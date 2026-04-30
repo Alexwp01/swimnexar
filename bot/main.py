@@ -70,6 +70,7 @@ def generate_content():
     prompt = f"""You are a social media expert for Swimnexar Aquatic Academy in Wesley Chapel, FL.
 We coach youth water polo (ages 8-18) and swim team (ages 5-12).
 Brand voice: expert, warm, motivating, parent-friendly.
+IMPORTANT: All content must be written in American English only. Target audience is American parents and youth athletes.
 
 Choose ONE topic from this list and create an Instagram carousel post:
 {json.dumps(TOPICS, indent=2)}
