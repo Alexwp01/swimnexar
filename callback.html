@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head><meta charset="UTF-8"><title>Auth</title>
+<style>
+  body { font-family: monospace; background: #0d0d0d; color: #fff; display: flex; align-items: center; justify-content: center; min-height: 100vh; margin: 0; flex-direction: column; gap: 20px; }
+  #code { width: 90vw; max-width: 700px; height: 120px; background: #1e1e1e; color: #4ade80; border: 2px solid #4ade80; border-radius: 8px; padding: 12px; font-size: 13px; word-break: break-all; }
+  button { background: #4ade80; color: #000; border: none; padding: 14px 32px; font-size: 16px; font-weight: 700; border-radius: 8px; cursor: pointer; }
+  #cmd { width: 90vw; max-width: 700px; height: 80px; background: #1e1e1e; color: #60a5fa; border: 2px solid #60a5fa; border-radius: 8px; padding: 12px; font-size: 12px; word-break: break-all; margin-top: 10px; }
+</style>
+</head>
+<body>
+<h2>✅ Authorization Code</h2>
+<textarea id="code" readonly></textarea>
+<button onclick="copyCode()">📋 Copy Code</button>
+<h3>Run this in Terminal:</h3>
+<textarea id="cmd" readonly></textarea>
+<button onclick="copyCmd()">📋 Copy Command</button>
+
+<script>
+const params = new URLSearchParams(window.location.search);
+const code = params.get('code');
+if (code) {
+  document.getElementById('code').value = code;
+  const cmd = `python3 /Users/alex_wp01/swimnexar-new/bot/get_token.py "${window.location.href}"`;
+  document.getElementById('cmd').value = cmd;
+} else {
+  document.getElementById('code').value = 'No code found. Something went wrong.';
+}
+function copyCode() { navigator.clipboard.writeText(document.getElementById('code').value); alert('Copied!'); }
+function copyCmd()  { navigator.clipboard.writeText(document.getElementById('cmd').value);  alert('Copied!'); }
+</script>
+</body>
+</html>
