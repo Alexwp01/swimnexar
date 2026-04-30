@@ -20,21 +20,31 @@ anthropic_client = anthropic.Anthropic(api_key=ANTHROPIC_KEY)
 
 # ── Topic bank (Claude picks one) ────────────────────────────
 TOPICS = [
+    # Technique & drills (post most often)
     "3 drills to improve freestyle technique for young swimmers",
-    "How to get a water polo scholarship to a US college",
+    "3 water polo passing drills every beginner needs",
     "5 water polo tips for beginners aged 8-12",
-    "Why starting swimming early gives kids a lifelong advantage",
-    "What NCAA recruiters look for in a water polo athlete",
+    "How to do a perfect flip turn — step by step for kids",
     "Morning swim workout for youth athletes",
     "How to improve your child's breaststroke in one week",
     "Water polo fitness drills you can do at home",
     "How to prepare for your first water polo tryout",
-    "College recruitment timeline for youth swimmers",
+    "5 kick drills every young swimmer needs to master",
     "Top 5 swimming mistakes parents don't notice",
+    "Water polo shooting technique for beginners aged 8-12",
+    "How to teach proper breathing in freestyle to young swimmers",
+    "Best backstroke drills for kids who are just starting out",
+    # Parent & lifestyle (~1–2x/month)
+    "Why starting swimming early gives kids a lifelong advantage",
     "How to choose the right swim program for your child",
     "Mental toughness tips for young water polo players",
     "Nutrition tips for youth aquatic athletes",
     "How water polo builds leadership skills in kids",
+    # College & recruitment (~1x/week = 4 topics out of ~20)
+    "How to get a water polo scholarship to a US college",
+    "What NCAA recruiters look for in a water polo athlete",
+    "College recruitment timeline for youth swimmers",
+    "How to build a recruiting profile for water polo by age 14",
 ]
 
 # ── Font paths: macOS first, then Ubuntu (GitHub Actions) ────
