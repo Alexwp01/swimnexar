@@ -1,9 +1,10 @@
 import os
 import json
+import time
 import requests
 import replicate
 import anthropic
-from datetime import datetime
+from datetime import datetime, timezone, timedelta
 from PIL import Image, ImageDraw, ImageFont
 from io import BytesIO
 
@@ -183,17 +184,23 @@ def upload_to_public_url(image_path):
         return url
     raise RuntimeError(f"Upload failed ({r.status_code}): {r.text[:200]}")
 
-# ── Step 5: Post to Instagram ─────────────────────────────────
+# ── Step 5: Schedule Instagram post ──────────────────────────
 def post_to_instagram(images, caption):
-    print("📱 Posting to Instagram...")
-    base = f"https://graph.instagram.com/v21.0"
+    """Creates a scheduled post (24 h from now). Open Instagram → Profile →
+    Scheduled content to add music and publish early if you want."""
+    print("📅 Scheduling Instagram post for 24 hours from now...")
+    base = "https://graph.instagram.com/v21.0"
 
     cover_url = upload_to_public_url(images[0])
 
+    scheduled_ts = int(time.time()) + 86400  # 24 hours from now
+
     r = requests.post(f"{base}/{IG_USER_ID}/media", data={
-        "image_url":    cover_url,
-        "caption":      caption,
-        "access_token": IG_TOKEN,
+        "image_url":              cover_url,
+        "caption":                caption,
+        "published":              "false",
+        "scheduled_publish_time": scheduled_ts,
+        "access_token":           IG_TOKEN,
     })
     container = r.json()
     print(f"Container: {container}")
@@ -207,7 +214,8 @@ def post_to_instagram(images, caption):
         "access_token": IG_TOKEN,
     })
     result = r2.json()
-    print(f"Publish: {result}")
+    scheduled_at = datetime.fromtimestamp(scheduled_ts, tz=timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
+    print(f"Scheduled for {scheduled_at}: {result}")
     return result.get("id")
 
 # ── Step 6: Log to Notion ─────────────────────────────────────
@@ -224,7 +232,7 @@ def log_to_notion(content, post_id):
             "parent": {"database_id": NOTION_DB_ID},
             "properties": {
                 "Name":        {"title":     [{"text": {"content": content["topic"]}}]},
-                "Status":      {"select":    {"name": "Posted" if post_id else "Error"}},
+                "Status":      {"select":    {"name": "Scheduled" if post_id else "Error"}},
                 "Topic":       {"rich_text": [{"text": {"content": content["topic"]}}]},
                 "Caption":     {"rich_text": [{"text": {"content": content["caption"][:2000]}}]},
                 "Posted Date": {"date":      {"start": datetime.now().isoformat()}},
@@ -245,7 +253,8 @@ def main():
     print(f"✅ Created {len(images)} slides")
 
     post_id = post_to_instagram(images, content["caption"])
-    print(f"✅ Posted! ID: {post_id}")
+    print(f"✅ Scheduled! ID: {post_id}")
+    print("👉 Open Instagram → Profile → Scheduled content → add music → publish")
 
     log_to_notion(content, post_id)
     print("🎉 Done!")
