@@ -1,153 +1,255 @@
-// Mobile menu toggle
-const menuToggle = document.getElementById('menuToggle');
-const nav = document.getElementById('nav');
+/* Swimnexar — main.js */
 
-if (menuToggle && nav) {
-    menuToggle.addEventListener('click', () => {
-        menuToggle.classList.toggle('active');
-        nav.classList.toggle('active');
-    });
+const APPS_SCRIPT_URL = 'YOUR_GOOGLE_APPS_SCRIPT_URL_HERE';
 
-    // Close menu when clicking a link
-    nav.querySelectorAll('.nav-link').forEach(link => {
-        link.addEventListener('click', () => {
-            menuToggle.classList.remove('active');
-            nav.classList.remove('active');
-        });
+/* ── Entry popup ── */
+const overlay    = document.getElementById('entryOverlay');
+const pickWP     = document.getElementById('pickWaterpolo');
+
+if (overlay) {
+  // Show popup unless already dismissed this session
+  if (!sessionStorage.getItem('programChosen')) {
+    document.body.style.overflow = 'hidden';
+  } else {
+    overlay.classList.add('hidden');
+  }
+
+  // Water polo → close popup, stay on page
+  if (pickWP) {
+    pickWP.addEventListener('click', () => {
+      sessionStorage.setItem('programChosen', 'waterpolo');
+      overlay.classList.add('hidden');
+      document.body.style.overflow = '';
     });
+  }
+
+  // Swim team card is an <a href="swimteam.html"> — navigates naturally
+  // Store choice before nav
+  const pickST = overlay.querySelector('.entry-card.swimteam');
+  if (pickST) {
+    pickST.addEventListener('click', () => {
+      sessionStorage.setItem('programChosen', 'swimteam');
+    });
+  }
 }
 
-// Header scroll effect
-const header = document.querySelector('.header');
-
+/* ── Header scroll ── */
+const header = document.getElementById('header');
 if (header) {
-    window.addEventListener('scroll', () => {
-        if (window.scrollY > 50) {
-            header.style.boxShadow = '0 4px 20px rgba(0,0,0,0.1)';
-        } else {
-            header.style.boxShadow = 'none';
-        }
-    });
+  const tick = () => header.classList.toggle('scrolled', window.scrollY > 50);
+  window.addEventListener('scroll', tick, { passive: true });
+  tick();
 }
 
-// Scroll animations
-const observerOptions = {
-    threshold: 0.1,
-    rootMargin: '0px 0px -50px 0px'
-};
-
-const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-        if (entry.isIntersecting) {
-            entry.target.classList.add('visible');
-        }
-    });
-}, observerOptions);
-
-// Observe elements for scroll animation
-document.querySelectorAll('.program-card, .feature, .product-card, .coach-card').forEach(el => {
-    observer.observe(el);
-});
-
-// Smooth scroll for anchor links
-document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-    anchor.addEventListener('click', function (e) {
-        const href = this.getAttribute('href');
-        if (href !== '#') {
-            e.preventDefault();
-            const target = document.querySelector(href);
-            if (target) {
-                target.scrollIntoView({
-                    behavior: 'smooth',
-                    block: 'start'
-                });
-            }
-        }
-    });
-});
-
-// Form validation (for contact page)
-const contactForm = document.querySelector('.contact-form form');
-
-if (contactForm) {
-    contactForm.addEventListener('submit', (e) => {
-        e.preventDefault();
-
-        // Basic validation
-        const name = contactForm.querySelector('input[name="name"]');
-        const email = contactForm.querySelector('input[name="email"]');
-        const message = contactForm.querySelector('textarea[name="message"]');
-
-        let isValid = true;
-
-        if (name && !name.value.trim()) {
-            showError(name, 'Please enter your name');
-            isValid = false;
-        }
-
-        if (email && !isValidEmail(email.value)) {
-            showError(email, 'Please enter a valid email');
-            isValid = false;
-        }
-
-        if (message && !message.value.trim()) {
-            showError(message, 'Please enter a message');
-            isValid = false;
-        }
-
-        if (isValid) {
-            // Show success message
-            alert('Thank you for your message! We will get back to you soon.');
-            contactForm.reset();
-        }
-    });
+/* ── Mobile menu ── */
+const menuBtn = document.getElementById('menuBtn');
+const nav     = document.getElementById('nav');
+if (menuBtn && nav) {
+  menuBtn.addEventListener('click', () => {
+    const open = nav.classList.toggle('open');
+    menuBtn.classList.toggle('open', open);
+    document.body.style.overflow = open ? 'hidden' : '';
+  });
+  nav.querySelectorAll('.nav-link').forEach(l => l.addEventListener('click', () => {
+    nav.classList.remove('open');
+    menuBtn.classList.remove('open');
+    document.body.style.overflow = '';
+  }));
 }
 
-function showError(input, message) {
-    input.style.borderColor = '#ef4444';
-    input.placeholder = message;
-
-    setTimeout(() => {
-        input.style.borderColor = '';
-        input.placeholder = '';
-    }, 3000);
+/* ── Scroll reveal ── */
+const revealEls = document.querySelectorAll('.reveal, .reveal-l, .reveal-r');
+if (revealEls.length) {
+  const ro = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); ro.unobserve(e.target); } });
+  }, { threshold: 0.12, rootMargin: '0px 0px -48px 0px' });
+  revealEls.forEach(el => ro.observe(el));
 }
 
-function isValidEmail(email) {
-    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-}
-
-// Add to cart notification
-document.querySelectorAll('.snipcart-add-item').forEach(btn => {
-    btn.addEventListener('click', () => {
-        // Visual feedback
-        const originalText = btn.textContent;
-        btn.textContent = 'Added!';
-        btn.style.background = '#10b981';
-
-        setTimeout(() => {
-            btn.textContent = originalText;
-            btn.style.background = '';
-        }, 1500);
+/* ── FAQ accordion ── */
+document.querySelectorAll('.faq-item').forEach(item => {
+  const q = item.querySelector('.faq-q');
+  const a = item.querySelector('.faq-a');
+  if (!q || !a) return;
+  q.addEventListener('click', () => {
+    const open = item.classList.contains('open');
+    document.querySelectorAll('.faq-item.open').forEach(x => {
+      x.classList.remove('open');
+      x.querySelector('.faq-a').style.maxHeight = '0';
     });
-});
-
-// Page transition effect
-document.addEventListener('DOMContentLoaded', () => {
-    document.body.style.opacity = '0';
-    setTimeout(() => {
-        document.body.style.transition = 'opacity 0.3s ease';
-        document.body.style.opacity = '1';
-    }, 100);
-});
-
-// Active nav link based on current page
-const currentPage = window.location.pathname.split('/').pop() || 'index.html';
-document.querySelectorAll('.nav-link').forEach(link => {
-    const href = link.getAttribute('href');
-    if (href === currentPage) {
-        link.classList.add('active');
-    } else {
-        link.classList.remove('active');
+    if (!open) {
+      item.classList.add('open');
+      a.style.maxHeight = a.scrollHeight + 'px';
     }
+  });
 });
+
+/* ── Smooth scroll ── */
+document.querySelectorAll('a[href^="#"]').forEach(a => {
+  a.addEventListener('click', e => {
+    const target = document.querySelector(a.getAttribute('href'));
+    if (!target) return;
+    e.preventDefault();
+    const top = target.getBoundingClientRect().top + window.scrollY - (header ? header.offsetHeight + 16 : 80);
+    window.scrollTo({ top, behavior: 'smooth' });
+  });
+});
+
+/* ── Lightbox ── */
+(function () {
+  const lb = document.createElement('div');
+  lb.className = 'lightbox';
+  lb.innerHTML = '<button class="lightbox-close" aria-label="Close">✕</button><img src="" alt="">';
+  document.body.appendChild(lb);
+
+  const lbImg = lb.querySelector('img');
+
+  document.querySelectorAll('.gal-item img').forEach(img => {
+    img.addEventListener('click', () => {
+      lbImg.src = img.src;
+      lbImg.alt = img.alt;
+      lb.classList.add('open');
+      document.body.style.overflow = 'hidden';
+    });
+  });
+
+  function closeLb() {
+    lb.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  lb.addEventListener('click', e => { if (e.target !== lbImg) closeLb(); });
+  lb.querySelector('.lightbox-close').addEventListener('click', closeLb);
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLb(); });
+})();
+
+/* ── Program select → swap waiver link ── */
+const programSelect = document.getElementById('programSelect');
+const waiverLink    = document.getElementById('waiverLink');
+
+if (programSelect && waiverLink) {
+  const waiverData = {
+    waterpolo: { href: 'waterpolo-terms.html', text: 'Water Polo Tryout Terms & Conditions' },
+    swimteam:  { href: 'swimteam-terms.html',  text: 'Swim Team Free Trial Terms & Conditions' }
+  };
+  programSelect.addEventListener('change', () => {
+    const d = waiverData[programSelect.value];
+    if (!d) return;
+    waiverLink.href = d.href;
+    waiverLink.textContent = d.text;
+    const waiverCheck = document.getElementById('waiverCheck');
+    if (waiverCheck) waiverCheck.checked = false;
+  });
+}
+
+/* ── Pricing age toggle ── */
+(function () {
+  const ageBtns = document.querySelectorAll('[data-age]');
+  if (!ageBtns.length) return;
+
+  ageBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      ageBtns.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const group = btn.dataset.age; // 'young' or 'teen'
+      document.querySelectorAll('.price-amount, .price-note').forEach(el => {
+        if (el.dataset[group]) el.textContent = el.dataset[group];
+      });
+    });
+  });
+})();
+
+/* ── Water polo swim gate ── */
+(function () {
+  const expSelect = document.getElementById('experienceSelect');
+  const gate      = document.getElementById('wpGate');
+  if (!expSelect || !gate || !programSelect) return;
+
+  function checkGate() {
+    const show = programSelect.value === 'waterpolo' && expSelect.value === 'none';
+    gate.style.display = show ? 'block' : 'none';
+  }
+
+  expSelect.addEventListener('change', checkGate);
+  programSelect.addEventListener('change', checkGate);
+
+  // Dismiss — coach will assess anyway
+  const gateDismiss = document.getElementById('gateDismiss');
+  if (gateDismiss) {
+    gateDismiss.addEventListener('click', () => {
+      gate.style.display = 'none';
+    });
+  }
+})();
+
+/* ── Contact form → Google Sheets ── */
+const form      = document.getElementById('contactForm');
+const submitBtn = document.getElementById('submitBtn');
+const formMsg   = document.getElementById('formMsg');
+
+if (form) {
+  form.addEventListener('submit', async e => {
+    e.preventDefault();
+
+    // Honeypot check — bots fill hidden field, humans don't see it
+    if (form.querySelector('[name="_hp"]')?.value) return;
+
+    // Validate required fields
+    let valid = true;
+    form.querySelectorAll('[required]').forEach(f => {
+      f.style.borderColor = '';
+      if (f.type === 'checkbox') {
+        if (!f.checked) { f.style.outline = '2px solid #ef4444'; valid = false; }
+        else { f.style.outline = ''; }
+      } else {
+        if (!f.value.trim()) { f.style.borderColor = '#ef4444'; valid = false; }
+      }
+    });
+    if (!valid) { showMsg('err', 'Please fill in all required fields and accept the Terms & Conditions.'); return; }
+
+    const data = Object.fromEntries(new FormData(form).entries());
+    delete data['_hp']; // strip honeypot before sending
+    data.submittedAt = new Date().toLocaleString('en-US', { timeZone: 'America/New_York' });
+
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Sending…';
+    hideMsg();
+
+    // Fallback to mailto if script not configured
+    if (!APPS_SCRIPT_URL || APPS_SCRIPT_URL.includes('YOUR_')) {
+      const body = Object.entries(data).map(([k,v]) => `${k}: ${v}`).join('\n');
+      window.open(`mailto:swimnexar@gmail.com?subject=New Registration: ${data.parentName}&body=${encodeURIComponent(body)}`);
+      showMsg('ok', '✅ Opening your email app. Alternatively, reach us at swimnexar@gmail.com or WhatsApp +1 838-333-0666.');
+      form.reset();
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Submit — First Practice is FREE →';
+      return;
+    }
+
+    try {
+      await fetch(APPS_SCRIPT_URL, {
+        method: 'POST', mode: 'no-cors',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+      });
+      showMsg('ok', '✅ Thank you! We\'ll contact you within 24 hours to schedule your free first practice.');
+      form.reset();
+    } catch {
+      showMsg('err', '❌ Something went wrong. Please email swimnexar@gmail.com or WhatsApp +1 838-333-0666.');
+    } finally {
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Submit — First Practice is FREE →';
+    }
+  });
+}
+
+function showMsg(type, text) {
+  if (!formMsg) return;
+  formMsg.className = 'form-msg ' + type;
+  formMsg.textContent = text;
+  formMsg.style.display = 'block';
+  formMsg.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+function hideMsg() {
+  if (formMsg) formMsg.style.display = 'none';
+}

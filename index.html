@@ -1,219 +1,312 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Swimnexar - Premier swimming and water polo programs for ages 5-18. Join our team today!">
-    <title>Swimnexar | Swim & Water Polo Academy</title>
-    <link rel="stylesheet" href="css/style.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <!-- Snipcart -->
-    <link rel="preconnect" href="https://app.snipcart.com">
-    <link rel="stylesheet" href="https://cdn.snipcart.com/themes/v3.2.0/default/snipcart.css" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Swimnexar – Youth Water Polo & Swim Academy. Wesley Chapel, FL. First practice free!">
+  <title>Swimnexar | Water Polo & Swim Academy — Wesley Chapel, FL</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    /* Entry-only page overrides */
+    body { background: #0d0d0d; overflow-x: hidden; overflow-y: auto; }
+
+    .entry-page {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 32px 24px;
+      position: relative;
+    }
+
+    /* Background photo behind everything */
+    .entry-bg {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+    }
+    .entry-bg img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+      filter: brightness(0.35);
+    }
+
+    .entry-content {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+      max-width: 920px;
+      width: 100%;
+    }
+
+    .entry-logo {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 24px;
+      font-weight: 900;
+      color: var(--white);
+      margin-bottom: 40px;
+    }
+    .entry-logo img {
+      height: 36px;
+      filter: brightness(0) invert(1);
+    }
+
+    .entry-headline {
+      font-size: clamp(28px, 5vw, 48px);
+      font-weight: 900;
+      color: var(--white);
+      letter-spacing: -1.5px;
+      margin-bottom: 12px;
+    }
+    .entry-sub {
+      font-size: 16px;
+      color: rgba(255,255,255,.55);
+      margin-bottom: 48px;
+    }
+
+    /* Brand headline */
+    .entry-brand { margin-bottom: 36px; }
+    .entry-brand-label {
+      font-size: 11px; font-weight: 700; letter-spacing: 2px;
+      text-transform: uppercase; color: rgba(255,255,255,.4);
+      margin-bottom: 10px;
+    }
+
+    /* Cards grid */
+    .choice-cards {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+    .choice-cards-4 { grid-template-columns: 1fr 1fr; }
+
+    .choice-card {
+      position: relative;
+      border-radius: 20px;
+      overflow: hidden;
+      cursor: pointer;
+      border: 2px solid transparent;
+      transition: all .3s ease;
+      display: block;
+      text-decoration: none;
+    }
+    .choice-card:hover {
+      transform: translateY(-6px);
+    }
+    .choice-card.wp:hover { border-color: #d42b2b; box-shadow: 0 20px 60px rgba(212,43,43,.35); }
+    .choice-card.st:hover { border-color: #1a56db; box-shadow: 0 20px 60px rgba(26,86,219,.35); }
+
+    .choice-bg {
+      position: absolute;
+      inset: 0;
+    }
+    .choice-bg img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform .5s ease;
+    }
+    .choice-card:hover .choice-bg img { transform: scale(1.04); }
+
+    .choice-dim {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(0,0,0,.92) 0%, rgba(0,0,0,.3) 60%, transparent 100%);
+    }
+
+    .choice-body {
+      position: relative;
+      z-index: 1;
+      padding: 120px 24px 28px;
+      text-align: left;
+    }
+
+    .choice-tag {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      padding: 5px 14px;
+      border-radius: 50px;
+      color: var(--white);
+      margin-bottom: 14px;
+    }
+    .wp .choice-tag { background: #d42b2b; }
+    .st .choice-tag { background: #1a56db; }
+
+    .choice-body h2 {
+      font-size: 30px;
+      font-weight: 900;
+      color: var(--white);
+      margin-bottom: 6px;
+      letter-spacing: -.5px;
+    }
+    .choice-body p {
+      font-size: 14px;
+      color: rgba(255,255,255,.6);
+      margin-bottom: 22px;
+    }
+    .choice-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--white);
+      padding: 11px 22px;
+      border-radius: 50px;
+      transition: gap .25s ease;
+    }
+    .wp .choice-cta       { background: #d42b2b; }
+    .st .choice-cta       { background: #1a56db; }
+    .online .choice-cta   { background: #7c3aed; }
+    .coaching .choice-cta { background: #059669; }
+    .choice-card:hover .choice-cta { gap: 14px; }
+
+    .online:hover   { border-color: #7c3aed; box-shadow: 0 20px 60px rgba(124,58,237,.35); }
+    .coaching:hover { border-color: #059669; box-shadow: 0 20px 60px rgba(5,150,105,.35); }
+
+    .coming-soon { opacity: .75; }
+    .coming-soon::before { content: '🔔 '; font-size: 12px; }
+
+    .choice-play {
+      position: absolute; top: 50%; left: 50%;
+      transform: translate(-50%, -60%);
+      width: 52px; height: 52px; border-radius: 50%;
+      background: rgba(255,255,255,.18);
+      border: 2px solid rgba(255,255,255,.5);
+      backdrop-filter: blur(4px);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px; color: #fff; z-index: 1;
+      pointer-events: none;
+      padding-left: 4px;
+    }
+
+    .entry-footer {
+      margin-top: 32px;
+      font-size: 13px;
+      color: rgba(255,255,255,.3);
+    }
+    .entry-footer a { color: rgba(255,255,255,.5); }
+    .entry-footer a:hover { color: var(--white); }
+
+    @media (max-width: 640px) {
+      .choice-cards { grid-template-columns: 1fr; }
+      .choice-body { padding-top: 100px; }
+      body { overflow: auto; }
+      .entry-page { min-height: 100svh; padding: 24px 16px; }
+      .entry-headline { font-size: clamp(22px, 6vw, 32px); }
+    }
+  </style>
 </head>
 <body>
-    <!-- Header -->
-    <header class="header">
-        <div class="container">
-            <a href="index.html" class="logo">
-                <span class="logo-icon">🏊</span>
-                <span class="logo-text">Swimnexar</span>
-            </a>
-            <nav class="nav" id="nav">
-                <a href="index.html" class="nav-link active">Home</a>
-                <a href="programs.html" class="nav-link">Programs</a>
-                <a href="coaches.html" class="nav-link">Coaches</a>
-                <a href="shop.html" class="nav-link">Shop</a>
-                <a href="about.html" class="nav-link">About</a>
-                <a href="contact.html" class="nav-link">Contact</a>
-            </nav>
-            <button class="cart-btn snipcart-checkout">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <circle cx="9" cy="21" r="1"></circle>
-                    <circle cx="20" cy="21" r="1"></circle>
-                    <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
-                </svg>
-                <span class="snipcart-items-count">0</span>
-            </button>
-            <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu">
-                <span></span>
-                <span></span>
-                <span></span>
-            </button>
-        </div>
-    </header>
 
-    <!-- Hero Section -->
-    <section class="hero">
-        <div class="hero-bg"></div>
-        <div class="container">
-            <div class="hero-content">
-                <h1 class="hero-title">
-                    Dive Into
-                    <span class="highlight">Excellence</span>
-                </h1>
-                <p class="hero-subtitle">Premier swimming and water polo training for athletes ages 5-18. Build skills, confidence, and lifelong friendships.</p>
-                <div class="hero-buttons">
-                    <a href="programs.html" class="btn btn-primary">View Programs</a>
-                    <a href="contact.html" class="btn btn-secondary">Get Started</a>
-                </div>
-                <div class="hero-stats">
-                    <div class="stat">
-                        <span class="stat-number">500+</span>
-                        <span class="stat-label">Athletes Trained</span>
-                    </div>
-                    <div class="stat">
-                        <span class="stat-number">15+</span>
-                        <span class="stat-label">Years Experience</span>
-                    </div>
-                    <div class="stat">
-                        <span class="stat-number">98%</span>
-                        <span class="stat-label">Parent Satisfaction</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="hero-wave">
-            <svg viewBox="0 0 1440 120" preserveAspectRatio="none">
-                <path d="M0,64 C288,120 720,0 1440,64 L1440,120 L0,120 Z" fill="white"/>
-            </svg>
-        </div>
-    </section>
+  <!-- Background -->
+  <div class="entry-bg">
+    <img src="https://images.pexels.com/photos/3800510/pexels-photo-3800510.jpeg?auto=compress&cs=tinysrgb&w=1920"
+         alt="Water polo action" loading="eager">
+  </div>
 
-    <!-- Programs Preview -->
-    <section class="programs-section">
-        <div class="container">
-            <div class="section-header">
-                <h2 class="section-title">Our Programs</h2>
-                <p class="section-subtitle">Comprehensive training programs designed for every skill level</p>
-            </div>
-            <div class="programs-grid">
-                <div class="program-card">
-                    <div class="program-icon">🏊‍♂️</div>
-                    <h3>Swim Team</h3>
-                    <p class="program-ages">Ages 5-12</p>
-                    <p>Build strong swimming foundations with technique-focused training and fun competitions.</p>
-                    <ul class="program-features">
-                        <li>Stroke development</li>
-                        <li>Competitive training</li>
-                        <li>Team building</li>
-                    </ul>
-                    <a href="programs.html#swim" class="btn btn-outline">Learn More</a>
-                </div>
-                <div class="program-card featured">
-                    <div class="program-badge">Popular</div>
-                    <div class="program-icon">🤽</div>
-                    <h3>Water Polo</h3>
-                    <p class="program-ages">Ages 8-18</p>
-                    <p>Dynamic water polo training combining swimming skills with strategic team play.</p>
-                    <ul class="program-features">
-                        <li>Ball handling skills</li>
-                        <li>Game strategy</li>
-                        <li>Tournament prep</li>
-                    </ul>
-                    <a href="programs.html#waterpolo" class="btn btn-primary">Learn More</a>
-                </div>
-                <div class="program-card">
-                    <div class="program-icon">🏅</div>
-                    <h3>Elite Training</h3>
-                    <p class="program-ages">Ages 12-18</p>
-                    <p>Advanced program for competitive athletes aiming for regional and national competitions.</p>
-                    <ul class="program-features">
-                        <li>Intensive coaching</li>
-                        <li>Performance analysis</li>
-                        <li>College prep</li>
-                    </ul>
-                    <a href="programs.html#elite" class="btn btn-outline">Learn More</a>
-                </div>
-            </div>
-        </div>
-    </section>
+  <div class="entry-page">
+    <div class="entry-content">
 
-    <!-- Why Choose Us -->
-    <section class="features-section">
-        <div class="container">
-            <div class="section-header">
-                <h2 class="section-title">Why Choose Swimnexar</h2>
-                <p class="section-subtitle">What sets us apart from other aquatic programs</p>
-            </div>
-            <div class="features-grid">
-                <div class="feature">
-                    <div class="feature-icon">👨‍🏫</div>
-                    <h3>Expert Coaches</h3>
-                    <p>Certified coaches with competitive swimming and water polo backgrounds</p>
-                </div>
-                <div class="feature">
-                    <div class="feature-icon">🏆</div>
-                    <h3>Proven Results</h3>
-                    <p>Our athletes consistently place in regional and state competitions</p>
-                </div>
-                <div class="feature">
-                    <div class="feature-icon">👨‍👩‍👧‍👦</div>
-                    <h3>Family Friendly</h3>
-                    <p>Welcoming environment for athletes and families alike</p>
-                </div>
-                <div class="feature">
-                    <div class="feature-icon">📍</div>
-                    <h3>Great Facilities</h3>
-                    <p>Modern pools and equipment for optimal training conditions</p>
-                </div>
-            </div>
-        </div>
-    </section>
+      <!-- Logo -->
+      <div class="entry-logo">
+        <img src="https://swimnexar.com/wp-content/uploads/2025/10/header-title-scaled-129x47.png" alt="Swimnexar">
+        Swimnexar
+      </div>
 
-    <!-- CTA Section -->
-    <section class="cta-section">
-        <div class="container">
-            <div class="cta-content">
-                <h2>Ready to Make a Splash?</h2>
-                <p>Join our community of athletes and start your aquatic journey today.</p>
-                <a href="contact.html" class="btn btn-white">Contact Us</a>
-            </div>
-        </div>
-    </section>
+      <!-- Brand headline -->
+      <div class="entry-brand">
+        <p class="entry-brand-label">Nexar Aquatic Academy · Pasco County, FL</p>
+        <h1 class="entry-headline">Not just a swim club.</h1>
+        <p class="entry-sub">We build complete aquatic athletes — from a child's first splash<br>to their college scholarship. In the water and beyond.</p>
+      </div>
 
-    <!-- Footer -->
-    <footer class="footer">
-        <div class="container">
-            <div class="footer-grid">
-                <div class="footer-brand">
-                    <a href="index.html" class="logo">
-                        <span class="logo-icon">🏊</span>
-                        <span class="logo-text">Swimnexar</span>
-                    </a>
-                    <p>Premier swimming and water polo academy dedicated to developing athletes of all levels.</p>
-                </div>
-                <div class="footer-links">
-                    <h4>Programs</h4>
-                    <a href="programs.html#swim">Swim Team</a>
-                    <a href="programs.html#waterpolo">Water Polo</a>
-                    <a href="programs.html#elite">Elite Training</a>
-                </div>
-                <div class="footer-links">
-                    <h4>Company</h4>
-                    <a href="about.html">About Us</a>
-                    <a href="coaches.html">Coaches</a>
-                    <a href="contact.html">Contact</a>
-                </div>
-                <div class="footer-links">
-                    <h4>Shop</h4>
-                    <a href="shop.html">All Products</a>
-                    <a href="shop.html#gear">Swim Gear</a>
-                    <a href="shop.html#apparel">Apparel</a>
-                </div>
-            </div>
-            <div class="footer-bottom">
-                <p>&copy; 2026 Swimnexar. All rights reserved.</p>
-            </div>
-        </div>
-    </footer>
+      <!-- 4 program cards — 2×2 grid -->
+      <div class="choice-cards choice-cards-4">
 
-    <!-- Snipcart -->
-    <script async src="https://cdn.snipcart.com/themes/v3.2.0/default/snipcart.js"></script>
-    <div hidden id="snipcart" data-api-key="YOUR_SNIPCART_API_KEY"></div>
+        <!-- Water Polo -->
+        <a class="choice-card wp" href="waterpolo.html">
+          <div class="choice-bg">
+            <img src="https://images.pexels.com/photos/3639466/pexels-photo-3639466.jpeg?auto=compress&cs=tinysrgb&w=900"
+                 alt="Water Polo" loading="eager">
+          </div>
+          <div class="choice-dim"></div>
+          <div class="choice-body">
+            <span class="choice-tag">🤽 Water Polo</span>
+            <h2>Water Polo</h2>
+            <p>Ages 8–18 · Land O' Lakes, FL<br>Mon / Wed / Fri · First practice free</p>
+            <span class="choice-cta">Get Started →</span>
+          </div>
+        </a>
 
-    <script src="js/main.js"></script>
+        <!-- Swim Team -->
+        <a class="choice-card st" href="swimteam.html">
+          <div class="choice-bg">
+            <img src="https://images.pexels.com/photos/863988/pexels-photo-863988.jpeg?auto=compress&cs=tinysrgb&w=900"
+                 alt="Swim Team" loading="eager">
+          </div>
+          <div class="choice-dim"></div>
+          <div class="choice-body">
+            <span class="choice-tag">🏊 Swim Team</span>
+            <h2>Swim Team</h2>
+            <p>Ages 5–12 · Wesley Chapel, FL<br>First lesson free</p>
+            <span class="choice-cta">Learn More →</span>
+          </div>
+        </a>
+
+        <!-- Online Course -->
+        <a class="choice-card online" href="#online">
+          <div class="choice-bg">
+            <img src="https://images.pexels.com/photos/32928609/pexels-photo-32928609.jpeg?auto=compress&cs=tinysrgb&w=900"
+                 alt="Parent and child swimming lesson" loading="lazy">
+          </div>
+          <div class="choice-dim"></div>
+          <div class="choice-body">
+            <span class="choice-tag">📱 Online · $39.99</span>
+            <h2>Parent & Child Course</h2>
+            <p>10 fun lessons · Prep your child<br>for their first swim lesson · Any pool</p>
+            <span class="choice-cta coming-soon">Coming Soon →</span>
+          </div>
+        </a>
+
+        <!-- 1-on-1 Coaching -->
+        <a class="choice-card coaching" href="mailto:swimnexar@gmail.com?subject=Book%20a%20Session%20with%20Coach%20Alex">
+          <div class="choice-bg">
+            <img src="https://images.pexels.com/photos/3205403/pexels-photo-3205403.jpeg?auto=compress&cs=tinysrgb&w=900"
+                 alt="Video coaching session on laptop" loading="lazy" style="object-position:center 40%;">
+          </div>
+          <div class="choice-dim"></div>
+          <div class="choice-body">
+            <span class="choice-tag">🎓 1-on-1 · Zoom / In-Person</span>
+            <h2>Coach Alex Sessions</h2>
+            <p>Video technique analysis · College<br>recruitment prep · Athlete development</p>
+            <span class="choice-cta">Book a Session →</span>
+          </div>
+        </a>
+
+      </div>
+
+      <div class="entry-footer">
+        <a href="mailto:swimnexar@gmail.com">swimnexar@gmail.com</a>
+        &nbsp;·&nbsp;
+        <a href="tel:+18383330666">+1 (838) 333-0666</a>
+        &nbsp;·&nbsp;
+        <a href="support.html">Support Us</a>
+      </div>
+
+    </div>
+  </div>
+
 </body>
 </html>
