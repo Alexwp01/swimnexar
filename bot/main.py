@@ -378,20 +378,49 @@ def create_carousel_images(content, cover_img):
     return images
 
 # ── Step 4: Upload cover to public URL for Instagram API ─────
-def upload_to_public_url(image_path):
-    print("⬆️  Uploading cover image...")
-    with open(image_path, "rb") as f:
+def _try_litterbox(path):
+    with open(path, "rb") as f:
         r = requests.post(
-            "https://catbox.moe/user/api.php",
-            data={"reqtype": "fileupload"},
+            "https://litterbox.catbox.moe/resources/internals/api.php",
+            data={"reqtype": "fileupload", "time": "72h"},
             files={"fileToUpload": ("cover.jpg", f, "image/jpeg")},
             timeout=30,
         )
     if r.status_code == 200 and r.text.strip().startswith("https://"):
-        url = r.text.strip()
-        print(f"  URL: {url}")
-        return url
-    raise RuntimeError(f"Upload failed ({r.status_code}): {r.text[:200]}")
+        return r.text.strip()
+    raise RuntimeError(f"litterbox: {r.status_code} {r.text[:100]}")
+
+def _try_uguu(path):
+    with open(path, "rb") as f:
+        r = requests.post(
+            "https://uguu.se/upload.php",
+            files={"files[]": ("cover.jpg", f, "image/jpeg")},
+            timeout=30,
+        )
+    if r.status_code == 200:
+        return r.json()["files"][0]["url"]
+    raise RuntimeError(f"uguu: {r.status_code} {r.text[:100]}")
+
+def _try_transfersh(path):
+    with open(path, "rb") as f:
+        r = requests.put(
+            "https://transfer.sh/swimnexar_cover.jpg",
+            data=f, headers={"Max-Days": "1"}, timeout=30,
+        )
+    if r.status_code == 200:
+        return r.text.strip()
+    raise RuntimeError(f"transfer.sh: {r.status_code} {r.text[:100]}")
+
+def upload_to_public_url(image_path):
+    print("⬆️  Uploading cover image...")
+    for fn in [_try_litterbox, _try_uguu, _try_transfersh]:
+        try:
+            url = fn(image_path)
+            print(f"  URL: {url}")
+            return url
+        except Exception as e:
+            print(f"  {e} — trying next service...")
+    raise RuntimeError("All upload services failed")
 
 # ── Step 5: Schedule Instagram post (24 h ahead) ─────────────
 def post_to_instagram(images, caption):
