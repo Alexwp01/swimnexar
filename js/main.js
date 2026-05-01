@@ -1,6 +1,41 @@
 /* Swimnexar — main.js */
 
-const APPS_SCRIPT_URL = 'YOUR_GOOGLE_APPS_SCRIPT_URL_HERE';
+/* ── Google Forms submission ── */
+const _GF = {
+  waterpolo: {
+    url: 'https://docs.google.com/forms/d/e/1FAIpQLSc2VkPrjFW_vxi1wY391Xwt1gBcoX6M6r9lEobDLSumkBNFLg/formResponse',
+    map: d => ({
+      'entry.2092238618': d.parentName  || '',
+      'entry.1556369182': d.email       || '',
+      'entry.479301265':  d.phone       || '',
+      'entry.588393791':  d.childName   || '',
+      'entry.1753222212': d.experience  || '',
+      'entry.1795103341': d.waiver ? 'By signing, you agree to "Terms and Conditions"' : '',
+    })
+  },
+  swimteam: {
+    url: 'https://docs.google.com/forms/d/e/1FAIpQLSeQ1dlFbdOW5UnvCg9qh77FWpoRUl38vjPCuTacGK_iUq2pMA/formResponse',
+    map: d => ({
+      'entry.1556369182': d.email       || '',
+      'entry.2092238618': d.parentName  || '',
+      'entry.479301265':  d.email       || '',
+      'entry.1753222212': d.phone       || '',
+      'entry.588393791':  d.childName   || '',
+      'entry.361570756':  d.experience  || '',
+      'entry.2022420186': d.waiver ? 'By signing, you agree to "Terms and Conditions"' : '',
+    })
+  }
+};
+
+async function submitToGoogleForms(data) {
+  const key = window.location.pathname.includes('swimteam') ? 'swimteam' : 'waterpolo';
+  const gf  = _GF[key];
+  const fd  = new FormData();
+  Object.entries(gf.map(data)).forEach(([k, v]) => fd.append(k, v));
+  try {
+    await fetch(gf.url, { method: 'POST', mode: 'no-cors', body: fd });
+  } catch (_) { /* no-cors always rejects - that's expected, form still submits */ }
+}
 
 /* ── Entry popup ── */
 const overlay    = document.getElementById('entryOverlay');
@@ -207,31 +242,17 @@ if (form) {
     });
     if (!valid) { showMsg('err', 'Please fill in all required fields and accept the Terms & Conditions.'); return; }
 
-    const data = Object.fromEntries(new FormData(form).entries());
-    delete data['_hp']; // strip honeypot before sending
-    data.submittedAt = new Date().toLocaleString('en-US', { timeZone: 'America/New_York' });
+    const rawData = Object.fromEntries(new FormData(form).entries());
+    delete rawData['_hp'];
+    // include waiver checked state (checkbox not in FormData when unchecked)
+    rawData.waiver = form.querySelector('[name="waiver"]')?.checked || false;
 
     submitBtn.disabled = true;
     submitBtn.textContent = 'Sending…';
     hideMsg();
 
-    // Fallback to mailto if script not configured
-    if (!APPS_SCRIPT_URL || APPS_SCRIPT_URL.includes('YOUR_')) {
-      const body = Object.entries(data).map(([k,v]) => `${k}: ${v}`).join('\n');
-      window.open(`mailto:swimnexar@gmail.com?subject=New Registration: ${data.parentName}&body=${encodeURIComponent(body)}`);
-      showMsg('ok', '✅ Opening your email app. Alternatively, reach us at swimnexar@gmail.com or WhatsApp +1 838-333-0666.');
-      form.reset();
-      submitBtn.disabled = false;
-      submitBtn.textContent = 'Submit — First Practice is FREE →';
-      return;
-    }
-
     try {
-      await fetch(APPS_SCRIPT_URL, {
-        method: 'POST', mode: 'no-cors',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data),
-      });
+      await submitToGoogleForms(rawData);
       showMsg('ok', '✅ Thank you! We\'ll contact you within 24 hours to schedule your free first practice.');
       form.reset();
     } catch {
