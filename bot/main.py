@@ -422,21 +422,17 @@ def upload_to_public_url(image_path):
             print(f"  {e} — trying next service...")
     raise RuntimeError("All upload services failed")
 
-# ── Step 5: Schedule Instagram post (24 h ahead) ─────────────
+# ── Step 5: Post to Instagram ────────────────────────────────
 def post_to_instagram(images, caption):
-    """Schedules post 24 h from now — open Instagram → Scheduled content to add music."""
-    print("📅 Scheduling Instagram post for 24 hours from now...")
+    print("📱 Posting to Instagram...")
     base = "https://graph.instagram.com/v21.0"
 
-    cover_url    = upload_to_public_url(images[0])
-    scheduled_ts = int(time.time()) + 86400
+    cover_url = upload_to_public_url(images[0])
 
     r = requests.post(f"{base}/{IG_USER_ID}/media", data={
-        "image_url":              cover_url,
-        "caption":                caption,
-        "published":              "false",
-        "scheduled_publish_time": scheduled_ts,
-        "access_token":           IG_TOKEN,
+        "image_url":    cover_url,
+        "caption":      caption,
+        "access_token": IG_TOKEN,
     })
     container = r.json()
     print(f"Container: {container}")
@@ -450,9 +446,7 @@ def post_to_instagram(images, caption):
         "access_token": IG_TOKEN,
     })
     result = r2.json()
-    scheduled_at = datetime.fromtimestamp(scheduled_ts, tz=timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
-    print(f"Scheduled for {scheduled_at}: {result}")
-    print("👉 Instagram → Profile → Scheduled content → add music → publish")
+    print(f"Published: {result}")
     return result.get("id")
 
 # ── Step 6: Log to Notion ─────────────────────────────────────
