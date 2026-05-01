@@ -182,7 +182,7 @@ Return ONLY valid JSON with this exact structure:
     {{"title": "Come Try It Free", "body": "First practice FREE · Ages 8–18 · Land O' Lakes & Wesley Chapel, FL · swimnexar.com"}}
   ],
   "caption": "150-200 words, starts with a hook question or bold statement, practical value in the middle, ends with CTA. Hashtags: #waterpolo #swimming #youthsports #swimteam #wesleychapel #florida #aquatics #swimnexar #collegeprep #scholarship",
-  "image_prompt": "Photorealistic dramatic sports photo: {topic_hint}. Professional athletics photography, moody underwater lighting or golden hour pool light, no text, cinematic"
+  "image_prompt": "Photorealistic dramatic sports photo related to the topic above. Professional athletics photography, moody underwater lighting or golden hour pool light, no text, cinematic"
 }}"""
 
     response = anthropic_client.messages.create(
