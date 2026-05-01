@@ -35,12 +35,11 @@ const _GF = {
 };
 
 async function submitToGoogleForms(data) {
-  const key = window.location.pathname.includes('swimteam') ? 'swimteam' : 'waterpolo';
-  const gf  = _GF[key];
-  const fd  = new FormData();
-  Object.entries(gf.map(data)).forEach(([k, v]) => fd.append(k, v));
-  // no-cors: browser sends the request, ignores response — no redirect, no new tab
-  await fetch(gf.url, { method: 'POST', mode: 'no-cors', body: fd });
+  const key    = window.location.pathname.includes('swimteam') ? 'swimteam' : 'waterpolo';
+  const gf     = _GF[key];
+  const params = new URLSearchParams(gf.map(data));
+  // URLSearchParams sends as application/x-www-form-urlencoded — what Google Forms expects
+  await fetch(gf.url, { method: 'POST', mode: 'no-cors', body: params });
 }
 
 /* ── Entry popup ── */
