@@ -1,6 +1,13 @@
 /* Swimnexar — main.js */
 
 /* ── Google Forms submission ── */
+const _EXP = {
+  'none':        "Beginner ( Can't swim independently )",
+  'strokes':     'Can swim freestyle & breaststroke',
+  'competitive': 'Competitive swimmer',
+  'waterpolo':   'Has played water polo before',
+};
+
 const _GF = {
   waterpolo: {
     url: 'https://docs.google.com/forms/d/e/1FAIpQLSc2VkPrjFW_vxi1wY391Xwt1gBcoX6M6r9lEobDLSumkBNFLg/formResponse',
@@ -9,7 +16,7 @@ const _GF = {
       'entry.1556369182': d.email       || '',
       'entry.479301265':  d.phone       || '',
       'entry.588393791':  d.childName   || '',
-      'entry.1753222212': d.experience  || '',
+      'entry.1753222212': _EXP[d.experience] || d.experience || '',
       'entry.1795103341': d.waiver ? 'By signing, you agree to "Terms and Conditions"' : '',
     })
   },
@@ -21,7 +28,7 @@ const _GF = {
       'entry.479301265':  d.email       || '',
       'entry.1753222212': d.phone       || '',
       'entry.588393791':  d.childName   || '',
-      'entry.361570756':  d.experience  || '',
+      'entry.361570756':  _EXP[d.experience] || d.experience || '',
       'entry.2022420186': d.waiver ? 'By signing, you agree to "Terms and Conditions"' : '',
     })
   }
