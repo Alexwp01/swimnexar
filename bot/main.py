@@ -253,7 +253,7 @@ def _make_cover(slide, cover_img, total):
     # Bottom strip
     draw.rectangle([0, H - 72, W, H], fill=(0, 0, 0, 180))
     draw = ImageDraw.Draw(img)
-    draw.text((44, H - 50), "swimnexar.com", font=_font(26, "regular"), fill=GRAY)
+    draw.text((44, H - 50), "Swimnexar Aquatic Academy", font=_font(26, "regular"), fill=GRAY)
 
     # Dots — bottom right area
     _dots(draw, total, 0, W - 110, H - 36)
@@ -306,7 +306,7 @@ def _make_content_slide(slide, idx, total):
 
     # Bottom bar
     draw.rectangle([0, H - 72, W, H], fill=DARKER)
-    draw.text((44, H - 50), "swimnexar.com", font=_font(24, "regular"), fill=LGRAY)
+    draw.text((44, H - 50), "Swimnexar Aquatic Academy", font=_font(24, "regular"), fill=LGRAY)
     _dots(draw, total, idx, W // 2, H - 36)
 
     return img
