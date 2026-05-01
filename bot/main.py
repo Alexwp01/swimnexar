@@ -1,4 +1,5 @@
 import os
+import re
 import json
 import time
 import requests
@@ -185,18 +186,27 @@ Return ONLY valid JSON with this exact structure:
   "image_prompt": "Photorealistic dramatic sports photo related to the topic above. Professional athletics photography, moody underwater lighting or golden hour pool light, no text, cinematic"
 }}"""
 
-    response = anthropic_client.messages.create(
-        model="claude-sonnet-4-6",
-        max_tokens=2000,
-        messages=[{"role": "user", "content": prompt}]
-    )
-
-    text = response.content[0].text.strip()
-    if text.startswith("```"):
-        text = text.split("```")[1]
-        if text.startswith("json"):
-            text = text[4:]
-    return json.loads(text.strip())
+    for attempt in range(3):
+        response = anthropic_client.messages.create(
+            model="claude-sonnet-4-6",
+            max_tokens=2000,
+            messages=[{"role": "user", "content": prompt}]
+        )
+        text = response.content[0].text.strip()
+        # Extract JSON block robustly
+        match = re.search(r'\{.*\}', text, re.DOTALL)
+        if match:
+            text = match.group()
+        elif text.startswith("```"):
+            text = text.split("```")[1]
+            if text.startswith("json"):
+                text = text[4:]
+        try:
+            return json.loads(text.strip())
+        except json.JSONDecodeError as e:
+            print(f"JSON parse error (attempt {attempt+1}): {e}")
+            if attempt == 2:
+                raise
 
 # ── Step 2: Generate cover image with Replicate ──────────────
 def generate_cover_image(prompt):
