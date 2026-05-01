@@ -1,45 +1,10 @@
 /* Swimnexar — main.js */
 
-/* ── Google Forms submission ── */
-const _EXP = {
-  'none':        "Beginner ( Can't swim independently )",
-  'strokes':     'Can swim freestyle & breaststroke',
-  'competitive': 'Competitive swimmer',
-  'waterpolo':   'Has played water polo before',
-};
-
-const _GF = {
-  waterpolo: {
-    url: 'https://docs.google.com/forms/d/e/1FAIpQLSc2VkPrjFW_vxi1wY391Xwt1gBcoX6M6r9lEobDLSumkBNFLg/formResponse',
-    map: d => ({
-      'entry.2092238618': d.parentName  || '',
-      'entry.1556369182': d.email       || '',
-      'entry.479301265':  d.phone       || '',
-      'entry.588393791':  d.childName   || '',
-      'entry.1753222212': _EXP[d.experience] || d.experience || '',
-      'entry.1795103341': d.waiver ? 'By signing, you agree to "Terms and Conditions"' : '',
-    })
-  },
-  swimteam: {
-    url: 'https://docs.google.com/forms/d/e/1FAIpQLSeQ1dlFbdOW5UnvCg9qh77FWpoRUl38vjPCuTacGK_iUq2pMA/formResponse',
-    map: d => ({
-      'entry.1556369182': d.email       || '',
-      'entry.2092238618': d.parentName  || '',
-      'entry.479301265':  d.email       || '',
-      'entry.1753222212': d.phone       || '',
-      'entry.588393791':  d.childName   || '',
-      'entry.361570756':  _EXP[d.experience] || d.experience || '',
-      'entry.2022420186': d.waiver ? 'By signing, you agree to "Terms and Conditions"' : '',
-    })
-  }
-};
+/* ── Form submission → Google Apps Script ── */
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzFaQscVvj-a6OWdvoZA9-QtxE_hXBWS8h8vDIT8Ihi9Jd-H5tj4bFFmtqstzrQaDHL/exec';
 
 async function submitToGoogleForms(data) {
-  const key    = window.location.pathname.includes('swimteam') ? 'swimteam' : 'waterpolo';
-  const gf     = _GF[key];
-  const params = new URLSearchParams(gf.map(data));
-  // URLSearchParams sends as application/x-www-form-urlencoded — what Google Forms expects
-  await fetch(gf.url, { method: 'POST', mode: 'no-cors', body: params });
+  await fetch(APPS_SCRIPT_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify(data) });
 }
 
 /* ── Entry popup ── */
@@ -249,8 +214,8 @@ if (form) {
 
     const rawData = Object.fromEntries(new FormData(form).entries());
     delete rawData['_hp'];
-    // include waiver checked state (checkbox not in FormData when unchecked)
-    rawData.waiver = form.querySelector('[name="waiver"]')?.checked || false;
+    rawData.waiver   = form.querySelector('[name="waiver"]')?.checked || false;
+    rawData.program  = rawData.program || (window.location.pathname.includes('swimteam') ? 'swimteam' : 'waterpolo');
 
     submitBtn.disabled = true;
     submitBtn.textContent = 'Sending…';
