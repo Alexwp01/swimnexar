@@ -167,7 +167,9 @@ Style rules:
 - Hook slide: bold statement or surprising fact, max 7 words, clear and polished
 - Tip slides: lead with the action, then explain — specific and concrete (say "6 kicks per arm stroke" not "kick properly")
 - Skip filler phrases like "it's important to", "make sure to", "don't forget"
-- Refer to young athletes as "young athletes", "swimmers", or "players" — not "kids" or "your kids"
+- Refer to athletes as "young athletes", "swimmers", or "players" — never "your kids", "your child", "your athlete"
+- Do NOT address parents directly ("you as a parent", "your child needs") — share knowledge as a coach, not as a teacher lecturing
+- Write as if sharing expertise with the community, not giving instructions to parents
 - CTA slide: warm and welcoming, never pushy or salesy
 
 Choose ONE topic from this list and create an Instagram carousel post:
