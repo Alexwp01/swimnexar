@@ -422,27 +422,51 @@ def upload_to_public_url(image_path):
             print(f"  {e} — trying next service...")
     raise RuntimeError("All upload services failed")
 
-# ── Step 5: Post to Instagram ────────────────────────────────
+# ── Step 5: Post carousel to Instagram ───────────────────────
 def post_to_instagram(images, caption):
-    print("📱 Posting to Instagram...")
+    print("📱 Posting carousel to Instagram...")
     base = "https://graph.instagram.com/v21.0"
 
-    cover_url = upload_to_public_url(images[0])
+    # Upload all slides
+    urls = []
+    for i, path in enumerate(images):
+        print(f"  Uploading slide {i+1}/{len(images)}...")
+        urls.append(upload_to_public_url(path))
 
+    # Create a media container for each slide
+    print("📦 Creating child containers...")
+    child_ids = []
+    for i, url in enumerate(urls):
+        r = requests.post(f"{base}/{IG_USER_ID}/media", data={
+            "image_url":        url,
+            "is_carousel_item": "true",
+            "access_token":     IG_TOKEN,
+        })
+        data = r.json()
+        print(f"  Slide {i+1}: {data}")
+        if "id" not in data:
+            print(f"❌ Child container failed: {data}")
+            return None
+        child_ids.append(data["id"])
+
+    # Create carousel container
+    print("🎠 Creating carousel container...")
     r = requests.post(f"{base}/{IG_USER_ID}/media", data={
-        "image_url":    cover_url,
+        "media_type":   "CAROUSEL",
+        "children":     ",".join(child_ids),
         "caption":      caption,
         "access_token": IG_TOKEN,
     })
-    container = r.json()
-    print(f"Container: {container}")
+    carousel = r.json()
+    print(f"Carousel: {carousel}")
 
-    if "id" not in container:
-        print(f"❌ Failed: {container}")
+    if "id" not in carousel:
+        print(f"❌ Carousel creation failed: {carousel}")
         return None
 
+    # Publish
     r2 = requests.post(f"{base}/{IG_USER_ID}/media_publish", data={
-        "creation_id":  container["id"],
+        "creation_id":  carousel["id"],
         "access_token": IG_TOKEN,
     })
     result = r2.json()
