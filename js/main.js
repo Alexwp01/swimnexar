@@ -164,6 +164,26 @@ if (programSelect && waiverLink) {
   });
 })();
 
+/* ── Waiver checkbox — locked until terms link is opened ── */
+(function () {
+  const check = document.getElementById('waiverCheck');
+  const link  = document.getElementById('waiverLink');
+  if (!check || !link) return;
+  check.disabled = true;
+  check.title    = 'Please open the Terms & Conditions link first';
+  link.addEventListener('click', () => {
+    check.disabled = false;
+    check.title    = '';
+  });
+  // Re-lock when program changes (link href swaps)
+  const sel = document.getElementById('programSelect');
+  if (sel) sel.addEventListener('change', () => {
+    check.disabled = true;
+    check.checked  = false;
+    check.title    = 'Please open the Terms & Conditions link first';
+  });
+})();
+
 /* ── Water polo swim gate ── */
 (function () {
   const expSelect = document.getElementById('experienceSelect');
