@@ -157,7 +157,7 @@ def _dots(draw, total, active, cx, y, r=6, gap=22):
 # ── Step 1: Generate content with Claude ─────────────────────
 def generate_content():
     print("🤖 Generating content with Claude...")
-    prompt = f"""You are a social media expert for Swimnexar Aquatic Academy in Wesley Chapel, FL.
+    prompt = f"""You are a social media expert for Nexar Aquatic Academy in Wesley Chapel, FL.
 We coach youth water polo (ages 8-18) and swim team (ages 5-12).
 Brand voice: confident, punchy, parent-friendly. Like a knowledgeable coach talking to a parent at the pool.
 IMPORTANT: All content must be written in American English only. Target audience is American parents and youth athletes.
@@ -235,9 +235,8 @@ def _make_cover(slide, cover_img, total):
     img = Image.alpha_composite(img.convert("RGBA"), overlay).convert("RGB")
     draw = ImageDraw.Draw(img)
 
-    # Logo — top left
-    _paste_logo(img, 44, 44, width=150)
-    draw = ImageDraw.Draw(img)
+    # Brand name — top left
+    draw.text((44, 44), "NEXAR AQUATIC ACADEMY", font=_font(28, "bold"), fill=WHITE)
 
     # Red accent line — left edge of title area
     draw.rectangle([44, 340, 52, 490], fill=RED)
@@ -253,7 +252,7 @@ def _make_cover(slide, cover_img, total):
     # Bottom strip
     draw.rectangle([0, H - 72, W, H], fill=(0, 0, 0, 180))
     draw = ImageDraw.Draw(img)
-    draw.text((44, H - 50), "Swimnexar Aquatic Academy", font=_font(26, "regular"), fill=GRAY)
+    draw.text((44, H - 50), "swimnexar.com", font=_font(26, "regular"), fill=GRAY)
 
     # Dots — bottom right area
     _dots(draw, total, 0, W - 110, H - 36)
@@ -281,9 +280,8 @@ def _make_content_slide(slide, idx, total):
     offset = int(draw.textlength(f"{idx:02d}", font=cnt_font)) + 10
     draw.text((44 + offset, 26), f"/ {total - 1:02d}", font=cnt_font, fill=LGRAY)
 
-    # Logo — top right
-    _paste_logo(img, W - 200, 18, width=158)
-    draw = ImageDraw.Draw(img)
+    # Brand name — top right
+    draw.text((W - 44, 26), "NEXAR AQUATIC ACADEMY", font=_font(24, "bold"), fill=WHITE, anchor="ra")
 
     # Title
     title_font = _font(66, "extrabold")
@@ -306,7 +304,7 @@ def _make_content_slide(slide, idx, total):
 
     # Bottom bar
     draw.rectangle([0, H - 72, W, H], fill=DARKER)
-    draw.text((44, H - 50), "Swimnexar Aquatic Academy", font=_font(24, "regular"), fill=LGRAY)
+    draw.text((44, H - 50), "swimnexar.com", font=_font(24, "regular"), fill=LGRAY)
     _dots(draw, total, idx, W // 2, H - 36)
 
     return img
