@@ -34,40 +34,13 @@ const _GF = {
   }
 };
 
-function submitToGoogleForms(data) {
-  const key    = window.location.pathname.includes('swimteam') ? 'swimteam' : 'waterpolo';
-  const gf     = _GF[key];
-  const mapped = gf.map(data);
-
-  // Hidden iframe so page doesn't redirect
-  const iframe = document.createElement('iframe');
-  iframe.name  = 'gf_' + Date.now();
-  iframe.style.display = 'none';
-  document.body.appendChild(iframe);
-
-  // Hidden form targeting the iframe
-  const hf    = document.createElement('form');
-  hf.method   = 'POST';
-  hf.action   = gf.url;
-  hf.target   = iframe.name;
-  hf.style.display = 'none';
-
-  Object.entries(mapped).forEach(([name, value]) => {
-    const inp = document.createElement('input');
-    inp.type  = 'hidden';
-    inp.name  = name;
-    inp.value = value;
-    hf.appendChild(inp);
-  });
-
-  document.body.appendChild(hf);
-  hf.submit();
-
-  // Clean up after Google Forms processes it
-  setTimeout(() => {
-    document.body.removeChild(iframe);
-    document.body.removeChild(hf);
-  }, 5000);
+async function submitToGoogleForms(data) {
+  const key = window.location.pathname.includes('swimteam') ? 'swimteam' : 'waterpolo';
+  const gf  = _GF[key];
+  const fd  = new FormData();
+  Object.entries(gf.map(data)).forEach(([k, v]) => fd.append(k, v));
+  // no-cors: browser sends the request, ignores response — no redirect, no new tab
+  await fetch(gf.url, { method: 'POST', mode: 'no-cors', body: fd });
 }
 
 /* ── Entry popup ── */
@@ -285,7 +258,7 @@ if (form) {
     hideMsg();
 
     try {
-      submitToGoogleForms(rawData);
+      await submitToGoogleForms(rawData);
       showMsg('ok', '✅ Thank you! We\'ll contact you within 24 hours to schedule your free first practice.');
       form.reset();
     } catch (err) {
