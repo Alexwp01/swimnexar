@@ -180,12 +180,12 @@ Return ONLY valid JSON with this exact structure:
   "topic": "the topic you chose",
   "slides": [
     {{"title": "Hook headline (max 7 words)", "body": ""}},
-    {{"title": "Short tip title (max 6 words)", "body": "2-3 concrete sentences"}},
-    {{"title": "Short tip title (max 6 words)", "body": "2-3 concrete sentences"}},
-    {{"title": "Short tip title (max 6 words)", "body": "2-3 concrete sentences"}},
+    {{"title": "Short tip title (max 6 words)", "body": "1-2 sentences max — concrete and specific"}},
+    {{"title": "Short tip title (max 6 words)", "body": "1-2 sentences max — concrete and specific"}},
+    {{"title": "Short tip title (max 6 words)", "body": "1-2 sentences max — concrete and specific"}},
     {{"title": "Come Try It Free", "body": "First practice FREE · Ages 8–18 · Land O' Lakes & Wesley Chapel, FL · swimnexar.com"}}
   ],
-  "caption": "150-200 words, starts with a hook question or bold statement, practical value in the middle, ends with CTA. Hashtags: #waterpolo #swimming #youthsports #swimteam #wesleychapel #florida #aquatics #swimnexar #collegeprep #scholarship",
+  "caption": "60-80 words max. One strong opening line, 2-3 sentences of value, one CTA line. Short and to the point — no fluff. Hashtags on a new line: #waterpolo #swimming #youthsports #swimteam #wesleychapel #florida #aquatics #swimnexar #collegeprep #scholarship",
   "image_prompt": "Photorealistic dramatic sports photo related to the topic above. Professional athletics photography, moody underwater lighting or golden hour pool light, no text, cinematic"
 }}"""
 
