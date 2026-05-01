@@ -34,14 +34,40 @@ const _GF = {
   }
 };
 
-async function submitToGoogleForms(data) {
-  const key = window.location.pathname.includes('swimteam') ? 'swimteam' : 'waterpolo';
-  const gf  = _GF[key];
-  const fd  = new FormData();
-  Object.entries(gf.map(data)).forEach(([k, v]) => fd.append(k, v));
-  try {
-    await fetch(gf.url, { method: 'POST', mode: 'no-cors', body: fd });
-  } catch (_) { /* no-cors always rejects - that's expected, form still submits */ }
+function submitToGoogleForms(data) {
+  const key    = window.location.pathname.includes('swimteam') ? 'swimteam' : 'waterpolo';
+  const gf     = _GF[key];
+  const mapped = gf.map(data);
+
+  // Hidden iframe so page doesn't redirect
+  const iframe = document.createElement('iframe');
+  iframe.name  = 'gf_' + Date.now();
+  iframe.style.display = 'none';
+  document.body.appendChild(iframe);
+
+  // Hidden form targeting the iframe
+  const hf    = document.createElement('form');
+  hf.method   = 'POST';
+  hf.action   = gf.url;
+  hf.target   = iframe.name;
+  hf.style.display = 'none';
+
+  Object.entries(mapped).forEach(([name, value]) => {
+    const inp = document.createElement('input');
+    inp.type  = 'hidden';
+    inp.name  = name;
+    inp.value = value;
+    hf.appendChild(inp);
+  });
+
+  document.body.appendChild(hf);
+  hf.submit();
+
+  // Clean up after Google Forms processes it
+  setTimeout(() => {
+    document.body.removeChild(iframe);
+    document.body.removeChild(hf);
+  }, 5000);
 }
 
 /* ── Entry popup ── */
@@ -259,10 +285,11 @@ if (form) {
     hideMsg();
 
     try {
-      await submitToGoogleForms(rawData);
+      submitToGoogleForms(rawData);
       showMsg('ok', '✅ Thank you! We\'ll contact you within 24 hours to schedule your free first practice.');
       form.reset();
-    } catch {
+    } catch (err) {
+      console.error('Google Forms error:', err);
       showMsg('err', '❌ Something went wrong. Please email swimnexar@gmail.com or WhatsApp +1 838-333-0666.');
     } finally {
       submitBtn.disabled = false;
