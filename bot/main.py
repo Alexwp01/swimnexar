@@ -382,11 +382,12 @@ def upload_to_public_url(image_path):
     print("⬆️  Uploading cover image...")
     with open(image_path, "rb") as f:
         r = requests.post(
-            "https://0x0.st",
-            files={"file": ("cover.jpg", f, "image/jpeg")},
+            "https://catbox.moe/user/api.php",
+            data={"reqtype": "fileupload"},
+            files={"fileToUpload": ("cover.jpg", f, "image/jpeg")},
             timeout=30,
         )
-    if r.status_code == 200:
+    if r.status_code == 200 and r.text.strip().startswith("https://"):
         url = r.text.strip()
         print(f"  URL: {url}")
         return url
