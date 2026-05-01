@@ -159,15 +159,16 @@ def generate_content():
     print("🤖 Generating content with Claude...")
     prompt = f"""You are a social media expert for Nexar Aquatic Academy in Wesley Chapel, FL.
 We coach youth water polo (ages 8-18) and swim team (ages 5-12).
-Brand voice: confident, punchy, parent-friendly. Like a knowledgeable coach talking to a parent at the pool.
+Brand voice: professional, warm, and knowledgeable. Like an experienced coach who genuinely cares about each athlete's development. Confident but never arrogant.
 IMPORTANT: All content must be written in American English only. Target audience is American parents and youth athletes.
 
 Style rules:
-- Hook slide: bold statement or surprising fact, max 7 words, make parents stop scrolling
-- Tip slides: lead with the action first, then explain — specific and concrete (say "6 kicks per arm stroke" not "kick properly")
-- Skip phrases like "it's important to", "make sure to", "don't forget"
-- Short sentences — punchy, direct
-- CTA slide: warm and inviting, not salesy
+- Write in complete, grammatically correct sentences — no fragments, no slang
+- Hook slide: bold statement or surprising fact, max 7 words, clear and polished
+- Tip slides: lead with the action, then explain — specific and concrete (say "6 kicks per arm stroke" not "kick properly")
+- Skip filler phrases like "it's important to", "make sure to", "don't forget"
+- Refer to young athletes as "young athletes", "swimmers", or "players" — not "kids" or "your kids"
+- CTA slide: warm and welcoming, never pushy or salesy
 
 Choose ONE topic from this list and create an Instagram carousel post:
 {json.dumps(TOPICS, indent=2)}
