@@ -1,0 +1,35 @@
+name: Blog Bot
+
+on:
+  schedule:
+    - cron: '0 12 * * 0'   # Every Sunday at 12:00 UTC (8 AM ET)
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  blog:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: pip install anthropic
+
+      - name: Generate blog post
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: python bot/blog.py
+
+      - name: Commit and push
+        run: |
+          git config user.name "Swimnexar Blog Bot"
+          git config user.email "bot@swimnexar.com"
+          git add blog/
+          git diff --staged --quiet || git commit -m "blog: add weekly post"
+          git push
