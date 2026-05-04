@@ -155,10 +155,21 @@ def _dots(draw, total, active, cx, y, r=6, gap=22):
         draw.ellipse([bx - r, y - r, bx + r, y + r], fill=fill)
 
 # ── Step 1: Generate content with Claude ─────────────────────
+def _pick_topic():
+    import random
+    return random.choice(TOPICS)
+
+def _is_waterpolo(topic):
+    return "water polo" in topic.lower()
+
 def generate_content():
     print("🤖 Generating content with Claude...")
+    topic = _pick_topic()
+    ages  = "7–18" if _is_waterpolo(topic) else "5–18"
     prompt = f"""You are a social media expert for Nexar Aquatic Academy in Wesley Chapel, FL.
-We coach youth water polo (ages 8-18) and swim team (ages 5-12).
+You must create a post about this specific topic: "{topic}"
+We coach youth water polo (ages 7-18) and swim team (ages 5-18).
+Always refer to the academy as "Nexar Aquatic Academy" — never "Nexar Water Polo Club", "Nexar Swim Team", or any other variation.
 Brand voice: professional, warm, and knowledgeable. Like an experienced coach who genuinely cares about each athlete's development. Confident but never arrogant.
 IMPORTANT: All content must be written in American English only. Target audience is American parents and youth athletes.
 
@@ -172,18 +183,15 @@ Style rules:
 - Write as if sharing expertise with the community, not giving instructions to parents
 - CTA slide: warm and welcoming, never pushy or salesy
 
-Choose ONE topic from this list and create an Instagram carousel post:
-{json.dumps(TOPICS, indent=2)}
-
 Return ONLY valid JSON with this exact structure:
 {{
-  "topic": "the topic you chose",
+  "topic": "{topic}",
   "slides": [
     {{"title": "Hook headline (max 7 words)", "body": ""}},
     {{"title": "Short tip title (max 6 words)", "body": "1-2 sentences max — concrete and specific"}},
     {{"title": "Short tip title (max 6 words)", "body": "1-2 sentences max — concrete and specific"}},
     {{"title": "Short tip title (max 6 words)", "body": "1-2 sentences max — concrete and specific"}},
-    {{"title": "Come Try It Free", "body": "First practice FREE · Ages 8–18 · Land O' Lakes & Wesley Chapel, FL · swimnexar.com"}}
+    {{"title": "Come Try It Free", "body": "First practice FREE · Ages {ages} · Land O' Lakes & Wesley Chapel, FL · swimnexar.com"}}
   ],
   "caption": "2-3 short sentences max. One hook, one value line, one CTA (e.g. 'First practice is free — link in bio'). No long paragraphs. Hashtags on a new line: #waterpolo #swimming #youthsports #swimteam #wesleychapel #florida #aquatics #swimnexar #collegeprep #scholarship",
   "image_prompt": "Photorealistic dramatic sports photo related to the topic above. Professional athletics photography, moody underwater lighting or golden hour pool light, no text, cinematic"
@@ -205,7 +213,11 @@ Return ONLY valid JSON with this exact structure:
             if text.startswith("json"):
                 text = text[4:]
         try:
-            return json.loads(text.strip())
+            content = json.loads(text.strip())
+            # Normalize brand name everywhere
+            brand_fix = re.compile(r'Nexar (Water Polo Club|Swim Team|Water Polo Team|Aquatics)', re.IGNORECASE)
+            content["caption"] = brand_fix.sub("Nexar Aquatic Academy", content["caption"])
+            return content
         except json.JSONDecodeError as e:
             print(f"JSON parse error (attempt {attempt+1}): {e}")
             if attempt == 2:
