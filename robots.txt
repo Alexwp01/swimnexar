@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /bot/
+Disallow: /callback.html
+
+Sitemap: https://swimnexar.com/sitemap.xml
