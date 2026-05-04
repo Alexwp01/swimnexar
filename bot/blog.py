@@ -21,11 +21,21 @@ POSTS_JSON = os.path.join(BLOG_DIR, 'posts.json')
 IMAGES_DIR = os.path.join(BLOG_DIR, 'images')
 
 NEWS_FEEDS = [
-    "https://news.google.com/rss/search?q=water+polo+youth&hl=en-US&gl=US&ceid=US:en",
-    "https://news.google.com/rss/search?q=youth+swimming+competition&hl=en-US&gl=US&ceid=US:en",
-    "https://news.google.com/rss/search?q=water+polo+USA&hl=en-US&gl=US&ceid=US:en",
-    "https://news.google.com/rss/search?q=youth+swim+team+Florida&hl=en-US&gl=US&ceid=US:en",
-    "https://news.google.com/rss/search?q=swimming+technique+kids&hl=en-US&gl=US&ceid=US:en",
+    # Water polo
+    "https://news.google.com/rss/search?q=USA+Water+Polo&hl=en-US&gl=US&ceid=US:en",
+    "https://news.google.com/rss/search?q=water+polo+youth+league&hl=en-US&gl=US&ceid=US:en",
+    "https://news.google.com/rss/search?q=water+polo+NCAA+college&hl=en-US&gl=US&ceid=US:en",
+    "https://news.google.com/rss/search?q=water+polo+national+championship&hl=en-US&gl=US&ceid=US:en",
+    "https://news.google.com/rss/search?q=water+polo+Florida&hl=en-US&gl=US&ceid=US:en",
+    # Swimming
+    "https://news.google.com/rss/search?q=USA+Swimming+junior&hl=en-US&gl=US&ceid=US:en",
+    "https://news.google.com/rss/search?q=youth+swim+team+competition&hl=en-US&gl=US&ceid=US:en",
+    "https://news.google.com/rss/search?q=NCAA+swimming+diving&hl=en-US&gl=US&ceid=US:en",
+    "https://news.google.com/rss/search?q=college+swimming+scholarship&hl=en-US&gl=US&ceid=US:en",
+    "https://news.google.com/rss/search?q=swim+team+Florida+youth&hl=en-US&gl=US&ceid=US:en",
+    # College recruiting
+    "https://news.google.com/rss/search?q=water+polo+college+recruiting&hl=en-US&gl=US&ceid=US:en",
+    "https://news.google.com/rss/search?q=swimming+college+scholarship+recruit&hl=en-US&gl=US&ceid=US:en",
 ]
 
 POST_TMPL = Template('''\
