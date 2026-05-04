@@ -5,16 +5,20 @@ import os
 import re
 import json
 import random
+import requests
 from string import Template
 from datetime import datetime, timezone
 import anthropic
+import replicate
 
-ANTHROPIC_KEY = os.environ["ANTHROPIC_API_KEY"]
+ANTHROPIC_KEY  = os.environ["ANTHROPIC_API_KEY"]
+REPLICATE_KEY  = os.environ["REPLICATE_API_TOKEN"]
 client = anthropic.Anthropic(api_key=ANTHROPIC_KEY)
 
-SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
-BLOG_DIR   = os.path.join(SCRIPT_DIR, '..', 'blog')
-POSTS_JSON = os.path.join(BLOG_DIR, 'posts.json')
+SCRIPT_DIR  = os.path.dirname(os.path.abspath(__file__))
+BLOG_DIR    = os.path.join(SCRIPT_DIR, '..', 'blog')
+POSTS_JSON  = os.path.join(BLOG_DIR, 'posts.json')
+IMAGES_DIR  = os.path.join(BLOG_DIR, 'images')
 
 TOPICS = [
     "How to improve freestyle swimming technique for beginners",
@@ -101,6 +105,7 @@ POST_TMPL = Template('''\
 </section>
 
 <main class="blog-body">
+  <img src="images/$image_file" alt="$title" style="width:100%;border-radius:12px;margin-bottom:40px;aspect-ratio:16/9;object-fit:cover">
 $content
 
   <div class="blog-cta">
@@ -228,7 +233,8 @@ Return ONLY valid JSON:
   "tag": "Water Polo" or "Swimming" or "Training" or "Nutrition" or "Recruiting",
   "meta_desc": "SEO description under 155 characters",
   "excerpt": "2 sentence summary for the blog listing page",
-  "content": "Full HTML using only <h2> <h3> <p> <ul> <ol> <li> <strong> tags. No <h1>. No inline styles."
+  "content": "Full HTML using only <h2> <h3> <p> <ul> <ol> <li> <strong> tags. No <h1>. No inline styles.",
+  "image_prompt": "Photorealistic sports photography related to the topic. Professional athletic photography, moody pool lighting or golden hour, cinematic, no text in image"
 }}"""
 
     for attempt in range(3):
@@ -249,7 +255,23 @@ Return ONLY valid JSON:
                 raise
 
 
-def build_post_html(data, date_str):
+def generate_image(image_prompt, slug):
+    print(f"🎨 Generating image...")
+    os.makedirs(IMAGES_DIR, exist_ok=True)
+    output = replicate.run(
+        "black-forest-labs/flux-schnell",
+        input={"prompt": image_prompt, "num_outputs": 1, "aspect_ratio": "16:9"}
+    )
+    url = output[0] if isinstance(output, list) else str(output)
+    filename = f"{slug}.jpg"
+    r = requests.get(url, timeout=30)
+    with open(os.path.join(IMAGES_DIR, filename), 'wb') as f:
+        f.write(r.content)
+    print(f"✅ Image saved: blog/images/{filename}")
+    return filename
+
+
+def build_post_html(data, date_str, image_file):
     date_display = datetime.strptime(date_str, '%Y-%m-%d').strftime('%B %d, %Y')
     return POST_TMPL.substitute(
         title=data['title'],
@@ -257,6 +279,7 @@ def build_post_html(data, date_str):
         tag=data['tag'],
         date_display=date_display,
         content=data['content'],
+        image_file=image_file,
     )
 
 
@@ -289,8 +312,10 @@ def main():
     filename = f"{date_str}-{data['slug']}.html"
     filepath = os.path.join(BLOG_DIR, filename)
 
+    image_file = generate_image(data['image_prompt'], data['slug'])
+
     with open(filepath, 'w', encoding='utf-8') as f:
-        f.write(build_post_html(data, date_str))
+        f.write(build_post_html(data, date_str, image_file))
     print(f"✅ Post: blog/{filename}")
 
     posts.append({
