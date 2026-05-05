@@ -49,8 +49,8 @@ POST_TMPL = Template('''\
   <link rel="canonical" href="https://swimnexar.com/blog/$filename">
   <meta property="og:title"       content="$title">
   <meta property="og:description" content="$meta_desc">
-  <meta property="og:image"       content="https://swimnexar.com/blog/images/$image_file">
-  <meta property="og:type"        content="article">
+  <meta property="og:image"  content="https://swimnexar.com/blog/images/$image_file">
+  <meta property="og:type"   content="article">
   <link rel="stylesheet" href="../css/style.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -62,8 +62,6 @@ POST_TMPL = Template('''\
   .blog-meta{color:#555;font-size:14px}
   .blog-body{max-width:740px;margin:0 auto;padding:60px 24px 80px}
   .blog-cover{width:100%;border-radius:12px;margin-bottom:40px;aspect-ratio:16/9;object-fit:cover}
-  .photo-credit{color:#444;font-size:11px;text-align:right;margin-top:-32px;margin-bottom:40px}
-  .photo-credit a{color:#555}
   .blog-body h2{font-size:26px;font-weight:700;color:#fff;margin:48px 0 16px;border-left:4px solid #d42b2b;padding-left:16px}
   .blog-body h3{font-size:19px;font-weight:600;color:#fff;margin:32px 0 10px}
   .blog-body p{color:#aaa;font-size:17px;line-height:1.8;margin-bottom:20px}
@@ -111,7 +109,6 @@ POST_TMPL = Template('''\
 
 <main class="blog-body">
   <img src="images/$image_file" alt="$title" class="blog-cover">
-  <p class="photo-credit">Photo: <a href="$photo_url" target="_blank" rel="noopener">$photo_credit</a> via Pexels</p>
 
   <div class="blog-source">
     &ldquo;$news_title&rdquo; &mdash; <a href="$news_url" target="_blank" rel="noopener noreferrer">Read original article</a>
@@ -301,7 +298,7 @@ Return ONLY valid JSON:
   "tag": "Water Polo" or "Swimming" or "Training" or "Nutrition" or "Recruiting",
   "meta_desc": "SEO description under 155 characters",
   "excerpt": "2 sentence summary for blog listing",
-  "pexels_query": "2-4 word photo search query",
+  "pexels_query": "2-4 word gender-neutral photo search query matching the sport and topic (e.g. 'water polo team', 'swimming pool race', 'freestyle swimming underwater')",
   "content": "Full HTML using only <h2> <h3> <p> <ul> <ol> <li> <strong> tags. No <h1>. No inline styles."
 }}"""
 
@@ -333,8 +330,6 @@ def build_post_html(data, date_str, image_file, photo_info, article):
         date_display=date_display,
         filename=filename,
         image_file=image_file,
-        photo_url=photo_info['page_url'],
-        photo_credit=photo_info['photographer'],
         news_title=article['title'],
         news_url=article['url'],
         content=data['content'],
