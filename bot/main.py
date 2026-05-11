@@ -477,6 +477,10 @@ def post_to_instagram(images, caption):
         print(f"❌ Carousel creation failed: {carousel}")
         return None
 
+    # Wait for Instagram to process media before publishing
+    print("⏳ Waiting 30s for Instagram to process media...")
+    time.sleep(30)
+
     # Publish
     r2 = requests.post(f"{base}/{IG_USER_ID}/media_publish", data={
         "creation_id":  carousel["id"],
