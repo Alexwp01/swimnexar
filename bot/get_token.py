@@ -2,7 +2,7 @@ import requests
 import sys
 
 CLIENT_ID     = "1945449166095595"
-CLIENT_SECRET = "0072e47f65214dfce0c9bca33b428008"
+CLIENT_SECRET = "fcc678c1137e9ed80da161ef4472683d"
 REDIRECT_URI  = "https://swimnexar.vercel.app/"
 
 OAUTH_URL = (
@@ -18,18 +18,15 @@ OAUTH_URL = (
     f"%2Cinstagram_business_manage_insights"
 )
 
-import webbrowser
-print("\n🔗 Открываю браузер для авторизации...\n")
-webbrowser.open(OAUTH_URL)
-
 if len(sys.argv) > 1:
     raw = sys.argv[1].strip()
-    print(f"📋 Код получен из аргумента")
+    print(f"📋 Обмениваю код...")
 else:
-    print("После нажатия Allow браузер откроет swimnexar.vercel.app")
-    print("Скопируй ВСЮ ссылку из адресной строки и вставь сюда:")
-    print()
-    raw = input("👉 Вставь полную ссылку: ").strip()
+    import webbrowser
+    print("\n🔗 Открываю браузер для авторизации...\n")
+    webbrowser.open(OAUTH_URL)
+    print("После нажатия Allow скопируй команду с сайта и запусти заново.")
+    sys.exit(0)
 
 # strip full URL if pasted
 if "code=" in raw:
