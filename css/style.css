@@ -751,6 +751,24 @@ h2.title.light { color:var(--white); }
   .footer-brand .logo img { height:36px; }
 }
 
+/* ── Mobile sticky Sign Up button ── */
+.mobile-signup {
+  display:none;
+}
+@media (max-width:768px) {
+  .mobile-signup {
+    display:flex; position:fixed; bottom:20px; left:50%; transform:translateX(-50%);
+    z-index:998; width:calc(100% - 40px); max-width:360px;
+  }
+  .mobile-signup a {
+    display:flex; align-items:center; justify-content:center; gap:8px;
+    width:100%; padding:16px 24px; font-size:17px; font-weight:800;
+    background:var(--red); color:var(--white); border-radius:50px;
+    box-shadow:0 8px 32px rgba(212,43,43,.5); text-decoration:none;
+    letter-spacing:0.3px;
+  }
+}
+
 /* ── Hover only on non-touch devices ── */
 @media (hover:hover) and (pointer:fine) {
   .prog-card:hover { transform:translateY(-6px); box-shadow:0 24px 64px rgba(0,0,0,.2); }
