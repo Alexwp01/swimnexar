@@ -176,6 +176,8 @@ h2.title.light { color:var(--white); }
   display:flex; align-items:center; flex-shrink:0;
 }
 .logo img { height:56px; width:auto; }
+.logo-text { display:flex; flex-direction:column; line-height:1.2; font-size:16px; font-weight:800; color:var(--white); letter-spacing:0.5px; }
+.logo-text small { font-size:10px; font-weight:600; letter-spacing:1.5px; color:rgba(255,255,255,.65); text-transform:uppercase; }
 .nav { display:flex; align-items:center; gap:2px; flex:1; justify-content:center; }
 .nav-link {
   padding:8px 14px; font-size:14px; font-weight:600;
