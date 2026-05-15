@@ -59,15 +59,17 @@
     .entry-logo img {
       height: clamp(140px, 30vw, 220px);
     }
+    .entry-logo {
+      display: flex; flex-direction: column; align-items: center; gap: 16px;
+      margin-bottom: 40px;
+    }
     .entry-logo-name {
-      display: flex; flex-direction: column; gap: 6px;
-      font-size: 28px; font-weight: 900; color: #fff;
-      letter-spacing: 3px; text-transform: uppercase; line-height: 1;
-      text-align: left;
+      font-size: clamp(18px, 4vw, 28px); font-weight: 900; color: #fff;
+      letter-spacing: 6px; text-transform: uppercase; text-align: center;
     }
     .entry-logo-name em {
-      font-style: normal; font-size: 11px; font-weight: 500;
-      letter-spacing: 4px; color: rgba(255,255,255,.55);
+      font-style: normal; font-weight: 400;
+      color: rgba(255,255,255,.6); letter-spacing: 6px;
     }
 
     .entry-headline {
@@ -242,7 +244,7 @@
       <!-- Logo -->
       <div class="entry-logo">
         <img src="/images/nexar-logo-v2.png" alt="Nexar Aquatic Academy">
-        <div class="entry-logo-name">NEXAR<em>Aquatic Academy</em></div>
+        <div class="entry-logo-name">NEXAR &nbsp;<em>AQUATIC ACADEMY</em></div>
       </div>
 
       <!-- Brand headline -->
