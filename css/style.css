@@ -111,7 +111,7 @@ h2.title.light { color:var(--white); }
   display:inline-flex; align-items:center; gap:10px;
   font-size:22px; font-weight:900; color:var(--white); margin-bottom:36px;
 }
-.entry-logo img { height:260px; }
+.entry-logo img { height:420px; }
 
 .entry-modal h2 {
   font-size:clamp(24px, 4vw, 36px); font-weight:900; color:var(--white);
@@ -176,7 +176,7 @@ h2.title.light { color:var(--white); }
   display:flex; align-items:center; gap:10px;
   font-size:20px; font-weight:900; color:var(--white); flex-shrink:0;
 }
-.logo img { height:75px; }
+.logo img { height:100px; }
 .nav { display:flex; align-items:center; gap:2px; }
 .nav-link {
   padding:8px 14px; font-size:14px; font-weight:600;
