@@ -111,7 +111,7 @@ h2.title.light { color:var(--white); }
   display:inline-flex; align-items:center; gap:10px;
   font-size:22px; font-weight:900; color:var(--white); margin-bottom:36px;
 }
-.entry-logo img { height:800px; max-width:90vw; }
+.entry-logo img { width:min(500px, 80vw); height:auto; }
 
 .entry-modal h2 {
   font-size:clamp(24px, 4vw, 36px); font-weight:900; color:var(--white);
