@@ -1,214 +1,453 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  <meta charset="UTF-8">
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
   <link rel="apple-touch-icon" href="/favicon-180.png">
+  <link rel="manifest" href="/manifest.json">
   <meta name="theme-color" content="#0d0d0d">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Meet the expert coaches at Swimnexar - certified professionals dedicated to developing young swimmers and water polo players.">
-    <title>Our Coaches | Swimnexar</title>
-    <link rel="stylesheet" href="css/style.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-    <link rel="preconnect" href="https://app.snipcart.com">
-    <link rel="stylesheet" href="https://cdn.snipcart.com/themes/v3.2.0/default/snipcart.css" />
+  <meta name="description" content="Coach Alex — Asian Champion, former Kazakhstan National Team water polo player. Now coaching youth water polo & swim team in Wesley Chapel, FL.">
+  <title>Coach Alex | Nexar Aquatic Academy</title>
+  <link rel="canonical" href="https://swimnexar.com/coaches.html">
+
+  <!-- Open Graph -->
+  <meta property="og:type"        content="website">
+  <meta property="og:url"         content="https://swimnexar.com/coaches.html">
+  <meta property="og:title"       content="Coach Alex | Nexar Aquatic Academy">
+  <meta property="og:description" content="Asian Champion & former Kazakhstan National Team player. Now building the next generation of aquatic athletes in Wesley Chapel, FL.">
+  <meta property="og:image"       content="https://swimnexar.com/images/wp-team-group.jpg">
+  <meta property="og:locale"      content="en_US">
+
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+  <style>
+    .coach-hero {
+      padding: calc(var(--header-h) + 80px) 0 80px;
+      background: var(--dark);
+      position: relative;
+      overflow: hidden;
+    }
+    .coach-hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at 70% 50%, rgba(212,43,43,.12) 0%, transparent 70%);
+    }
+    .coach-hero .container {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 64px;
+      align-items: center;
+    }
+    .coach-hero-text .label { margin-bottom: 20px; }
+    .coach-hero-text h1 {
+      font-size: clamp(36px, 5vw, 58px);
+      font-weight: 900;
+      color: var(--white);
+      line-height: 1.08;
+      letter-spacing: -1.5px;
+      margin-bottom: 20px;
+    }
+    .coach-hero-text h1 span { color: var(--red); }
+    .coach-hero-text p {
+      font-size: 17px;
+      color: rgba(255,255,255,.65);
+      line-height: 1.75;
+      margin-bottom: 32px;
+    }
+    .coach-badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 36px;
+    }
+    .coach-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(255,255,255,.08);
+      border: 1px solid rgba(255,255,255,.14);
+      color: var(--white);
+      font-size: 13px;
+      font-weight: 600;
+      padding: 8px 16px;
+      border-radius: 50px;
+    }
+    .coach-photo-wrap { position: relative; }
+    .coach-photo-wrap img {
+      width: 100%;
+      border-radius: 24px;
+      object-fit: cover;
+      aspect-ratio: 4/5;
+      display: block;
+    }
+    .coach-photo-badge {
+      position: absolute;
+      bottom: 24px;
+      left: 24px;
+      background: rgba(0,0,0,.75);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255,255,255,.15);
+      border-radius: 14px;
+      padding: 14px 20px;
+      color: #fff;
+    }
+    .coach-photo-badge strong { display: block; font-size: 15px; font-weight: 800; }
+    .coach-photo-badge span  { font-size: 12px; color: rgba(255,255,255,.55); }
+
+    .stats-strip {
+      background: var(--red);
+      padding: 32px 0;
+    }
+    .stats-strip .container {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+    }
+    .stat-item {
+      text-align: center;
+      padding: 0 24px;
+      border-right: 1px solid rgba(255,255,255,.2);
+    }
+    .stat-item:last-child { border-right: none; }
+    .stat-num {
+      font-size: clamp(28px, 4vw, 40px);
+      font-weight: 900;
+      color: #fff;
+      display: block;
+      line-height: 1;
+      margin-bottom: 6px;
+    }
+    .stat-lbl {
+      font-size: 13px;
+      color: rgba(255,255,255,.75);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .philosophy-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      margin-top: 48px;
+    }
+    .phil-card {
+      background: #f7f7f7;
+      border-radius: 20px;
+      padding: 32px 28px;
+    }
+    .phil-icon { font-size: 32px; margin-bottom: 16px; }
+    .phil-card h3 { font-size: 18px; font-weight: 800; margin-bottom: 10px; color: var(--dark); }
+    .phil-card p  { font-size: 14px; color: #6b7280; line-height: 1.65; }
+
+    .timeline {
+      margin-top: 12px;
+      position: relative;
+      padding-left: 32px;
+    }
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 8px;
+      bottom: 8px;
+      width: 2px;
+      background: linear-gradient(to bottom, var(--red), transparent);
+    }
+    .tl-item {
+      position: relative;
+      margin-bottom: 36px;
+    }
+    .tl-item::before {
+      content: '';
+      position: absolute;
+      left: -36px;
+      top: 6px;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--red);
+      border: 2px solid #fff;
+      box-shadow: 0 0 0 2px var(--red);
+    }
+    .tl-year { font-size: 11px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--red); margin-bottom: 4px; }
+    .tl-item h4 { font-size: 16px; font-weight: 800; margin-bottom: 4px; }
+    .tl-item p  { font-size: 14px; color: #6b7280; }
+
+    .cta-dark {
+      background: var(--dark);
+      padding: 80px 0;
+      text-align: center;
+    }
+    .cta-dark h2 { font-size: clamp(28px,4vw,42px); font-weight:900; color:#fff; margin-bottom:14px; letter-spacing:-.5px; }
+    .cta-dark p  { font-size:17px; color:rgba(255,255,255,.6); margin-bottom:36px; }
+    .cta-btns    { display:flex; gap:16px; justify-content:center; flex-wrap:wrap; }
+
+    @media (max-width: 900px) {
+      .coach-hero .container { grid-template-columns: 1fr; gap: 40px; }
+      .coach-photo-wrap { max-width: 400px; margin: 0 auto; }
+      .stats-strip .container { grid-template-columns: repeat(2, 1fr); }
+      .stat-item { padding: 16px; border-right: none; border-bottom: 1px solid rgba(255,255,255,.15); }
+      .stat-item:nth-child(odd) { border-right: 1px solid rgba(255,255,255,.2); }
+      .stat-item:last-child { border-bottom: none; }
+      .philosophy-grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 640px) {
+      .coach-hero { padding: calc(var(--header-h) + 40px) 0 48px; }
+    }
+  </style>
 </head>
 <body>
-    <!-- Header -->
-    <header class="header">
-        <div class="container">
-            <a href="index.html" class="logo">
-                <span class="logo-icon">🏊</span>
-                <span class="logo-text">Swimnexar</span>
-            </a>
-            <nav class="nav" id="nav">
-                <a href="index.html" class="nav-link">Home</a>
-                <a href="programs.html" class="nav-link">Programs</a>
-                <a href="coaches.html" class="nav-link active">Coaches</a>
-                <a href="shop.html" class="nav-link">Shop</a>
-                <a href="about.html" class="nav-link">About</a>
-                <a href="contact.html" class="nav-link">Contact</a>
-            </nav>
-            <button class="cart-btn snipcart-checkout">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <circle cx="9" cy="21" r="1"></circle>
-                    <circle cx="20" cy="21" r="1"></circle>
-                    <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
-                </svg>
-                <span class="snipcart-items-count">0</span>
-            </button>
-            <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu">
-                <span></span>
-                <span></span>
-                <span></span>
-            </button>
+
+<!-- HEADER -->
+<header class="header" id="header">
+  <div class="container">
+    <a href="index.html" class="logo">
+      <img src="/images/nexar-logo-clean.png" alt="Nexar">
+      <span class="logo-text">NEXAR<em>Aquatic Academy</em></span>
+    </a>
+    <nav class="nav" id="nav">
+      <a href="index.html"     class="nav-link">← Home</a>
+      <a href="waterpolo.html" class="nav-link">Water Polo</a>
+      <a href="swimteam.html"  class="nav-link">Swim Team</a>
+      <a href="coaches.html"   class="nav-link active">Coach Alex</a>
+      <a href="support.html"   class="nav-link">Support Us</a>
+    </nav>
+    <div class="header-cta">
+      <a href="waterpolo.html#register" class="btn btn-red btn-sm">Free Trial →</a>
+    </div>
+    <button class="menu-btn" id="menuBtn" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="coach-hero">
+  <div class="container">
+    <div class="coach-hero-text reveal-l">
+      <div class="label" style="color:var(--red); border-color:rgba(212,43,43,.3);">🎓 Head Coach & Founder</div>
+      <h1>Coach<br><span>Alex</span></h1>
+      <p>Asian Champion. Former Kazakhstan National Team player. Now building the next generation of aquatic athletes in Pasco County, Florida — one practice at a time.</p>
+      <div class="coach-badges">
+        <span class="coach-badge">🏆 Asian Champion</span>
+        <span class="coach-badge">🇰🇿 Kazakhstan National Team</span>
+        <span class="coach-badge">🤽 Water Polo</span>
+        <span class="coach-badge">🏊 Swim Coach</span>
+      </div>
+      <div style="display:flex; gap:16px; flex-wrap:wrap;">
+        <a href="waterpolo.html#register" class="btn btn-red">Join Water Polo →</a>
+        <a href="mailto:swimnexar@gmail.com?subject=Book%20a%20Session%20with%20Coach%20Alex" class="btn btn-ghost">Book 1-on-1 Session</a>
+      </div>
+    </div>
+    <div class="coach-photo-wrap reveal-r">
+      <img src="images/wp-team-group.jpg" alt="Coach Alex with Nexar Water Polo team">
+      <div class="coach-photo-badge">
+        <strong>Alexandr Godovanyuk</strong>
+        <span>Head Coach · Nexar Aquatic Academy</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STATS -->
+<div class="stats-strip">
+  <div class="container">
+    <div class="stat-item">
+      <span class="stat-num">🏆</span>
+      <span class="stat-lbl">Asian Champion</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-num">10+</span>
+      <span class="stat-lbl">Years Playing</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-num">8–18</span>
+      <span class="stat-lbl">Ages Coached</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-num">Free</span>
+      <span class="stat-lbl">First Practice</span>
+    </div>
+  </div>
+</div>
+
+<!-- STORY -->
+<section class="section">
+  <div class="container">
+    <div class="about-grid">
+      <div class="about-text reveal-l">
+        <div class="label">The Story</div>
+        <h2 class="title">From National Team<br>to Your Child's Coach</h2>
+        <p>Coach Alex competed at the highest levels of water polo — representing Kazakhstan at the Asian Championships and earning a gold medal with the National Team. That experience taught him that elite performance isn't born, it's built through disciplined, technique-first coaching.</p>
+        <p style="margin-top:16px;">Now based in Wesley Chapel, FL, Coach Alex brings that world-class perspective to youth athletes. His approach: meet every child where they are, teach fundamentals that last a lifetime, and make training something athletes genuinely love.</p>
+        <p style="margin-top:16px;">He also coaches the Nexar Swim Team, offering 1-on-1 sessions via Zoom or in-person for swimmers who want personalized technique analysis and college recruitment guidance.</p>
+      </div>
+      <div class="reveal-r">
+        <img src="images/wp-team-competition.jpg" alt="Nexar team at competition"
+             style="width:100%; border-radius:20px; object-fit:cover; aspect-ratio:4/3;">
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- COACHING PHILOSOPHY -->
+<section class="section" style="background:#f7f7f7;">
+  <div class="container">
+    <div class="section-head center">
+      <div class="label">Coaching Philosophy</div>
+      <h2 class="title">How Coach Alex Develops Athletes</h2>
+    </div>
+    <div class="philosophy-grid">
+      <div class="phil-card reveal">
+        <div class="phil-icon">🎯</div>
+        <h3>Technique First</h3>
+        <p>Every drill, every rep starts with the right mechanics. Bad habits are hard to break — Coach Alex builds it right from the beginning so athletes never have to unlearn.</p>
+      </div>
+      <div class="phil-card reveal">
+        <div class="phil-icon">🧠</div>
+        <h3>Game Intelligence</h3>
+        <p>Physical skill alone doesn't win games. Alex teaches players to read the field, anticipate plays, and make smart decisions under pressure — the same mental skills he used at the national level.</p>
+      </div>
+      <div class="phil-card reveal">
+        <div class="phil-icon">💪</div>
+        <h3>Individual Growth</h3>
+        <p>Every athlete enters at a different level. Coach Alex meets each kid exactly where they are, giving beginners the confidence to start and experienced players the tools to compete.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CAREER TIMELINE -->
+<section class="section">
+  <div class="container">
+    <div class="about-grid">
+      <div class="reveal-l">
+        <div class="label">Career</div>
+        <h2 class="title">A Champion's<br>Journey</h2>
+        <p>Coach Alex's competitive career spans over a decade at the highest levels of water polo in Asia and Central Asia.</p>
+      </div>
+      <div class="reveal-r">
+        <div class="timeline">
+          <div class="tl-item">
+            <div class="tl-year">Kazakhstan National Team</div>
+            <h4>🇰🇿 National Team Selection</h4>
+            <p>Selected to represent Kazakhstan in international water polo competitions.</p>
+          </div>
+          <div class="tl-item">
+            <div class="tl-year">Asian Championships</div>
+            <h4>🏆 Asian Champion</h4>
+            <p>Earned gold at the Asian Water Polo Championships, competing against the top teams across the continent.</p>
+          </div>
+          <div class="tl-item">
+            <div class="tl-year">Wesley Chapel, FL</div>
+            <h4>🤽 Nexar Aquatic Academy Founded</h4>
+            <p>Moved to Florida and launched Nexar — bringing championship-level coaching to youth athletes in Pasco County.</p>
+          </div>
+          <div class="tl-item">
+            <div class="tl-year">Today</div>
+            <h4>🏊 Water Polo + Swim Team</h4>
+            <p>Running both the Water Polo program (Land O' Lakes) and Swim Team (Wesley Chapel), plus 1-on-1 coaching sessions.</p>
+          </div>
         </div>
-    </header>
+      </div>
+    </div>
+  </div>
+</section>
 
-    <!-- Page Hero -->
-    <section class="page-hero">
-        <div class="container">
-            <h1>Our Coaches</h1>
-            <p>Expert instructors dedicated to your success in the water</p>
+<!-- 1-ON-1 COACHING -->
+<section class="section" style="background:#f7f7f7;">
+  <div class="container">
+    <div class="section-head center">
+      <div class="label" style="background:rgba(5,150,105,.1); color:#059669; border-color:rgba(5,150,105,.3);">🎓 Private Sessions</div>
+      <h2 class="title">1-on-1 Coaching with Coach Alex</h2>
+      <p class="subtitle">For swimmers and water polo players who want focused, personalized development outside of team practice.</p>
+    </div>
+    <div class="grid-3" style="margin-top:40px;">
+      <div class="feature-box reveal">
+        <div class="feat-icon">📹</div>
+        <h3>Video Analysis</h3>
+        <p>Submit your swim or water polo footage. Coach Alex reviews every detail — stroke mechanics, positioning, efficiency — and gives you a full breakdown.</p>
+      </div>
+      <div class="feature-box reveal">
+        <div class="feat-icon">💻</div>
+        <h3>Zoom Sessions</h3>
+        <p>Live video coaching from anywhere. Review footage together, drill specific techniques, ask questions, and get a personalized training plan.</p>
+      </div>
+      <div class="feature-box reveal">
+        <div class="feat-icon">🏫</div>
+        <h3>In-Person Training</h3>
+        <p>Private pool sessions in Wesley Chapel or Land O' Lakes. Hands-on technique correction and sport-specific conditioning drills.</p>
+      </div>
+    </div>
+    <div style="text-align:center; margin-top:48px;">
+      <a href="mailto:swimnexar@gmail.com?subject=Book%20a%20Session%20with%20Coach%20Alex" class="btn btn-lg" style="background:#059669; color:#fff; font-size:17px; padding:18px 40px; border-radius:50px;">
+        Book a Session with Coach Alex →
+      </a>
+      <p style="margin-top:16px; font-size:14px; color:#9ca3af;">Reply within 24 hours · swimnexar@gmail.com</p>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-dark">
+  <div class="container">
+    <h2>Ready to Train with a Champion?</h2>
+    <p>Join Nexar Water Polo or Swim Team — first practice is completely free.</p>
+    <div class="cta-btns">
+      <a href="waterpolo.html#register" class="btn btn-red btn-lg">Join Water Polo — Free Trial →</a>
+      <a href="swimteam.html#register"  class="btn btn-lg" style="background:rgba(255,255,255,.1); color:#fff; border:1px solid rgba(255,255,255,.3); border-radius:50px; padding:16px 32px;">Join Swim Team →</a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a href="index.html" class="logo">
+          <img src="/images/nexar-logo-clean.png" alt="Nexar Aquatic Academy">
+        </a>
+        <p>Youth Water Polo & Swim Academy. Land O' Lakes & Wesley Chapel, Pasco County, FL.</p>
+        <div class="footer-socials">
+          <a href="https://instagram.com/swim_nexar" target="_blank" rel="noopener noreferrer" class="footer-soc">📸</a>
+          <a href="https://wa.me/18383330666" target="_blank" rel="noopener noreferrer" class="footer-soc">💬</a>
+          <a href="mailto:swimnexar@gmail.com" class="footer-soc">✉️</a>
         </div>
-    </section>
+      </div>
+      <div class="footer-col">
+        <h4>Programs</h4>
+        <a href="waterpolo.html">Water Polo</a>
+        <a href="swimteam.html">Swim Team</a>
+        <a href="mailto:swimnexar@gmail.com?subject=Book%20a%20Session%20with%20Coach%20Alex">1-on-1 Coaching</a>
+      </div>
+      <div class="footer-col">
+        <h4>Nexar</h4>
+        <a href="index.html">Home</a>
+        <a href="coaches.html">Coach Alex</a>
+        <a href="support.html">Support Us</a>
+      </div>
+      <div class="footer-col">
+        <h4>Contact</h4>
+        <a href="mailto:swimnexar@gmail.com">swimnexar@gmail.com</a>
+        <a href="tel:+18383330666">+1 (838) 333-0666</a>
+        <a href="https://instagram.com/swim_nexar" target="_blank">@swim_nexar</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2026 Nexar Aquatic Academy. All rights reserved.</p>
+      <a href="index.html">← Back to Programs</a>
+    </div>
+  </div>
+</footer>
 
-    <!-- Coaches Grid -->
-    <section>
-        <div class="container">
-            <div class="section-header">
-                <h2 class="section-title">Meet the Team</h2>
-                <p class="section-subtitle">Our certified coaches bring years of competitive experience and a passion for teaching</p>
-            </div>
-            <div class="coaches-grid">
-                <!-- Coach 1 -->
-                <div class="coach-card">
-                    <div class="coach-image">👨‍🏫</div>
-                    <div class="coach-info">
-                        <h3>Michael Torres</h3>
-                        <p class="coach-role">Head Coach & Founder</p>
-                        <p>Former Olympic trials qualifier with 20+ years of coaching experience. Specializes in competitive stroke technique and race strategy.</p>
-                    </div>
-                </div>
-
-                <!-- Coach 2 -->
-                <div class="coach-card">
-                    <div class="coach-image">👩‍🏫</div>
-                    <div class="coach-info">
-                        <h3>Sarah Chen</h3>
-                        <p class="coach-role">Water Polo Director</p>
-                        <p>NCAA Division I water polo player and certified USA Water Polo coach. Leads our water polo program with focus on teamwork and strategy.</p>
-                    </div>
-                </div>
-
-                <!-- Coach 3 -->
-                <div class="coach-card">
-                    <div class="coach-image">👨‍🏫</div>
-                    <div class="coach-info">
-                        <h3>David Miller</h3>
-                        <p class="coach-role">Swim Team Coach</p>
-                        <p>ASCA Level 3 certified coach specializing in youth development. Expert in building confidence and proper technique from day one.</p>
-                    </div>
-                </div>
-
-                <!-- Coach 4 -->
-                <div class="coach-card">
-                    <div class="coach-image">👩‍🏫</div>
-                    <div class="coach-info">
-                        <h3>Emily Rodriguez</h3>
-                        <p class="coach-role">Junior Program Lead</p>
-                        <p>Former collegiate swimmer passionate about introducing young athletes to competitive swimming in a fun, supportive environment.</p>
-                    </div>
-                </div>
-
-                <!-- Coach 5 -->
-                <div class="coach-card">
-                    <div class="coach-image">👨‍🏫</div>
-                    <div class="coach-info">
-                        <h3>James Wilson</h3>
-                        <p class="coach-role">Elite Training Coach</p>
-                        <p>Specialized in high-performance training and college recruitment preparation. Helped numerous athletes earn scholarships.</p>
-                    </div>
-                </div>
-
-                <!-- Coach 6 -->
-                <div class="coach-card">
-                    <div class="coach-image">👩‍🏫</div>
-                    <div class="coach-info">
-                        <h3>Lisa Park</h3>
-                        <p class="coach-role">Assistant Coach</p>
-                        <p>Red Cross certified instructor focusing on water safety and beginner skill development. Patient approach perfect for new swimmers.</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Certifications -->
-    <section class="features-section">
-        <div class="container">
-            <div class="section-header">
-                <h2 class="section-title">Our Certifications</h2>
-                <p class="section-subtitle">All coaches maintain current certifications and ongoing professional development</p>
-            </div>
-            <div class="features-grid">
-                <div class="feature">
-                    <div class="feature-icon">🏅</div>
-                    <h3>USA Swimming</h3>
-                    <p>Certified coaches through USA Swimming's coaching education program</p>
-                </div>
-                <div class="feature">
-                    <div class="feature-icon">🤽</div>
-                    <h3>USA Water Polo</h3>
-                    <p>Licensed water polo coaches with competitive playing backgrounds</p>
-                </div>
-                <div class="feature">
-                    <div class="feature-icon">⛑️</div>
-                    <h3>Lifeguard & CPR</h3>
-                    <p>All staff maintain current lifeguard and CPR/First Aid certifications</p>
-                </div>
-                <div class="feature">
-                    <div class="feature-icon">✅</div>
-                    <h3>Background Checked</h3>
-                    <p>Complete background checks for all coaching staff members</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- CTA -->
-    <section class="cta-section">
-        <div class="container">
-            <div class="cta-content">
-                <h2>Ready to Train with Us?</h2>
-                <p>Contact us today to schedule a trial session with our expert coaches.</p>
-                <a href="contact.html" class="btn btn-white">Schedule a Trial</a>
-            </div>
-        </div>
-    </section>
-
-    <!-- Footer -->
-    <footer class="footer">
-        <div class="container">
-            <div class="footer-grid">
-                <div class="footer-brand">
-                    <a href="index.html" class="logo">
-                        <span class="logo-icon">🏊</span>
-                        <span class="logo-text">Swimnexar</span>
-                    </a>
-                    <p>Premier swimming and water polo academy dedicated to developing athletes of all levels.</p>
-                </div>
-                <div class="footer-links">
-                    <h4>Programs</h4>
-                    <a href="programs.html#swim">Swim Team</a>
-                    <a href="programs.html#waterpolo">Water Polo</a>
-                    <a href="programs.html#elite">Elite Training</a>
-                </div>
-                <div class="footer-links">
-                    <h4>Company</h4>
-                    <a href="about.html">About Us</a>
-                    <a href="coaches.html">Coaches</a>
-                    <a href="contact.html">Contact</a>
-                </div>
-                <div class="footer-links">
-                    <h4>Shop</h4>
-                    <a href="shop.html">All Products</a>
-                    <a href="shop.html#gear">Swim Gear</a>
-                    <a href="shop.html#apparel">Apparel</a>
-                </div>
-            </div>
-            <div class="footer-bottom">
-                <p>&copy; 2026 Swimnexar. All rights reserved.</p>
-            </div>
-        </div>
-    </footer>
-
-    <!-- Snipcart -->
-    <script async src="https://cdn.snipcart.com/themes/v3.2.0/default/snipcart.js"></script>
-    <div hidden id="snipcart" data-api-key="YOUR_SNIPCART_API_KEY"></div>
-
-    <script src="js/main.js"></script>
+<script src="js/main.js"></script>
 </body>
 </html>

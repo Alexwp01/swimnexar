@@ -1,0 +1,16 @@
+{
+  "name": "Nexar Aquatic Academy",
+  "short_name": "Nexar",
+  "description": "Youth Water Polo & Swim Team — Wesley Chapel & Land O' Lakes, FL",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0d0d0d",
+  "theme_color": "#0d0d0d",
+  "orientation": "portrait-primary",
+  "icons": [
+    { "src": "/favicon-32.png",  "sizes": "32x32",   "type": "image/png" },
+    { "src": "/favicon-180.png", "sizes": "180x180",  "type": "image/png" },
+    { "src": "/favicon-192.png", "sizes": "192x192",  "type": "image/png", "purpose": "any maskable" },
+    { "src": "/favicon-512.png", "sizes": "512x512",  "type": "image/png", "purpose": "any maskable" }
+  ]
+}
