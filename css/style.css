@@ -777,6 +777,8 @@ h2.title.light { color:var(--white); }
   letter-spacing:0.3px; transition:all var(--t);
 }
 .mobile-signup a:hover { transform:translateY(-2px); box-shadow:0 12px 40px rgba(212,43,43,.6); }
+.mobile-signup.blue a { background:var(--blue); box-shadow:0 8px 32px rgba(26,86,219,.5); }
+.mobile-signup.blue a:hover { box-shadow:0 12px 40px rgba(26,86,219,.6); }
 
 /* ── Hover only on non-touch devices ── */
 @media (hover:hover) and (pointer:fine) {
