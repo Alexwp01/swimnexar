@@ -18,10 +18,13 @@
 
 <script>
 const params = new URLSearchParams(window.location.search);
-const code = params.get('code');
+const rawCode = params.get('code') || '';
+// Sanitize: only allow alphanumeric, dash, underscore, dot
+const code = rawCode.replace(/[^a-zA-Z0-9\-_.]/g, '');
 if (code) {
   document.getElementById('code').value = code;
-  const cmd = `python3 /Users/alex_wp01/swimnexar-new/bot/get_token.py "${window.location.href}"`;
+  const safeUrl = `https://swimnexar.vercel.app/callback.html?code=${code}`;
+  const cmd = `python3 bot/get_token.py "${safeUrl}"`;
   document.getElementById('cmd').value = cmd;
 } else {
   document.getElementById('code').value = 'No code found. Something went wrong.';
