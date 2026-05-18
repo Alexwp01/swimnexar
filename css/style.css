@@ -765,6 +765,42 @@ h2.title.light { color:var(--white); }
   .footer-brand .logo img { height:36px; }
 }
 
+/* ── Google Calendar embed ── */
+.cal-wrap {
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 8px 40px rgba(0,0,0,.10);
+  margin-top: 40px;
+}
+.cal-wrap iframe { display: block; border-radius: 20px; }
+.cal-placeholder {
+  background: #f7f7f7;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 260px;
+  padding: 48px 24px;
+}
+.cal-ph-inner { text-align: center; max-width: 480px; }
+.cal-ph-inner h3 { font-size: 22px; font-weight: 800; margin-bottom: 10px; color: var(--dark); }
+.cal-ph-inner p  { font-size: 15px; color: #6b7280; margin-bottom: 28px; }
+.cal-days {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+.cal-day {
+  width: 48px; height: 48px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: .5px;
+}
+.cal-day.on  { background: var(--red); color: #fff; }
+.cal-day.off { background: #e5e7eb; color: #9ca3af; }
+
 /* ── Mobile sticky Sign Up button ── */
 .mobile-signup {
   display:flex; position:fixed; bottom:24px; left:50%; transform:translateX(-50%);

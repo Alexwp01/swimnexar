@@ -9,7 +9,7 @@
         { "key": "Referrer-Policy",           "value": "strict-origin-when-cross-origin" },
         { "key": "Permissions-Policy",        "value": "camera=(), microphone=(), geolocation=(), payment=()" },
         { "key": "Strict-Transport-Security", "value": "max-age=63072000; includeSubDomains; preload" },
-        { "key": "Content-Security-Policy",   "value": "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https://images.pexels.com https://swimnexar.com https://www.pexels.com; frame-src https://www.google.com https://maps.google.com https://www.instagram.com; connect-src 'self' https://script.google.com;" },
+        { "key": "Content-Security-Policy",   "value": "default-src 'self'; script-src 'self' 'unsafe-inline' https://w.behold.so; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https://images.pexels.com https://swimnexar.com https://www.pexels.com https://scontent.cdninstagram.com https://scontent-mia3-2.cdninstagram.com https://*.cdninstagram.com; frame-src https://www.google.com https://maps.google.com https://www.instagram.com https://calendar.google.com; connect-src 'self' https://script.google.com https://graph.facebook.com https://w.behold.so;" },
         { "key": "X-Permitted-Cross-Domain-Policies", "value": "none" },
         { "key": "Cross-Origin-Opener-Policy", "value": "same-origin-allow-popups" },
         { "key": "Cross-Origin-Resource-Policy", "value": "same-site" }

@@ -236,6 +236,39 @@
   </div>
 </section>
 
+<!-- LIVE CALENDAR -->
+<section class="section" id="calendar">
+  <div class="container">
+    <div class="section-head center">
+      <div class="label">🗓 Live Schedule</div>
+      <h2 class="title">Practice Calendar</h2>
+      <p class="subtitle">Cancelled or rescheduled practices update here in real-time — no need to call or text.</p>
+    </div>
+    <div class="cal-wrap">
+      <iframe id="nexar-calendar"
+              src="CALENDAR_PENDING"
+              style="border:0; display:none;" width="100%" height="520"
+              frameborder="0" scrolling="no" title="Nexar Swim Team Schedule" loading="lazy"></iframe>
+      <div class="cal-placeholder" id="calPlaceholder">
+        <div class="cal-ph-inner">
+          <div style="font-size:40px; margin-bottom:16px;">📅</div>
+          <h3>Live Calendar Coming Soon</h3>
+          <p>We're connecting our practice calendar. In the meantime — Tuesday & Thursday · 5:00–7:00 PM</p>
+          <div class="cal-days">
+            <div class="cal-day off">Mon</div>
+            <div class="cal-day on" style="background:var(--blue);">Tue</div>
+            <div class="cal-day off">Wed</div>
+            <div class="cal-day on" style="background:var(--blue);">Thu</div>
+            <div class="cal-day off">Fri</div>
+            <div class="cal-day off">Sat</div>
+            <div class="cal-day off">Sun</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- GALLERY — Real kids with NEXAR awards -->
 <section class="section section-gray">
   <div class="container">
@@ -251,6 +284,27 @@
       <div class="gal-item"><img src="images/st-award-4.jpg" alt="NEXAR Swim Team Level 4 award" loading="lazy"></div>
       <div class="gal-item"><img src="images/st-award-5.jpg" alt="NEXAR Swim Team Level 2 award" loading="lazy"></div>
       <div class="gal-item"><img src="images/nexar-swim-logo.jpg" alt="NEXAR Swim Team" loading="lazy"></div>
+    </div>
+  </div>
+</section>
+
+<!-- INSTAGRAM FEED -->
+<section class="section" id="instagram" style="background:#f7f7f7;">
+  <div class="container">
+    <div class="section-head center">
+      <div class="label">📸 Instagram</div>
+      <h2 class="title">Follow @swim_nexar</h2>
+      <p class="subtitle">Swimmer achievements, practice moments, and team highlights.</p>
+    </div>
+    <div id="behold-widget-WIDGET_ID" style="margin-top:32px;"></div>
+    <script>
+    !function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="https://w.behold.so/widget.js";fjs.parentNode.insertBefore(js,fjs)}}(document,"script","behold-widget-js");
+    </script>
+    <div style="text-align:center; margin-top:28px;">
+      <a href="https://instagram.com/swim_nexar" target="_blank" rel="noopener noreferrer"
+         class="btn btn-dark" style="display:inline-flex; align-items:center; gap:10px; background:#E1306C; border-radius:50px; padding:14px 28px;">
+        📸 Follow on Instagram
+      </a>
     </div>
   </div>
 </section>

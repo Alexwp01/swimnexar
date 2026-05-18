@@ -321,6 +321,41 @@
   </div>
 </section>
 
+<!-- LIVE CALENDAR -->
+<section class="section" id="calendar">
+  <div class="container">
+    <div class="section-head center">
+      <div class="label">🗓 Live Schedule</div>
+      <h2 class="title">Practice Calendar</h2>
+      <p class="subtitle">Cancelled or rescheduled practices update here in real-time — no need to call or text.</p>
+    </div>
+    <div class="cal-wrap">
+      <!-- ⬇ Replace src value with your Google Calendar embed URL -->
+      <iframe id="nexar-calendar"
+              src="CALENDAR_PENDING"
+              style="border:0; display:none;" width="100%" height="520"
+              frameborder="0" scrolling="no" title="Nexar Water Polo Schedule" loading="lazy"></iframe>
+      <!-- Shown until calendar is connected -->
+      <div class="cal-placeholder" id="calPlaceholder">
+        <div class="cal-ph-inner">
+          <div style="font-size:40px; margin-bottom:16px;">📅</div>
+          <h3>Live Calendar Coming Soon</h3>
+          <p>We're connecting our practice calendar. In the meantime — Mon / Wed / Fri · 8:00–9:45 PM</p>
+          <div class="cal-days">
+            <div class="cal-day on">Mon</div>
+            <div class="cal-day off">Tue</div>
+            <div class="cal-day on">Wed</div>
+            <div class="cal-day off">Thu</div>
+            <div class="cal-day on">Fri</div>
+            <div class="cal-day off">Sat</div>
+            <div class="cal-day off">Sun</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- COACH -->
 <section class="section" id="coach">
   <div class="container">
@@ -453,6 +488,28 @@
         </div>
       </div>
 
+    </div>
+  </div>
+</section>
+
+<!-- INSTAGRAM FEED -->
+<section class="section" id="instagram" style="background:#f7f7f7;">
+  <div class="container">
+    <div class="section-head center">
+      <div class="label">📸 Instagram</div>
+      <h2 class="title">Follow @swim_nexar</h2>
+      <p class="subtitle">Practice clips, team moments, highlights — see what Nexar is all about.</p>
+    </div>
+    <!-- Behold.so widget — replace WIDGET_ID with your ID from behold.so -->
+    <div id="behold-widget-WIDGET_ID" style="margin-top:32px;"></div>
+    <script>
+    !function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="https://w.behold.so/widget.js";fjs.parentNode.insertBefore(js,fjs)}}(document,"script","behold-widget-js");
+    </script>
+    <div style="text-align:center; margin-top:28px;">
+      <a href="https://instagram.com/swim_nexar" target="_blank" rel="noopener noreferrer"
+         class="btn btn-dark" style="display:inline-flex; align-items:center; gap:10px; background:#E1306C; border-radius:50px; padding:14px 28px;">
+        📸 Follow on Instagram
+      </a>
     </div>
   </div>
 </section>
