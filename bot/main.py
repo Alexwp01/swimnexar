@@ -27,6 +27,22 @@ LGRAY  = (90, 90, 90)
 DARK   = (13, 13, 13)
 DARKER = (8, 8, 8)
 
+# ── Used-topics state ────────────────────────────────────────
+_USED_TOPICS_PATH = os.path.join(os.path.dirname(__file__), "used_topics.json")
+
+def _load_used_topics():
+    if os.path.exists(_USED_TOPICS_PATH):
+        with open(_USED_TOPICS_PATH) as f:
+            return json.load(f)
+    return []
+
+def _save_used_topic(topic):
+    used = _load_used_topics()
+    if topic not in used:
+        used.append(topic)
+    with open(_USED_TOPICS_PATH, "w") as f:
+        json.dump(used, f, indent=2)
+
 # ── Topic bank ───────────────────────────────────────────────
 TOPICS = [
     # Technique & drills
@@ -157,7 +173,16 @@ def _dots(draw, total, active, cx, y, r=6, gap=22):
 # ── Step 1: Generate content with Claude ─────────────────────
 def _pick_topic():
     import random
-    return random.choice(TOPICS)
+    used = _load_used_topics()
+    available = [t for t in TOPICS if t not in used]
+    if not available:
+        # All topics used — reset and start over
+        print("🔄 All topics used — resetting cycle")
+        with open(_USED_TOPICS_PATH, "w") as f:
+            json.dump([], f)
+        available = TOPICS
+    topic = random.choice(available)
+    return topic
 
 def _is_waterpolo(topic):
     return "water polo" in topic.lower()
@@ -526,6 +551,9 @@ def main():
 
     post_id = post_to_instagram(images, content["caption"])
     print(f"✅ Scheduled! ID: {post_id}")
+
+    if post_id:
+        _save_used_topic(content["topic"])
 
     log_to_notion(content, post_id)
     print("🎉 Done!")
