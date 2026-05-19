@@ -27,21 +27,30 @@ LGRAY  = (90, 90, 90)
 DARK   = (13, 13, 13)
 DARKER = (8, 8, 8)
 
-# ── Used-topics state ────────────────────────────────────────
-_USED_TOPICS_PATH = os.path.join(os.path.dirname(__file__), "used_topics.json")
-
+# ── Used-topics state (via Notion) ───────────────────────────
 def _load_used_topics():
-    if os.path.exists(_USED_TOPICS_PATH):
-        with open(_USED_TOPICS_PATH) as f:
-            return json.load(f)
-    return []
-
-def _save_used_topic(topic):
-    used = _load_used_topics()
-    if topic not in used:
-        used.append(topic)
-    with open(_USED_TOPICS_PATH, "w") as f:
-        json.dump(used, f, indent=2)
+    """Query Notion DB for all previously posted topics."""
+    used = []
+    cursor = None
+    while True:
+        body = {"page_size": 100, "filter": {"property": "Topic", "rich_text": {"is_not_empty": True}}}
+        if cursor:
+            body["start_cursor"] = cursor
+        r = requests.post(
+            f"https://api.notion.com/v1/databases/{NOTION_DB_ID}/query",
+            headers={"Authorization": f"Bearer {NOTION_TOKEN}", "Notion-Version": "2022-06-28"},
+            json=body,
+            timeout=15,
+        )
+        data = r.json()
+        for page in data.get("results", []):
+            rt = page.get("properties", {}).get("Topic", {}).get("rich_text", [])
+            if rt:
+                used.append(rt[0]["text"]["content"])
+        if not data.get("has_more"):
+            break
+        cursor = data.get("next_cursor")
+    return used
 
 # ── Topic bank ───────────────────────────────────────────────
 TOPICS = [
@@ -174,12 +183,10 @@ def _dots(draw, total, active, cx, y, r=6, gap=22):
 def _pick_topic():
     import random
     used = _load_used_topics()
+    print(f"📋 Used topics so far: {len(used)}/{len(TOPICS)}")
     available = [t for t in TOPICS if t not in used]
     if not available:
-        # All topics used — reset and start over
         print("🔄 All topics used — resetting cycle")
-        with open(_USED_TOPICS_PATH, "w") as f:
-            json.dump([], f)
         available = TOPICS
     topic = random.choice(available)
     return topic
@@ -551,9 +558,6 @@ def main():
 
     post_id = post_to_instagram(images, content["caption"])
     print(f"✅ Scheduled! ID: {post_id}")
-
-    if post_id:
-        _save_used_topic(content["topic"])
 
     log_to_notion(content, post_id)
     print("🎉 Done!")
