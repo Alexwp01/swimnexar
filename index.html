@@ -222,11 +222,8 @@
     .entry-footer a { color: rgba(255,255,255,.5); }
     .entry-footer a:hover { color: var(--white); }
 
-    @media (max-width: 860px) {
-      .choice-cards[style*="1fr 1fr 1fr"] { grid-template-columns: 1fr 1fr !important; }
-    }
     @media (max-width: 640px) {
-      .choice-cards { grid-template-columns: 1fr !important; }
+      .choice-cards { grid-template-columns: 1fr; }
       .choice-body { padding-top: 80px; padding-bottom: 22px; }
       body { overflow: auto; }
       .entry-page { min-height: 100svh; padding: 20px 14px; }
@@ -262,16 +259,16 @@
 
       <!-- Brand headline -->
       <div class="entry-brand">
-        <p class="entry-brand-label">Nexar Aquatic Academy · Pasco County, FL</p>
+        <p class="entry-brand-label">Nexar Aquatic Academy · Pasco & Hillsborough County, FL</p>
         <h1 class="entry-headline">Not just a swim club.</h1>
         <p class="entry-sub">We build complete aquatic athletes — from a child's first splash<br>to their college scholarship. In the water and beyond.</p>
       </div>
 
-      <!-- Program cards — 3 on top, 2 on bottom -->
-      <div class="choice-cards" style="grid-template-columns:1fr 1fr 1fr;">
+      <!-- 3 program cards -->
+      <div class="choice-cards choice-cards-4">
 
-        <!-- Water Polo — Land O' Lakes -->
-        <a class="choice-card wp" href="waterpolo.html">
+        <!-- Water Polo → location chooser -->
+        <a class="choice-card wp" href="waterpolo-choose.html">
           <div class="choice-bg">
             <img src="https://images.pexels.com/photos/3639466/pexels-photo-3639466.jpeg?auto=compress&cs=tinysrgb&w=900"
                  alt="Water Polo" loading="eager">
@@ -280,26 +277,9 @@
           <div class="choice-body">
             <span class="choice-tag">🤽 Water Polo</span>
             <h2>Water Polo</h2>
-            <p>Ages 8–18 · Land O' Lakes, FL<br>Mon / Wed / Fri · 8–9:45 PM</p>
-            <span class="choice-cta">Get Started →</span>
+            <p>Ages 8–18 · 2 locations<br>Pasco & Hillsborough County · First practice free</p>
+            <span class="choice-cta">Choose Location →</span>
           </div>
-        </a>
-
-        <!-- Water Polo — Temple Terrace -->
-        <a class="choice-card wp" href="waterpolo-temple.html">
-          <div class="choice-bg">
-            <img src="https://images.pexels.com/photos/3639466/pexels-photo-3639466.jpeg?auto=compress&cs=tinysrgb&w=900"
-                 alt="Water Polo Temple Terrace" loading="eager">
-          </div>
-          <div class="choice-dim"></div>
-          <div class="choice-body">
-            <span class="choice-tag" style="background:#b91c1c;">🤽 Water Polo</span>
-            <h2>Water Polo</h2>
-            <p>Ages 8–18 · Temple Terrace, FL<br>Tue / Thu · 7–8 PM · $20/session</p>
-            <span class="choice-cta">Get Started →</span>
-          </div>
-          <!-- NEW badge -->
-          <div style="position:absolute;top:16px;right:16px;background:#fff;color:#d42b2b;font-size:10px;font-weight:800;letter-spacing:1px;text-transform:uppercase;padding:4px 10px;border-radius:50px;">NEW</div>
         </a>
 
         <!-- Swim Team -->
@@ -317,12 +297,7 @@
           </div>
         </a>
 
-      </div>
-
-      <!-- Bottom 2 cards -->
-      <div class="choice-cards" style="grid-template-columns:1fr 1fr; margin-top:16px;">
-
-        <!-- Online Course -->
+        <!-- Parent & Child Online Course -->
         <a class="choice-card online" href="#online">
           <div class="choice-bg">
             <img src="https://images.pexels.com/photos/32928609/pexels-photo-32928609.jpeg?auto=compress&cs=tinysrgb&w=900"
@@ -334,21 +309,6 @@
             <h2>Parent & Child Course</h2>
             <p>10 fun lessons · Prep your child<br>for their first swim lesson · Any pool</p>
             <span class="choice-cta coming-soon">Coming Soon →</span>
-          </div>
-        </a>
-
-        <!-- 1-on-1 Coaching -->
-        <a class="choice-card coaching" href="mailto:swimnexar@gmail.com?subject=Book%20a%20Session%20with%20Coach%20Alex">
-          <div class="choice-bg">
-            <img src="https://images.pexels.com/photos/3205403/pexels-photo-3205403.jpeg?auto=compress&cs=tinysrgb&w=900"
-                 alt="Video coaching session on laptop" loading="lazy" style="object-position:center 40%;">
-          </div>
-          <div class="choice-dim"></div>
-          <div class="choice-body">
-            <span class="choice-tag">🎓 1-on-1 · Zoom / In-Person</span>
-            <h2>Coach Alex Sessions</h2>
-            <p>Video technique analysis · College<br>recruitment prep · Athlete development</p>
-            <span class="choice-cta">Book a Session →</span>
           </div>
         </a>
 

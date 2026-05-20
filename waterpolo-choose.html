@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  <link rel="apple-touch-icon" href="/favicon-180.png">
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#0d0d0d">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Youth water polo in Pasco & Hillsborough County, FL. Choose your location — Land O' Lakes or Temple Terrace. Ages 8–18. First practice free!">
+  <title>Choose Location | Water Polo | Nexar Aquatic Academy</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    body { background: #0d0d0d; overflow-x: hidden; }
+
+    .choose-page {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 32px 24px;
+      position: relative;
+    }
+
+    .choose-bg {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+    }
+    .choose-bg img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      filter: brightness(0.22);
+    }
+
+    .choose-content {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+      width: 100%;
+      max-width: 860px;
+    }
+
+    .choose-logo {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 48px;
+    }
+    .choose-logo img { height: clamp(72px, 14vw, 110px); width: auto; }
+    .choose-logo-name {
+      font-size: clamp(14px, 3vw, 20px);
+      font-weight: 900;
+      color: #fff;
+      letter-spacing: 6px;
+      text-transform: uppercase;
+    }
+    .choose-logo-name em {
+      font-style: normal;
+      font-weight: 400;
+      color: rgba(255,255,255,.55);
+    }
+
+    .choose-heading {
+      font-size: clamp(12px, 2vw, 13px);
+      font-weight: 700;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,.4);
+      margin-bottom: 12px;
+    }
+    .choose-title {
+      font-size: clamp(26px, 5vw, 42px);
+      font-weight: 900;
+      color: #fff;
+      letter-spacing: -1px;
+      margin-bottom: 8px;
+    }
+    .choose-sub {
+      font-size: 15px;
+      color: rgba(255,255,255,.5);
+      margin-bottom: 40px;
+    }
+
+    /* Location cards */
+    .loc-cards {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin-bottom: 32px;
+    }
+
+    .loc-card {
+      position: relative;
+      border-radius: 24px;
+      overflow: hidden;
+      cursor: pointer;
+      border: 2px solid transparent;
+      transition: all .3s ease;
+      display: block;
+      text-decoration: none;
+      text-align: left;
+    }
+    .loc-card:hover { transform: translateY(-6px); border-color: #d42b2b; box-shadow: 0 20px 60px rgba(212,43,43,.35); }
+
+    .loc-bg { position: absolute; inset: 0; }
+    .loc-bg img { width: 100%; height: 100%; object-fit: cover; transition: transform .5s ease; }
+    .loc-card:hover .loc-bg img { transform: scale(1.05); }
+
+    .loc-dim {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(0,0,0,.93) 0%, rgba(0,0,0,.4) 55%, transparent 100%);
+    }
+
+    .loc-body {
+      position: relative;
+      z-index: 1;
+      padding: 140px 28px 32px;
+    }
+
+    .loc-badge {
+      display: inline-block;
+      background: #d42b2b;
+      color: #fff;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      padding: 5px 14px;
+      border-radius: 50px;
+      margin-bottom: 14px;
+    }
+    .loc-badge.new-badge {
+      background: #fff;
+      color: #d42b2b;
+      margin-left: 8px;
+    }
+
+    .loc-body h2 {
+      font-size: clamp(22px, 3.5vw, 30px);
+      font-weight: 900;
+      color: #fff;
+      margin-bottom: 8px;
+      letter-spacing: -.5px;
+    }
+
+    .loc-details {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-bottom: 22px;
+    }
+    .loc-detail {
+      font-size: 14px;
+      color: rgba(255,255,255,.7);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .loc-detail strong { color: #fff; }
+
+    .loc-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: #d42b2b;
+      color: #fff;
+      font-size: 14px;
+      font-weight: 700;
+      padding: 11px 22px;
+      border-radius: 50px;
+      transition: gap .25s ease;
+    }
+    .loc-card:hover .loc-cta { gap: 14px; }
+
+    .choose-back {
+      font-size: 14px;
+      color: rgba(255,255,255,.4);
+    }
+    .choose-back a { color: rgba(255,255,255,.6); }
+    .choose-back a:hover { color: #fff; }
+
+    @media (max-width: 600px) {
+      .loc-cards { grid-template-columns: 1fr; }
+      .loc-body { padding-top: 100px; padding-bottom: 24px; }
+      .choose-page { padding: 20px 16px; min-height: 100svh; }
+      .choose-logo { margin-bottom: 32px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="choose-bg">
+  <img src="https://images.pexels.com/photos/3639466/pexels-photo-3639466.jpeg?auto=compress&cs=tinysrgb&w=1920"
+       alt="Water polo" loading="eager">
+</div>
+
+<div class="choose-page">
+  <div class="choose-content">
+
+    <!-- Logo -->
+    <div class="choose-logo">
+      <img src="/images/nexar-logo-clean.png" alt="Nexar Aquatic Academy">
+      <div class="choose-logo-name">NEXAR &nbsp;<em>AQUATIC ACADEMY</em></div>
+    </div>
+
+    <!-- Heading -->
+    <p class="choose-heading">🤽 Water Polo</p>
+    <h1 class="choose-title">Choose Your Location</h1>
+    <p class="choose-sub">Two training locations across Pasco & Hillsborough County.<br>First practice is always free — no commitment.</p>
+
+    <!-- Location Cards -->
+    <div class="loc-cards">
+
+      <!-- Land O' Lakes -->
+      <a class="loc-card" href="waterpolo.html">
+        <div class="loc-bg">
+          <img src="images/wp-team-group.jpg" alt="Land O' Lakes water polo" loading="eager">
+        </div>
+        <div class="loc-dim"></div>
+        <div class="loc-body">
+          <span class="loc-badge">📍 Land O' Lakes</span>
+          <h2>Land O' Lakes</h2>
+          <div class="loc-details">
+            <div class="loc-detail">🏟 <span>Land O' Lakes Recreation Complex</span></div>
+            <div class="loc-detail">📅 <span><strong>Mon · Wed · Fri</strong></span></div>
+            <div class="loc-detail">⏰ <span><strong>8:00 – 9:45 PM</strong></span></div>
+            <div class="loc-detail">👶 <span>Ages 8–18 · All levels</span></div>
+            <div class="loc-detail">💰 <span>Monthly plans · $25–30/session</span></div>
+          </div>
+          <span class="loc-cta">Get Started →</span>
+        </div>
+      </a>
+
+      <!-- Temple Terrace -->
+      <a class="loc-card" href="waterpolo-temple.html">
+        <div class="loc-bg">
+          <img src="images/wp-team-competition.jpg" alt="Temple Terrace water polo" loading="eager">
+        </div>
+        <div class="loc-dim"></div>
+        <div class="loc-body">
+          <span class="loc-badge">📍 Temple Terrace</span>
+          <span class="loc-badge new-badge">NEW</span>
+          <h2>Temple Terrace</h2>
+          <div class="loc-details">
+            <div class="loc-detail">🏟 <span>Temple Terrace Aquatic Center</span></div>
+            <div class="loc-detail">📅 <span><strong>Tue · Thu</strong></span></div>
+            <div class="loc-detail">⏰ <span><strong>7:00 – 8:00 PM</strong></span></div>
+            <div class="loc-detail">👶 <span>Ages 8–18 · All levels</span></div>
+            <div class="loc-detail">💰 <span>$20/session · Package of 8: $160</span></div>
+          </div>
+          <span class="loc-cta">Get Started →</span>
+        </div>
+      </a>
+
+    </div>
+
+    <p class="choose-back">
+      <a href="index.html">← Back to all programs</a>
+    </p>
+
+  </div>
+</div>
+
+</body>
+</html>
