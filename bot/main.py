@@ -191,6 +191,25 @@ def _pick_topic():
     topic = random.choice(available)
     return topic
 
+_VISUAL_STYLES = [
+    # Angle / composition
+    ("aerial top-down", "bird's-eye view directly above the pool, swimmers forming geometric lane patterns, vivid blue water"),
+    ("side profile action", "low camera angle at water level, athlete mid-stroke in profile, water spraying sideways, motion blur on arms"),
+    ("underwater upward", "underwater camera looking up at swimmer silhouette from below, sunlight rays refracting through water surface, dramatic light columns"),
+    ("poolside wide", "wide establishing shot from pool deck, multiple lanes, morning mist, golden hour light raking across the water"),
+    ("over-shoulder coach", "over-the-shoulder perspective of a coach watching athletes in pool from starting block end, depth of field blur on background"),
+    ("tight action freeze", "telephoto freeze-frame of athlete at peak effort — fingertips breaking surface, water crown mid-air, razor-sharp detail"),
+    ("underwater side", "underwater side-angle, athlete streamlined underwater after dive, bubbles trailing, turquoise light, clean and peaceful"),
+    ("splash close-up", "extreme close-up of water erupting from a powerful stroke or kick, backlit droplets like crystals, black background"),
+    ("victory end-of-lane", "athlete at the wall after a race, goggles pushed up, looking up at the scoreboard, out-of-focus teammates behind"),
+    ("training drill wide", "wide shot of a youth practice session, multiple athletes doing drills in parallel lanes, coach walking the deck"),
+]
+
+def _pick_visual_style():
+    import random
+    label, description = random.choice(_VISUAL_STYLES)
+    return label, description
+
 def _is_waterpolo(topic):
     return "water polo" in topic.lower()
 
@@ -198,6 +217,8 @@ def generate_content():
     print("🤖 Generating content with Claude...")
     topic = _pick_topic()
     ages  = "7–18" if _is_waterpolo(topic) else "5–18"
+    visual_label, visual_desc = _pick_visual_style()
+    print(f"🎨 Visual style: {visual_label}")
     prompt = f"""You are a social media expert for Nexar Aquatic Academy in Wesley Chapel, FL.
 You must create a post about this specific topic: "{topic}"
 We coach youth water polo (ages 7-18) and swim team (ages 5-18).
@@ -226,7 +247,7 @@ Return ONLY valid JSON with this exact structure:
     {{"title": "Come Try It Free", "body": "First practice FREE · Ages {ages} · Land O' Lakes & Wesley Chapel, FL · swimnexar.com"}}
   ],
   "caption": "2-3 short sentences max. One hook, one value line, one CTA (e.g. 'First practice is free — link in bio'). No long paragraphs. Hashtags on a new line: #waterpolo #swimming #youthsports #swimteam #wesleychapel #florida #aquatics #swimnexar #collegeprep #scholarship",
-  "image_prompt": "Photorealistic dramatic sports photo related to the topic above. Professional athletics photography, moody underwater lighting or golden hour pool light, no text, cinematic"
+  "image_prompt": "Photorealistic sports photography, {visual_label} composition — {visual_desc}. Topic: {topic}. No faces close-up, no text, no watermarks. Shot on Canon 1DX, f/2.8, cinematic color grade."
 }}"""
 
     for attempt in range(3):
