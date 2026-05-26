@@ -191,23 +191,36 @@ def _pick_topic():
     topic = random.choice(available)
     return topic
 
-_VISUAL_STYLES = [
-    # Angle / composition
-    ("aerial top-down", "bird's-eye view directly above the pool, swimmers forming geometric lane patterns, vivid blue water"),
-    ("side profile action", "low camera angle at water level, athlete mid-stroke in profile, water spraying sideways, motion blur on arms"),
-    ("underwater upward", "underwater camera looking up at swimmer silhouette from below, sunlight rays refracting through water surface, dramatic light columns"),
-    ("poolside wide", "wide establishing shot from pool deck, multiple lanes, morning mist, golden hour light raking across the water"),
-    ("over-shoulder coach", "over-the-shoulder perspective of a coach watching athletes in pool from starting block end, depth of field blur on background"),
-    ("tight action freeze", "telephoto freeze-frame of athlete at peak effort — fingertips breaking surface, water crown mid-air, razor-sharp detail"),
-    ("underwater side", "underwater side-angle, athlete streamlined underwater after dive, bubbles trailing, turquoise light, clean and peaceful"),
-    ("splash close-up", "extreme close-up of water erupting from a powerful stroke or kick, backlit droplets like crystals, black background"),
-    ("victory end-of-lane", "athlete at the wall after a race, goggles pushed up, looking up at the scoreboard, out-of-focus teammates behind"),
-    ("training drill wide", "wide shot of a youth practice session, multiple athletes doing drills in parallel lanes, coach walking the deck"),
+_VISUAL_STYLES_SWIM = [
+    ("aerial lanes", "girl swimmer, bird's-eye view from directly above, freestyle mid-stroke, vivid turquoise lane lines, geometric composition"),
+    ("water level side", "teenage boy swimmer, camera at water surface, butterfly stroke in full extension, massive water spray sideways, golden hour light"),
+    ("underwater upward", "girl swimmer silhouette from below, underwater looking up, sunlight refracting through surface into light columns, peaceful turquoise"),
+    ("poolside wide", "mixed group of young male and female swimmers on starting blocks, wide shot, stadium lights, coach on deck watching"),
+    ("action freeze telephoto", "boy swimmer, telephoto freeze-frame at peak of backstroke — arm fully extended, water crown erupting, razor-sharp droplets"),
+    ("underwater streamline", "girl swimmer streamlined underwater after a dive start, bubbles trailing, clear water, side angle, calm and powerful"),
+    ("splash abstract", "extreme close-up of water exploding from a breaststroke kick, backlit droplets like crystals, dark background, no athlete visible"),
+    ("finish wall", "teenage girl touching the wall at finish, goggles up, looking at scoreboard, out-of-focus teammates cheering behind her"),
+    ("training wide", "group of boys and girls in parallel lanes during practice, coach walking poolside, morning light, multiple splashes"),
+    ("dive entry", "boy in mid-air off starting block, perfect streamlined dive, pool stretching into background, stadium overhead lights"),
 ]
 
-def _pick_visual_style():
+_VISUAL_STYLES_WATERPOLO = [
+    ("shooting action", "teenage boy water polo player, side angle, arm cocked back releasing a powerful shot, ball mid-air, dramatic splash around hips, golden hour pool light"),
+    ("aerial game", "bird's-eye view of a water polo game in progress, players treading water in formation, ball in play, vivid blue pool, geometric overhead composition"),
+    ("goalkeeper save", "girl goalkeeper mid-save, arms spread wide, ball just deflected, water erupting around her, low dramatic angle from the water"),
+    ("passing drill", "two teenage water polo players — one boy one girl — facing each other mid-pass drill, ball sharp in focus, coaches watching in soft background"),
+    ("defensive block", "boy defender rising high out of water to block, opponent behind him, both arms extended, dynamic water displacement, telephoto blur on background"),
+    ("team huddle pool", "mixed team of boys and girls treading water in a circle huddle, caps and goggles, coach leaning down from pool deck, tight group shot"),
+    ("eggbeater close", "girl water polo player, waist-up out of the water, holding ball overhead, water pouring off her arms, stadium lights behind, power pose"),
+    ("underwater passing", "underwater side view of two players' legs and arms — eggbeater kick motion visible, turquoise water, bubbles, athletic power"),
+    ("counterattack wide", "three water polo players sprinting through water in counterattack — two boys one girl — wide shot, churning white water wake, opponent behind"),
+    ("cap and goggle detail", "close-up of water polo cap and goggles on an athlete's head, water droplets on surface, shallow depth of field, dark pool background"),
+]
+
+def _pick_visual_style(is_waterpolo: bool):
     import random
-    label, description = random.choice(_VISUAL_STYLES)
+    pool = _VISUAL_STYLES_WATERPOLO if is_waterpolo else _VISUAL_STYLES_SWIM
+    label, description = random.choice(pool)
     return label, description
 
 def _is_waterpolo(topic):
@@ -216,8 +229,9 @@ def _is_waterpolo(topic):
 def generate_content():
     print("🤖 Generating content with Claude...")
     topic = _pick_topic()
-    ages  = "7–18" if _is_waterpolo(topic) else "5–18"
-    visual_label, visual_desc = _pick_visual_style()
+    waterpolo = _is_waterpolo(topic)
+    ages  = "7–18" if waterpolo else "5–18"
+    visual_label, visual_desc = _pick_visual_style(waterpolo)
     print(f"🎨 Visual style: {visual_label}")
     prompt = f"""You are a social media expert for Nexar Aquatic Academy in Wesley Chapel, FL.
 You must create a post about this specific topic: "{topic}"
