@@ -102,7 +102,7 @@
       <div class="hero-stats">
         <div class="hero-stat"><strong>Ages 8–18</strong><span>All Levels</span></div>
         <div class="hero-stat"><strong>Tue & Thu</strong><span>7–8 PM</span></div>
-        <div class="hero-stat"><strong>$20/session</strong><span>Under 12</span></div>
+        <div class="hero-stat"><strong>$25/session</strong><span>All Ages</span></div>
         <div class="hero-stat"><strong>Free</strong><span>First Practice</span></div>
       </div>
     </div>
@@ -168,53 +168,46 @@
   <div class="container">
     <div class="section-head center">
       <div class="label">Pricing</div>
-      <h2 class="title">Simple, Flexible Pricing</h2>
-      <p class="subtitle">Pay per session or save with a package of 8. No monthly contract, no lock-in.</p>
+      <h2 class="title">Simple Pricing — All Ages</h2>
+      <p class="subtitle">Same price for everyone. Come once or commit to a full month.</p>
     </div>
 
-    <!-- Age toggle -->
-    <div style="display:flex; justify-content:center; margin-bottom:40px;">
-      <div class="price-toggle">
-        <button class="price-toggle-btn active" data-age="young">Under 12</button>
-        <button class="price-toggle-btn" data-age="teen">Ages 12+</button>
-      </div>
-    </div>
-
-    <div class="grid-2-c" style="max-width:700px; margin:0 auto; display:grid; grid-template-columns:1fr 1fr; gap:24px;">
+    <div style="max-width:700px; margin:0 auto; display:grid; grid-template-columns:1fr 1fr; gap:24px;">
 
       <!-- Single Session -->
       <div class="price-card reveal d1">
         <div class="price-icon">📅</div>
         <h3>Single Session</h3>
-        <p class="price-age">Pay as you go</p>
+        <p class="price-age">Drop-in · any Tuesday or Thursday</p>
         <div>
-          <span class="price-amount" data-young="$20" data-teen="$25">$20</span>
+          <span class="price-amount">$25</span>
           <span class="price-per">/session</span>
         </div>
-        <p class="price-note" data-young="Per practice · Tue or Thu" data-teen="Per practice · Tue or Thu">Per practice · Tue or Thu</p>
+        <p class="price-note">Per practice · no commitment</p>
         <div class="price-divider"></div>
         <ul class="price-feats">
           <li class="price-feat">Come when you can</li>
-          <li class="price-feat">No commitment</li>
+          <li class="price-feat">No contract</li>
           <li class="price-feat">First practice FREE</li>
         </ul>
         <a href="#register" class="btn btn-outline-red btn-full">Start Free →</a>
       </div>
 
-      <!-- Package of 8 — Best Value -->
+      <!-- Monthly / Pack of 8 -->
       <div class="price-card popular reveal d2">
         <div class="price-pop-badge">Best Value</div>
         <div class="price-icon">🔥</div>
-        <h3>Package of 8</h3>
-        <p class="price-age">Prepaid · 4 weeks</p>
+        <h3>Monthly</h3>
+        <p class="price-age">8 sessions · Tue & Thu · 4 weeks</p>
         <div>
-          <span class="price-amount" data-young="$160" data-teen="$200">$160</span>
+          <span class="price-amount">$200</span>
+          <span class="price-per">/mo</span>
         </div>
-        <p class="price-note" data-young="$20/session · same price, more commitment" data-teen="$25/session · commit to your training">$20/session — 8 sessions prepaid</p>
+        <p class="price-note">$25/session · full month commitment</p>
         <div class="price-divider"></div>
         <ul class="price-feats">
-          <li class="price-feat">8 sessions (≈ 4 weeks)</li>
-          <li class="price-feat">Tue & Thu</li>
+          <li class="price-feat">8 sessions per month</li>
+          <li class="price-feat">Tue & Thu · 7–8 PM</li>
           <li class="price-feat">First practice FREE</li>
         </ul>
         <a href="#register" class="btn btn-red btn-full">Start Free →</a>
@@ -223,7 +216,7 @@
     </div>
 
     <p style="max-width:580px; margin:32px auto 0; text-align:center; font-size:14px; color:var(--gray); line-height:1.7;">
-      💡 <strong style="color:var(--black);">First practice is always free.</strong> Come try it with your child — no payment required for the first session. Package sessions do not expire if a practice is cancelled.
+      💡 <strong style="color:var(--black);">First practice is always free.</strong> No payment needed for the first session. Unused sessions from cancelled practices carry over.
     </p>
 
   </div>
@@ -383,10 +376,8 @@
           <label>Pricing preference</label>
           <select name="pricingPlan">
             <option value="">Select...</option>
-            <option value="single-u12">Single session — Under 12 ($20)</option>
-            <option value="package-u12">Package of 8 — Under 12 ($160)</option>
-            <option value="single-12plus">Single session — Ages 12+ ($25)</option>
-            <option value="package-12plus">Package of 8 — Ages 12+ ($200)</option>
+            <option value="single">Single session ($25)</option>
+            <option value="monthly">Monthly — 8 sessions/month ($200)</option>
           </select>
         </div>
         <div class="f-group">
