@@ -163,35 +163,39 @@ h2.title.light { color:var(--white); }
 .ticker-wrap {
   position: fixed; top: 0; left: 0; right: 0; z-index: 1001;
   height: var(--ticker-h); background: var(--dark); overflow: hidden;
-  border-bottom: 1px solid rgba(255,255,255,.06);
+  display: flex; align-items: center;
+  border-bottom: 1px solid rgba(255,255,255,.08);
 }
 .ticker-track {
-  display: flex; align-items: center;
-  height: 100%; width: max-content;
-  animation: ticker-scroll 40s linear infinite;
+  display: flex; align-items: center; flex-shrink: 0;
+  white-space: nowrap;
+  animation: ticker-scroll 42s linear infinite;
 }
 .ticker-track:hover { animation-play-state: paused; }
 @keyframes ticker-scroll {
-  0%   { transform: translateX(0); }
-  100% { transform: translateX(-50%); }
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
 }
 .ticker-item {
-  white-space: nowrap; padding: 0 28px;
-  font-size: 12px; font-weight: 600; color: rgba(255,255,255,.65);
-  letter-spacing: .4px;
+  display: inline-flex; align-items: center;
+  padding: 0 24px; height: var(--ticker-h);
+  font-size: 12px; font-weight: 600; color: rgba(255,255,255,.6);
+  letter-spacing: .3px; white-space: nowrap;
 }
-.ticker-item a { color: #f87171; text-decoration: none; font-weight: 700; }
+.ticker-item a { color: #fca5a5; text-decoration: none; font-weight: 700; }
 .ticker-item a:hover { color: #fff; }
 .ticker-dot {
-  width: 4px; height: 4px; border-radius: 50%;
-  background: rgba(255,255,255,.2); flex-shrink: 0;
+  display: inline-block; width: 3px; height: 3px; border-radius: 50%;
+  background: rgba(255,255,255,.22); flex-shrink: 0; align-self: center;
 }
+@media (max-width: 640px) { .ticker-wrap { display: none; } }
 
 /* ── HEADER ── */
 .header {
   position: fixed; top: var(--ticker-h); left: 0; right: 0; z-index: 1000;
   height: var(--header-h); transition: background var(--t), box-shadow var(--t);
 }
+@media (max-width: 640px) { .header { top: 0; } }
 .header.scrolled {
   background:rgba(13,13,13,.96);
   backdrop-filter:blur(16px);
