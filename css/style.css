@@ -19,6 +19,7 @@
 
   --font: 'Inter', -apple-system, sans-serif;
   --h:    var(--header-h);
+  --ticker-h: 36px;
   --header-h: 80px;
   --r:    12px;
   --r-lg: 20px;
@@ -158,10 +159,38 @@ h2.title.light { color:var(--white); }
 .entry-card.swimteam  .entry-card-cta { background:var(--blue); }
 .entry-card:hover .entry-card-cta { gap:12px; }
 
+/* ── TICKER ── */
+.ticker-wrap {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 1001;
+  height: var(--ticker-h); background: var(--dark); overflow: hidden;
+  border-bottom: 1px solid rgba(255,255,255,.06);
+}
+.ticker-track {
+  display: flex; align-items: center;
+  height: 100%; width: max-content;
+  animation: ticker-scroll 40s linear infinite;
+}
+.ticker-track:hover { animation-play-state: paused; }
+@keyframes ticker-scroll {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+.ticker-item {
+  white-space: nowrap; padding: 0 28px;
+  font-size: 12px; font-weight: 600; color: rgba(255,255,255,.65);
+  letter-spacing: .4px;
+}
+.ticker-item a { color: #f87171; text-decoration: none; font-weight: 700; }
+.ticker-item a:hover { color: #fff; }
+.ticker-dot {
+  width: 4px; height: 4px; border-radius: 50%;
+  background: rgba(255,255,255,.2); flex-shrink: 0;
+}
+
 /* ── HEADER ── */
 .header {
-  position:fixed; top:0; left:0; right:0; z-index:1000;
-  height:var(--header-h); transition:background var(--t), box-shadow var(--t);
+  position: fixed; top: var(--ticker-h); left: 0; right: 0; z-index: 1000;
+  height: var(--header-h); transition: background var(--t), box-shadow var(--t);
 }
 .header.scrolled {
   background:rgba(13,13,13,.96);
@@ -554,7 +583,7 @@ h2.title.light { color:var(--white); }
 
 /* ── PAGE HERO (inner pages) ── */
 .page-hero {
-  background:var(--dark); padding:calc(var(--header-h) + 56px) 0 72px; color:var(--white);
+  background:var(--dark); padding:calc(var(--ticker-h) + var(--header-h) + 56px) 0 72px; color:var(--white);
   position:relative; overflow:hidden; text-align:center;
 }
 .page-hero h1 { font-size:clamp(36px,6vw,60px); font-weight:900; letter-spacing:-2px; margin-bottom:14px; }
