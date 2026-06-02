@@ -106,6 +106,8 @@
       text-align: left;
     }
     .loc-card:hover { transform: translateY(-6px); border-color: #d42b2b; box-shadow: 0 20px 60px rgba(212,43,43,.35); }
+    .loc-card-link { position: absolute; inset: 0; z-index: 1; }
+    .loc-body { position: relative; z-index: 2; }
 
     .loc-bg { position: absolute; inset: 0; }
     .loc-bg img { width: 100%; height: 100%; object-fit: cover; transition: transform .5s ease; }
@@ -223,6 +225,8 @@
           <img src="images/wp-team-group.jpg" alt="Land O' Lakes water polo" loading="eager">
         </div>
         <div class="loc-dim"></div>
+        <!-- Full card clickable link -->
+        <a href="waterpolo.html" class="loc-card-link" aria-label="Land O' Lakes water polo — full program"></a>
         <div class="loc-body">
           <span class="loc-badge">📍 Land O' Lakes</span>
           <h2>Land O' Lakes</h2>
@@ -232,12 +236,9 @@
             <div class="loc-detail">⏰ <span><strong>8:00 – 9:45 PM</strong></span></div>
             <div class="loc-detail">👶 <span>Ages 8–18 · All levels</span></div>
           </div>
-          <div style="display:flex; flex-direction:column; gap:10px;">
+          <div style="display:flex; flex-direction:column; gap:10px; position:relative; z-index:2;">
             <a href="waterpolo.html#register" class="loc-cta" style="justify-content:center; background:#d42b2b;">
               🎉 Sign Up — First Practice Free
-            </a>
-            <a href="waterpolo.html" style="color:rgba(255,255,255,.6); font-size:13px; text-align:center; text-decoration:none;">
-              See full program →
             </a>
           </div>
         </div>
@@ -249,6 +250,8 @@
           <img src="images/wp-team-competition.jpg" alt="Temple Terrace water polo" loading="eager">
         </div>
         <div class="loc-dim"></div>
+        <!-- Full card clickable link -->
+        <a href="waterpolo-temple.html" class="loc-card-link" aria-label="Temple Terrace water polo — full program"></a>
         <div class="loc-body">
           <span class="loc-badge">📍 Temple Terrace</span>
           <span class="loc-badge new-badge">NEW</span>
@@ -259,12 +262,9 @@
             <div class="loc-detail">⏰ <span><strong>7:00 – 8:00 PM</strong></span></div>
             <div class="loc-detail">👶 <span>Ages 8–18 · All levels</span></div>
           </div>
-          <div style="display:flex; flex-direction:column; gap:10px;">
+          <div style="display:flex; flex-direction:column; gap:10px; position:relative; z-index:2;">
             <a href="waterpolo-temple.html#register" class="loc-cta" style="justify-content:center; background:#d42b2b;">
               🎉 Sign Up — First Practice Free
-            </a>
-            <a href="waterpolo-temple.html" style="color:rgba(255,255,255,.6); font-size:13px; text-align:center; text-decoration:none;">
-              See full program →
             </a>
           </div>
         </div>
