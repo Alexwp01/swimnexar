@@ -99,8 +99,7 @@
       position: relative;
       border-radius: 24px;
       overflow: hidden;
-      cursor: pointer;
-      border: 2px solid transparent;
+      border: 2px solid rgba(255,255,255,.1);
       transition: all .3s ease;
       display: block;
       text-decoration: none;
@@ -257,7 +256,7 @@
     <div class="loc-cards">
 
       <!-- Land O' Lakes -->
-      <a class="loc-card" href="waterpolo.html">
+      <div class="loc-card">
         <div class="loc-bg">
           <img src="images/wp-team-group.jpg" alt="Land O' Lakes water polo" loading="eager">
         </div>
@@ -271,12 +270,19 @@
             <div class="loc-detail">⏰ <span><strong>8:00 – 9:45 PM</strong></span></div>
             <div class="loc-detail">👶 <span>Ages 8–18 · All levels</span></div>
           </div>
-          <span class="loc-cta">Get Started →</span>
+          <div style="display:flex; flex-direction:column; gap:10px;">
+            <a href="waterpolo.html#register" class="loc-cta" style="justify-content:center; background:#d42b2b;">
+              🎉 Sign Up — First Practice Free
+            </a>
+            <a href="waterpolo.html" style="color:rgba(255,255,255,.6); font-size:13px; text-align:center; text-decoration:none;">
+              See full program →
+            </a>
+          </div>
         </div>
-      </a>
+      </div>
 
       <!-- Temple Terrace -->
-      <a class="loc-card" href="waterpolo-temple.html">
+      <div class="loc-card">
         <div class="loc-bg">
           <img src="images/wp-team-competition.jpg" alt="Temple Terrace water polo" loading="eager">
         </div>
@@ -291,9 +297,16 @@
             <div class="loc-detail">⏰ <span><strong>7:00 – 8:00 PM</strong></span></div>
             <div class="loc-detail">👶 <span>Ages 8–18 · All levels</span></div>
           </div>
-          <span class="loc-cta">Get Started →</span>
+          <div style="display:flex; flex-direction:column; gap:10px;">
+            <a href="waterpolo-temple.html#register" class="loc-cta" style="justify-content:center; background:#d42b2b;">
+              🎉 Sign Up — First Practice Free
+            </a>
+            <a href="waterpolo-temple.html" style="color:rgba(255,255,255,.6); font-size:13px; text-align:center; text-decoration:none;">
+              See full program →
+            </a>
+          </div>
         </div>
-      </a>
+      </div>
 
     </div>
 

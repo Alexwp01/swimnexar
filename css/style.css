@@ -798,6 +798,19 @@ h2.title.light { color:var(--white); }
   .footer-brand .logo img { height:36px; }
 }
 
+/* ── Floating WhatsApp button ── */
+.wa-float {
+  position: fixed; bottom: 28px; right: 24px; z-index: 997;
+  width: 56px; height: 56px; border-radius: 50%;
+  background: #25D366;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 4px 20px rgba(37,211,102,.45);
+  transition: transform .2s, box-shadow .2s;
+  text-decoration: none;
+}
+.wa-float:hover { transform: scale(1.1); box-shadow: 0 6px 28px rgba(37,211,102,.6); }
+@media (max-width: 640px) { .wa-float { bottom: 90px; right: 16px; width: 50px; height: 50px; } }
+
 /* ── Google Calendar embed ── */
 .cal-wrap {
   border-radius: 20px;
