@@ -228,7 +228,7 @@ Return ONLY valid JSON with this exact structure:
     {{"title": "Come Try It Free", "body": "First practice FREE · Ages {ages} · Land O' Lakes & Wesley Chapel, FL · swimnexar.com"}}
   ],
   "caption": "2-3 short sentences max. One hook, one value line, one CTA (e.g. 'First practice is free — link in bio'). No long paragraphs. Hashtags on a new line: #waterpolo #swimming #youthsports #swimteam #wesleychapel #florida #aquatics #swimnexar #collegeprep #scholarship",
-  "pexels_query": "2-4 word real-photo search query for a stock photo site, matching the sport ({sport}) and topic. Keep it concrete and likely to return real sports photos — e.g. 'water polo player', 'freestyle swimming race', 'swimmer underwater', 'swimming pool training'. No people's names, no text overlays."
+  "pexels_query": "2-4 word real-photo search query for a stock photo site, matching the sport ({sport}) and topic. It must return action photos of a visible athlete — e.g. 'water polo match', 'freestyle swimmer racing', 'swimmer underwater', 'competitive swimming'. Do NOT use the word 'pool' on its own (it returns billiards photos) and avoid equipment-only terms like 'lane ropes'. No people's names, no text overlays."
 }}"""
 
     for attempt in range(3):
@@ -258,9 +258,10 @@ Return ONLY valid JSON with this exact structure:
                 raise
 
 # ── Step 2: Fetch a real cover photo from Pexels ─────────────
+# Note: avoid the bare word "pool" — Pexels returns billiards photos for it.
 _PEXELS_FALLBACKS = {
-    True:  ["water polo player", "water polo game", "water polo pool", "water sport pool"],
-    False: ["competitive swimming", "swimmer freestyle", "swimming pool race", "swimmer underwater"],
+    True:  ["water polo match", "water polo players", "water polo game", "water polo athlete"],
+    False: ["competitive swimmer", "swimmer racing", "freestyle swimming", "swimming competition"],
 }
 
 def _pexels_search(query):
@@ -284,10 +285,14 @@ def _photo_fits(photo, topic, sport):
                 {"type": "image", "source": {"type": "base64", "media_type": "image/jpeg", "data": b64}},
                 {"type": "text", "text": (
                     f'This photo will be the cover image of a youth {sport} social media post '
-                    f'titled "{topic}". Answer YES only if it clearly shows real {sport} '
-                    f'(a pool, swimmers, or water polo players / action) and fits the topic, '
-                    f'with no off-brand content (no babies/bathtubs, no unrelated objects, '
-                    f'no overlaid text or watermarks). Otherwise answer NO. Reply with only YES or NO.'
+                    f'titled "{topic}". Answer YES only if ALL of these hold: '
+                    f'(1) it clearly shows at least one real {sport} athlete actively swimming or '
+                    f'playing water polo in the water — a visible person in action, not an empty '
+                    f'pool, lane ropes, equipment, or water alone; '
+                    f'(2) it genuinely depicts {sport} (not billiards, not a hot tub/spa, not a '
+                    f'beach or open water leisure scene); '
+                    f'(3) no babies/bathtubs, no unrelated objects, no overlaid text or watermarks. '
+                    f'Otherwise answer NO. Reply with only YES or NO.'
                 )},
             ]}],
         )
