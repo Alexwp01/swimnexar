@@ -14,8 +14,8 @@ IG_TOKEN      = os.environ["INSTAGRAM_ACCESS_TOKEN"]
 IG_USER_ID    = os.environ["INSTAGRAM_USER_ID"]
 ANTHROPIC_KEY = os.environ["ANTHROPIC_API_KEY"]
 REPLICATE_KEY = os.environ["REPLICATE_API_TOKEN"]
-NOTION_TOKEN  = os.environ["NOTION_TOKEN"]
-NOTION_DB_ID  = os.environ["NOTION_DATABASE_ID"]
+NOTION_TOKEN  = os.environ.get("NOTION_TOKEN")        # optional — logging only
+NOTION_DB_ID  = os.environ.get("NOTION_DATABASE_ID")  # optional — logging only
 
 anthropic_client = anthropic.Anthropic(api_key=ANTHROPIC_KEY)
 
@@ -27,30 +27,29 @@ LGRAY  = (90, 90, 90)
 DARK   = (13, 13, 13)
 DARKER = (8, 8, 8)
 
-# ── Used-topics state (via Notion) ───────────────────────────
+# ── Used-topics state (local file, committed back by CI) ─────
+# Notion logging used to be the source of truth here, but its writes were
+# failing (HTTP 400), so the dedup always saw an empty history and repeated
+# topics. State now lives in a committed JSON file — reliable and self-contained.
+STATE_FILE = os.path.join(os.path.dirname(__file__), "posted_topics.json")
+
 def _load_used_topics():
-    """Query Notion DB for all previously posted topics."""
-    used = []
-    cursor = None
-    while True:
-        body = {"page_size": 100, "filter": {"property": "Topic", "rich_text": {"is_not_empty": True}}}
-        if cursor:
-            body["start_cursor"] = cursor
-        r = requests.post(
-            f"https://api.notion.com/v1/databases/{NOTION_DB_ID}/query",
-            headers={"Authorization": f"Bearer {NOTION_TOKEN}", "Notion-Version": "2022-06-28"},
-            json=body,
-            timeout=15,
-        )
-        data = r.json()
-        for page in data.get("results", []):
-            rt = page.get("properties", {}).get("Topic", {}).get("rich_text", [])
-            if rt:
-                used.append(rt[0]["text"]["content"])
-        if not data.get("has_more"):
-            break
-        cursor = data.get("next_cursor")
-    return used
+    """Read previously posted topics from the committed state file."""
+    try:
+        with open(STATE_FILE, "r", encoding="utf-8") as f:
+            data = json.load(f)
+        return data if isinstance(data, list) else data.get("topics", [])
+    except (FileNotFoundError, json.JSONDecodeError):
+        return []
+
+def _record_used_topic(topic):
+    """Append a freshly posted topic to the state file (CI commits it back)."""
+    used = _load_used_topics()
+    if topic not in used:
+        used.append(topic)
+    with open(STATE_FILE, "w", encoding="utf-8") as f:
+        json.dump(used, f, indent=2, ensure_ascii=False)
+    print(f"📒 Recorded topic — history now {len(used)} entries")
 
 # ── Topic bank ───────────────────────────────────────────────
 TOPICS = [
@@ -559,26 +558,36 @@ def post_to_instagram(images, caption):
 
 # ── Step 6: Log to Notion ─────────────────────────────────────
 def log_to_notion(content, post_id):
+    if not (NOTION_TOKEN and NOTION_DB_ID):
+        print("📝 Notion not configured — skipping log")
+        return
     print("📝 Logging to Notion...")
-    r = requests.post(
-        "https://api.notion.com/v1/pages",
-        headers={
-            "Authorization":  f"Bearer {NOTION_TOKEN}",
-            "Content-Type":   "application/json",
-            "Notion-Version": "2022-06-28",
-        },
-        json={
-            "parent": {"database_id": NOTION_DB_ID},
-            "properties": {
-                "Name":        {"title":     [{"text": {"content": content["topic"]}}]},
-                "Status":      {"select":    {"name": "Scheduled" if post_id else "Error"}},
-                "Topic":       {"rich_text": [{"text": {"content": content["topic"]}}]},
-                "Caption":     {"rich_text": [{"text": {"content": content["caption"][:2000]}}]},
-                "Posted Date": {"date":      {"start": datetime.now().isoformat()}},
+    try:
+        r = requests.post(
+            "https://api.notion.com/v1/pages",
+            headers={
+                "Authorization":  f"Bearer {NOTION_TOKEN}",
+                "Content-Type":   "application/json",
+                "Notion-Version": "2022-06-28",
             },
-        },
-    )
-    print(f"Notion: {r.status_code}")
+            json={
+                "parent": {"database_id": NOTION_DB_ID},
+                "properties": {
+                    "Name":        {"title":     [{"text": {"content": content["topic"]}}]},
+                    "Status":      {"select":    {"name": "Scheduled" if post_id else "Error"}},
+                    "Topic":       {"rich_text": [{"text": {"content": content["topic"]}}]},
+                    "Caption":     {"rich_text": [{"text": {"content": content["caption"][:2000]}}]},
+                    "Posted Date": {"date":      {"start": datetime.now().isoformat()}},
+                },
+            },
+            timeout=15,
+        )
+        print(f"Notion: {r.status_code}")
+        if r.status_code >= 300:
+            # Not fatal — dedup no longer depends on Notion. Print body to debug schema.
+            print(f"  Notion error body: {r.text[:300]}")
+    except Exception as e:
+        print(f"  Notion logging failed (non-fatal): {e}")
 
 # ── Main ──────────────────────────────────────────────────────
 def main():
@@ -593,6 +602,9 @@ def main():
 
     post_id = post_to_instagram(images, content["caption"])
     print(f"✅ Scheduled! ID: {post_id}")
+
+    if post_id:
+        _record_used_topic(content["topic"])
 
     log_to_notion(content, post_id)
     print("🎉 Done!")
