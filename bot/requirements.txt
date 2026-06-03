@@ -1,4 +1,3 @@
 anthropic
 requests
 Pillow
-replicate

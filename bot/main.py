@@ -2,8 +2,8 @@ import os
 import re
 import json
 import time
+import random
 import requests
-import replicate
 import anthropic
 from datetime import datetime, timezone
 from PIL import Image, ImageDraw, ImageFont, ImageOps
@@ -13,7 +13,7 @@ from io import BytesIO
 IG_TOKEN      = os.environ["INSTAGRAM_ACCESS_TOKEN"]
 IG_USER_ID    = os.environ["INSTAGRAM_USER_ID"]
 ANTHROPIC_KEY = os.environ["ANTHROPIC_API_KEY"]
-REPLICATE_KEY = os.environ["REPLICATE_API_TOKEN"]
+PEXELS_KEY    = os.environ["PEXELS_API_KEY"]
 NOTION_TOKEN  = os.environ.get("NOTION_TOKEN")        # optional — logging only
 NOTION_DB_ID  = os.environ.get("NOTION_DATABASE_ID")  # optional — logging only
 
@@ -190,38 +190,6 @@ def _pick_topic():
     topic = random.choice(available)
     return topic
 
-_VISUAL_STYLES_SWIM = [
-    ("aerial lanes", "girl swimmer, bird's-eye view from directly above, freestyle mid-stroke, vivid turquoise lane lines, geometric composition"),
-    ("water level side", "teenage boy swimmer, camera at water surface, butterfly stroke in full extension, massive water spray sideways, golden hour light"),
-    ("underwater upward", "girl swimmer silhouette from below, underwater looking up, sunlight refracting through surface into light columns, peaceful turquoise"),
-    ("poolside wide", "mixed group of young male and female swimmers on starting blocks, wide shot, stadium lights, coach on deck watching"),
-    ("action freeze telephoto", "boy swimmer, telephoto freeze-frame at peak of backstroke — arm fully extended, water crown erupting, razor-sharp droplets"),
-    ("underwater streamline", "girl swimmer streamlined underwater after a dive start, bubbles trailing, clear water, side angle, calm and powerful"),
-    ("splash abstract", "extreme close-up of water exploding from a breaststroke kick, backlit droplets like crystals, dark background, no athlete visible"),
-    ("finish wall", "teenage girl touching the wall at finish, goggles up, looking at scoreboard, out-of-focus teammates cheering behind her"),
-    ("training wide", "group of boys and girls in parallel lanes during practice, coach walking poolside, morning light, multiple splashes"),
-    ("dive entry", "boy in mid-air off starting block, perfect streamlined dive, pool stretching into background, stadium overhead lights"),
-]
-
-_VISUAL_STYLES_WATERPOLO = [
-    ("shooting action", "teenage boy water polo player, side angle, arm cocked back releasing a powerful shot, ball mid-air, dramatic splash around hips, golden hour pool light"),
-    ("aerial game", "bird's-eye view of a water polo game in progress, players treading water in formation, ball in play, vivid blue pool, geometric overhead composition"),
-    ("goalkeeper save", "girl goalkeeper mid-save, arms spread wide, ball just deflected, water erupting around her, low dramatic angle from the water"),
-    ("passing drill", "two teenage water polo players — one boy one girl — facing each other mid-pass drill, ball sharp in focus, coaches watching in soft background"),
-    ("defensive block", "boy defender rising high out of water to block, opponent behind him, both arms extended, dynamic water displacement, telephoto blur on background"),
-    ("team huddle pool", "mixed team of boys and girls treading water in a circle huddle, caps and goggles, coach leaning down from pool deck, tight group shot"),
-    ("eggbeater close", "girl water polo player, waist-up out of the water, holding ball overhead, water pouring off her arms, stadium lights behind, power pose"),
-    ("underwater passing", "underwater side view of two players' legs and arms — eggbeater kick motion visible, turquoise water, bubbles, athletic power"),
-    ("counterattack wide", "three water polo players sprinting through water in counterattack — two boys one girl — wide shot, churning white water wake, opponent behind"),
-    ("cap and goggle detail", "close-up of water polo cap and goggles on an athlete's head, water droplets on surface, shallow depth of field, dark pool background"),
-]
-
-def _pick_visual_style(is_waterpolo: bool):
-    import random
-    pool = _VISUAL_STYLES_WATERPOLO if is_waterpolo else _VISUAL_STYLES_SWIM
-    label, description = random.choice(pool)
-    return label, description
-
 def _is_waterpolo(topic):
     return "water polo" in topic.lower()
 
@@ -230,8 +198,7 @@ def generate_content():
     topic = _pick_topic()
     waterpolo = _is_waterpolo(topic)
     ages  = "7–18" if waterpolo else "5–18"
-    visual_label, visual_desc = _pick_visual_style(waterpolo)
-    print(f"🎨 Visual style: {visual_label}")
+    sport = "water polo" if waterpolo else "swimming"
     prompt = f"""You are a social media expert for Nexar Aquatic Academy in Wesley Chapel, FL.
 You must create a post about this specific topic: "{topic}"
 We coach youth water polo (ages 7-18) and swim team (ages 5-18).
@@ -260,7 +227,7 @@ Return ONLY valid JSON with this exact structure:
     {{"title": "Come Try It Free", "body": "First practice FREE · Ages {ages} · Land O' Lakes & Wesley Chapel, FL · swimnexar.com"}}
   ],
   "caption": "2-3 short sentences max. One hook, one value line, one CTA (e.g. 'First practice is free — link in bio'). No long paragraphs. Hashtags on a new line: #waterpolo #swimming #youthsports #swimteam #wesleychapel #florida #aquatics #swimnexar #collegeprep #scholarship",
-  "image_prompt": "Photorealistic sports photography, {visual_label} composition — {visual_desc}. Topic: {topic}. No faces close-up, no text, no watermarks. Shot on Canon 1DX, f/2.8, cinematic color grade."
+  "pexels_query": "2-4 word real-photo search query for a stock photo site, matching the sport ({sport}) and topic. Keep it concrete and likely to return real sports photos — e.g. 'water polo player', 'freestyle swimming race', 'swimmer underwater', 'swimming pool training'. No people's names, no text overlays."
 }}"""
 
     for attempt in range(3):
@@ -289,22 +256,43 @@ Return ONLY valid JSON with this exact structure:
             if attempt == 2:
                 raise
 
-# ── Step 2: Generate cover image with Replicate ──────────────
-def generate_cover_image(prompt):
-    print("🎨 Generating cover image with Replicate...")
-    os.environ["REPLICATE_API_TOKEN"] = REPLICATE_KEY
-    output = replicate.run(
-        "black-forest-labs/flux-schnell",
-        input={"prompt": prompt, "num_outputs": 1, "aspect_ratio": "1:1"}
+# ── Step 2: Fetch a real cover photo from Pexels ─────────────
+_PEXELS_FALLBACKS = {
+    True:  ["water polo player", "water polo game", "water polo pool", "water sport pool"],
+    False: ["competitive swimming", "swimmer freestyle", "swimming pool race", "swimmer underwater"],
+}
+
+def _pexels_search(query):
+    r = requests.get(
+        "https://api.pexels.com/v1/search",
+        headers={"Authorization": PEXELS_KEY},
+        params={"query": query, "per_page": 15, "orientation": "landscape"},
+        timeout=15,
     )
-    url = output[0] if isinstance(output, list) else str(output)
-    r = requests.get(url)
+    return r.json().get("photos", [])
+
+def fetch_cover_photo(query, is_waterpolo):
+    """Search Pexels for a real photo; fall back to generic sport queries."""
+    print(f"📷 Searching Pexels: {query}")
+    photos = _pexels_search(query)
+    if not photos:
+        for fb in _PEXELS_FALLBACKS[is_waterpolo]:
+            print(f"  No results — trying fallback: {fb}")
+            photos = _pexels_search(fb)
+            if photos:
+                break
+    if not photos:
+        raise RuntimeError(f"Pexels returned no photos for '{query}' or fallbacks")
+    photo = random.choice(photos)
+    print(f"  Photo by {photo.get('photographer', '?')} — {photo.get('url', '')}")
+    r = requests.get(photo["src"]["large2x"], timeout=30)
     return Image.open(BytesIO(r.content)).convert("RGB")
 
 # ── Step 3: Create carousel slides ───────────────────────────
 def _make_cover(slide, cover_img, total):
-    """Slide 0: AI photo background with logo + title overlay."""
-    img = cover_img.copy().resize((W, H), Image.LANCZOS)
+    """Slide 0: real photo background with logo + title overlay."""
+    # Center-crop to square so landscape stock photos aren't squished.
+    img = ImageOps.fit(cover_img, (W, H), Image.LANCZOS, centering=(0.5, 0.4))
 
     # Dark gradient overlay — heavier at bottom for text legibility
     overlay = Image.new("RGBA", (W, H))
@@ -596,7 +584,8 @@ def main():
     content   = generate_content()
     print(f"✅ Topic: {content['topic']}")
 
-    cover_img = generate_cover_image(content["image_prompt"])
+    query     = content.get("pexels_query") or ("water polo" if _is_waterpolo(content["topic"]) else "swimming")
+    cover_img = fetch_cover_photo(query, _is_waterpolo(content["topic"]))
     images    = create_carousel_images(content, cover_img)
     print(f"✅ Created {len(images)} slides")
 
