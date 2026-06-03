@@ -2,6 +2,7 @@ import os
 import re
 import json
 import time
+import base64
 import random
 import requests
 import anthropic
@@ -271,21 +272,63 @@ def _pexels_search(query):
     )
     return r.json().get("photos", [])
 
-def fetch_cover_photo(query, is_waterpolo):
-    """Search Pexels for a real photo; fall back to generic sport queries."""
+def _photo_fits(photo, topic, sport):
+    """Ask Claude (vision) whether this photo actually matches the post."""
+    try:
+        thumb = requests.get(photo["src"]["medium"], timeout=15).content
+        b64 = base64.standard_b64encode(thumb).decode()
+        resp = anthropic_client.messages.create(
+            model="claude-sonnet-4-6",
+            max_tokens=10,
+            messages=[{"role": "user", "content": [
+                {"type": "image", "source": {"type": "base64", "media_type": "image/jpeg", "data": b64}},
+                {"type": "text", "text": (
+                    f'This photo will be the cover image of a youth {sport} social media post '
+                    f'titled "{topic}". Answer YES only if it clearly shows real {sport} '
+                    f'(a pool, swimmers, or water polo players / action) and fits the topic, '
+                    f'with no off-brand content (no babies/bathtubs, no unrelated objects, '
+                    f'no overlaid text or watermarks). Otherwise answer NO. Reply with only YES or NO.'
+                )},
+            ]}],
+        )
+        ans = resp.content[0].text.strip().upper()
+        print(f"    vision check: {ans[:3]} — {photo.get('url', '')}")
+        return ans.startswith("Y")
+    except Exception as e:
+        print(f"    vision check failed ({e}) — accepting photo")
+        return True
+
+def fetch_cover_photo(query, is_waterpolo, topic):
+    """Search Pexels, then vision-verify each candidate so the cover fits the post."""
+    sport = "water polo" if is_waterpolo else "swimming"
     print(f"📷 Searching Pexels: {query}")
-    photos = _pexels_search(query)
-    if not photos:
-        for fb in _PEXELS_FALLBACKS[is_waterpolo]:
-            print(f"  No results — trying fallback: {fb}")
-            photos = _pexels_search(fb)
-            if photos:
-                break
-    if not photos:
+    candidates = _pexels_search(query)
+    for fb in _PEXELS_FALLBACKS[is_waterpolo]:
+        if len(candidates) >= 6:
+            break
+        print(f"  Adding fallback query: {fb}")
+        candidates += _pexels_search(fb)
+    # De-dup by photo id
+    seen, uniq = set(), []
+    for p in candidates:
+        if p["id"] not in seen:
+            seen.add(p["id"])
+            uniq.append(p)
+    if not uniq:
         raise RuntimeError(f"Pexels returned no photos for '{query}' or fallbacks")
-    photo = random.choice(photos)
-    print(f"  Photo by {photo.get('photographer', '?')} — {photo.get('url', '')}")
-    r = requests.get(photo["src"]["large2x"], timeout=30)
+    random.shuffle(uniq)
+
+    # Vision-gate: take the first candidate Claude confirms fits the post
+    for p in uniq[:8]:
+        if _photo_fits(p, topic, sport):
+            print(f"  ✅ Chosen: photo by {p.get('photographer', '?')} — {p.get('url', '')}")
+            r = requests.get(p["src"]["large2x"], timeout=30)
+            return Image.open(BytesIO(r.content)).convert("RGB")
+
+    # Nothing passed — use the first as a last resort rather than failing the post
+    print("  ⚠️ No candidate passed the vision check — using best available")
+    p = uniq[0]
+    r = requests.get(p["src"]["large2x"], timeout=30)
     return Image.open(BytesIO(r.content)).convert("RGB")
 
 # ── Step 3: Create carousel slides ───────────────────────────
@@ -584,10 +627,16 @@ def main():
     content   = generate_content()
     print(f"✅ Topic: {content['topic']}")
 
-    query     = content.get("pexels_query") or ("water polo" if _is_waterpolo(content["topic"]) else "swimming")
-    cover_img = fetch_cover_photo(query, _is_waterpolo(content["topic"]))
+    waterpolo = _is_waterpolo(content["topic"])
+    query     = content.get("pexels_query") or ("water polo" if waterpolo else "swimming")
+    cover_img = fetch_cover_photo(query, waterpolo, content["topic"])
     images    = create_carousel_images(content, cover_img)
     print(f"✅ Created {len(images)} slides")
+
+    if os.environ.get("DRY_RUN"):
+        print("🧪 DRY RUN — slides built, skipping Instagram publish & history update")
+        print("🎉 Done (dry run)!")
+        return
 
     post_id = post_to_instagram(images, content["caption"])
     print(f"✅ Scheduled! ID: {post_id}")

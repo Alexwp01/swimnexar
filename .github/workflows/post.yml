@@ -4,6 +4,11 @@ on:
   schedule:
     - cron: '0 14 */2 * *'   # Every 2 days at 14:00 UTC (10 AM ET)
   workflow_dispatch:          # Manual trigger from GitHub UI
+    inputs:
+      dry_run:
+        description: 'Build & preview slides without posting to Instagram'
+        type: boolean
+        default: false
 
 permissions:
   contents: write
@@ -32,9 +37,18 @@ jobs:
           PEXELS_API_KEY:         ${{ secrets.PEXELS_API_KEY }}
           NOTION_TOKEN:           ${{ secrets.NOTION_TOKEN }}
           NOTION_DATABASE_ID:     ${{ secrets.NOTION_DATABASE_ID }}
+          DRY_RUN:                ${{ inputs.dry_run && '1' || '' }}
         run: python bot/main.py
 
+      - name: Upload preview slides (dry run)
+        if: ${{ inputs.dry_run }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: preview-slides
+          path: /tmp/slide_*.jpg
+
       - name: Commit posted-topics history
+        if: ${{ !inputs.dry_run }}
         run: |
           git config user.name "Swimnexar Instagram Bot"
           git config user.email "bot@swimnexar.com"
