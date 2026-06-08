@@ -295,6 +295,105 @@
   </div>
 </section>
 
+<!-- REGISTER FORM -->
+<section class="section" id="register">
+  <div class="container">
+    <div class="contact-grid">
+      <div class="reveal-l">
+        <div class="label">Get Started</div>
+        <h2 class="title">Ready to Join?</h2>
+        <p class="subtitle" style="margin-bottom:32px;">Fill out the form — we'll reach out within 24 hours to schedule your free first practice.</p>
+
+        <div class="c-items">
+          <div class="c-item">
+            <div class="c-icon">📧</div>
+            <div><strong>Email</strong><a href="mailto:swimnexar@gmail.com">swimnexar@gmail.com</a></div>
+          </div>
+          <div class="c-item">
+            <div class="c-icon">📱</div>
+            <div><strong>Phone / WhatsApp</strong><a href="tel:+18383330666">+1 (838) 333-0666</a></div>
+          </div>
+          <div class="c-item">
+            <div class="c-icon">📍</div>
+            <div><strong>2 Locations</strong><span>Land O' Lakes · Temple Terrace</span></div>
+          </div>
+        </div>
+
+        <div class="c-socials" style="margin-top:8px;">
+          <a href="https://instagram.com/swim_nexar" target="_blank" rel="noopener noreferrer" class="c-social">📸 @swim_nexar</a>
+          <a href="https://wa.me/18383330666" target="_blank" rel="noopener noreferrer" class="c-social">💬 WhatsApp</a>
+        </div>
+      </div>
+
+      <div class="form-box reveal-r">
+        <h3>Register — First Practice Free</h3>
+        <p>Takes 60 seconds.</p>
+        <form id="contactForm" novalidate>
+          <div class="form-row">
+            <div class="f-group"><label>Parent Name *</label><input type="text" name="parentName" placeholder="Your full name" required></div>
+            <div class="f-group"><label>Child's Name *</label><input type="text" name="childName" placeholder="Child's name" required></div>
+          </div>
+          <div class="form-row">
+            <div class="f-group"><label>Email *</label><input type="email" name="email" placeholder="your@email.com" required></div>
+            <div class="f-group"><label>Phone / WhatsApp *</label><input type="tel" name="phone" placeholder="+1 (___) ___-____" required></div>
+          </div>
+          <input type="hidden" name="program" value="waterpolo">
+          <div class="f-group">
+            <label>Location *</label>
+            <select name="location" id="locationSelect" required>
+              <option value="land-o-lakes" selected>📍 Land O' Lakes — Mon / Wed / Fri · 8–9:45 PM</option>
+              <option value="temple-terrace">📍 Temple Terrace — Tue / Thu · 7–8 PM</option>
+            </select>
+          </div>
+          <div class="f-group"><label>Child's Age *</label><input type="number" name="childAge" placeholder="e.g. 10" min="5" max="18" required></div>
+
+          <div class="f-group">
+            <label>Child's Swim Level *</label>
+            <select name="experience" id="experienceSelect" required>
+              <option value="" disabled selected>Select level</option>
+              <option value="none">Cannot swim independently</option>
+              <option value="strokes">Can swim freestyle & breaststroke</option>
+              <option value="competitive">Competitive swimmer</option>
+              <option value="waterpolo">Has played water polo before</option>
+            </select>
+          </div>
+
+          <!-- Water polo swim gate -->
+          <div class="wp-gate" id="wpGate">
+            <p class="wp-gate-head">⚠️ Water polo requires independent swimming</p>
+            <p>To join water polo, your child must be able to swim <strong>freestyle</strong> and <strong>breaststroke</strong> independently across the pool.</p>
+            <p>We recommend starting with our <strong><a href="swimteam.html">Swim Team</a></strong> — your child will build these skills there first, then move to water polo.</p>
+            <div class="wp-gate-btns">
+              <a href="swimteam.html" class="btn btn-blue btn-sm">Register for Swim Team →</a>
+              <button type="button" id="gateDismiss" class="wp-gate-dismiss">Still register for Water Polo — coach will assess</button>
+            </div>
+          </div>
+          <div class="f-group">
+            <label>Message (optional)</label>
+            <textarea name="message" placeholder="Any questions?"></textarea>
+          </div>
+
+          <div class="waiver-box">
+            <label class="waiver-label">
+              <input type="checkbox" name="waiver" id="waiverCheck" required>
+              <span>I have read and agree to the <a href="waterpolo-terms.html" target="_blank" id="waiverLink">Water Polo Tryout Terms & Conditions</a>. I understand participation involves inherent risks and consent to my child's participation. I also consent to photos/videos being used for Swimnexar's social media and marketing.</span>
+            </label>
+          </div>
+
+          <div class="form-hp" aria-hidden="true">
+            <input type="text" name="_hp" tabindex="-1" autocomplete="off">
+          </div>
+
+          <button type="submit" class="form-submit" id="submitBtn">
+            Submit — First Practice is FREE →
+          </button>
+          <div class="form-msg" id="formMsg"></div>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- SCHEDULE + LOCATION -->
 <section class="section section-dark" id="schedule">
   <div class="container">
@@ -518,104 +617,6 @@
          class="btn btn-dark" style="display:inline-flex; align-items:center; gap:10px; background:#E1306C; border-radius:50px; padding:14px 28px;">
         📸 Follow on Instagram
       </a>
-    </div>
-  </div>
-</section>
-
-<!-- REGISTER FORM -->
-<section class="section" id="register">
-  <div class="container">
-    <div class="contact-grid">
-      <div class="reveal-l">
-        <div class="label">Get Started</div>
-        <h2 class="title">Ready to Join?</h2>
-        <p class="subtitle" style="margin-bottom:32px;">Fill out the form — we'll reach out within 24 hours to schedule your free first practice.</p>
-
-        <div class="c-items">
-          <div class="c-item">
-            <div class="c-icon">📧</div>
-            <div><strong>Email</strong><a href="mailto:swimnexar@gmail.com">swimnexar@gmail.com</a></div>
-          </div>
-          <div class="c-item">
-            <div class="c-icon">📱</div>
-            <div><strong>Phone / WhatsApp</strong><a href="tel:+18383330666">+1 (838) 333-0666</a></div>
-          </div>
-          <div class="c-item">
-            <div class="c-icon">📍</div>
-            <div><strong>Location</strong><span>Land O' Lakes Recreation Complex<br>Land O' Lakes, FL 34639</span></div>
-          </div>
-        </div>
-
-        <div class="c-socials" style="margin-top:8px;">
-          <a href="https://instagram.com/swim_nexar" target="_blank" rel="noopener noreferrer" class="c-social">📸 @swim_nexar</a>
-          <a href="https://wa.me/18383330666" target="_blank" rel="noopener noreferrer" class="c-social">💬 WhatsApp</a>
-        </div>
-      </div>
-
-      <div class="form-box reveal-r">
-        <h3>Register — First Practice Free</h3>
-        <p>Takes 60 seconds.</p>
-        <form id="contactForm" novalidate>
-          <div class="form-row">
-            <div class="f-group"><label>Parent Name *</label><input type="text" name="parentName" placeholder="Your full name" required></div>
-            <div class="f-group"><label>Child's Name *</label><input type="text" name="childName" placeholder="Child's name" required></div>
-          </div>
-          <div class="form-row">
-            <div class="f-group"><label>Email *</label><input type="email" name="email" placeholder="your@email.com" required></div>
-            <div class="f-group"><label>Phone / WhatsApp *</label><input type="tel" name="phone" placeholder="+1 (___) ___-____" required></div>
-          </div>
-          <div class="f-group">
-            <label>Program *</label>
-            <select name="program" id="programSelect" required>
-              <option value="waterpolo" selected>🤽 Water Polo</option>
-              <option value="swimteam">🏊 Swim Team</option>
-            </select>
-          </div>
-          <div class="f-group"><label>Child's Age *</label><input type="number" name="childAge" placeholder="e.g. 10" min="5" max="18" required></div>
-
-          <div class="f-group">
-            <label>Child's Swim Level *</label>
-            <select name="experience" id="experienceSelect" required>
-              <option value="" disabled selected>Select level</option>
-              <option value="none">Cannot swim independently</option>
-              <option value="strokes">Can swim freestyle & breaststroke</option>
-              <option value="competitive">Competitive swimmer</option>
-              <option value="waterpolo">Has played water polo before</option>
-            </select>
-          </div>
-
-          <!-- Water polo swim gate -->
-          <div class="wp-gate" id="wpGate">
-            <p class="wp-gate-head">⚠️ Water polo requires independent swimming</p>
-            <p>To join water polo, your child must be able to swim <strong>freestyle</strong> and <strong>breaststroke</strong> independently across the pool.</p>
-            <p>We recommend starting with our <strong><a href="swimteam.html">Swim Team</a></strong> — your child will build these skills there first, then move to water polo.</p>
-            <div class="wp-gate-btns">
-              <a href="swimteam.html" class="btn btn-blue btn-sm">Register for Swim Team →</a>
-              <button type="button" id="gateDismiss" class="wp-gate-dismiss">Still register for Water Polo — coach will assess</button>
-            </div>
-          </div>
-          <div class="f-group">
-            <label>Message (optional)</label>
-            <textarea name="message" placeholder="Any questions?"></textarea>
-          </div>
-
-          <div class="waiver-box">
-            <label class="waiver-label">
-              <input type="checkbox" name="waiver" id="waiverCheck" required>
-              <span>I have read and agree to the <a href="waterpolo-terms.html" target="_blank" id="waiverLink">Water Polo Tryout Terms & Conditions</a>. I understand participation involves inherent risks and consent to my child's participation. I also consent to photos/videos being used for Swimnexar's social media and marketing.</span>
-            </label>
-          </div>
-
-          <div class="form-hp" aria-hidden="true">
-            <input type="text" name="_hp" tabindex="-1" autocomplete="off">
-          </div>
-
-          <button type="submit" class="form-submit" id="submitBtn">
-            Submit — First Practice is FREE →
-          </button>
-          <div class="form-msg" id="formMsg"></div>
-        </form>
-      </div>
     </div>
   </div>
 </section>

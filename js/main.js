@@ -242,15 +242,16 @@ if (programSelect && waiverLink) {
 (function () {
   const expSelect = document.getElementById('experienceSelect');
   const gate      = document.getElementById('wpGate');
-  if (!expSelect || !gate || !programSelect) return;
+  if (!expSelect || !gate) return;
 
   function checkGate() {
-    const show = programSelect.value === 'waterpolo' && expSelect.value === 'none';
+    const prog = programSelect ? programSelect.value : 'waterpolo';
+    const show = prog === 'waterpolo' && expSelect.value === 'none';
     gate.style.display = show ? 'block' : 'none';
   }
 
   expSelect.addEventListener('change', checkGate);
-  programSelect.addEventListener('change', checkGate);
+  if (programSelect) programSelect.addEventListener('change', checkGate);
 
   // Dismiss — coach will assess anyway
   const gateDismiss = document.getElementById('gateDismiss');
