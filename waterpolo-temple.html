@@ -346,62 +346,105 @@
 </section>
 
 <!-- REGISTER FORM -->
-<section class="section" id="register" style="background:var(--dark);">
-  <div class="container" style="max-width:680px;">
-    <div class="section-head center">
-      <div class="label white">Register</div>
-      <h2 class="title light">First Practice is FREE</h2>
-      <p style="color:rgba(255,255,255,.6); font-size:16px; margin-bottom:0;">Temple Terrace Aquatic Center · Tue & Thu · 7–8 PM</p>
-    </div>
-    <div class="form-box" style="margin-top:40px;">
-      <h3>Register — First Practice Free</h3>
-      <p>Takes 60 seconds.</p>
-      <form id="contactForm" novalidate>
-        <input type="text" name="_hp" tabindex="-1" autocomplete="off"
-               style="opacity:0;position:absolute;height:0;width:0;pointer-events:none;" aria-hidden="true">
-        <input type="hidden" name="program" value="waterpolo-temple">
-        <div class="form-row">
-          <div class="f-group"><label>Parent Name *</label><input type="text" name="parentName" placeholder="Your full name" required></div>
-          <div class="f-group"><label>Child's Name *</label><input type="text" name="childName" placeholder="Child's name" required></div>
+<section class="section" id="register">
+  <div class="container">
+    <div class="contact-grid">
+      <div class="reveal-l">
+        <div class="label">Get Started</div>
+        <h2 class="title">Ready to Join?</h2>
+        <p class="subtitle" style="margin-bottom:32px;">Fill out the form — we'll reach out within 24 hours to schedule your free first practice.</p>
+
+        <div class="c-items">
+          <div class="c-item">
+            <div class="c-icon">📧</div>
+            <div><strong>Email</strong><a href="mailto:swimnexar@gmail.com">swimnexar@gmail.com</a></div>
+          </div>
+          <div class="c-item">
+            <div class="c-icon">📱</div>
+            <div><strong>Phone / WhatsApp</strong><a href="tel:+18383330666">+1 (838) 333-0666</a></div>
+          </div>
+          <div class="c-item">
+            <div class="c-icon">📍</div>
+            <div><strong>Temple Terrace Aquatic Center</strong><span>6610 E Whiteway Dr<br>Temple Terrace, FL 33617</span></div>
+          </div>
+          <div class="c-item">
+            <div class="c-icon">⏰</div>
+            <div><strong>Tue & Thu · 7:00–8:00 PM</strong><span>First practice is always FREE</span></div>
+          </div>
         </div>
-        <div class="form-row">
+
+        <div class="c-socials" style="margin-top:8px;">
+          <a href="https://instagram.com/swim_nexar" target="_blank" rel="noopener noreferrer" class="c-social">📸 @swim_nexar</a>
+          <a href="https://wa.me/18383330666" target="_blank" rel="noopener noreferrer" class="c-social">💬 WhatsApp</a>
+        </div>
+      </div>
+
+      <div class="form-box reveal-r">
+        <h3>Register — First Practice Free</h3>
+        <p>Takes 60 seconds.</p>
+        <form id="contactForm" novalidate>
+          <div class="form-row">
+            <div class="f-group"><label>Parent Name *</label><input type="text" name="parentName" placeholder="Your full name" required></div>
+            <div class="f-group"><label>Child's Name *</label><input type="text" name="childName" placeholder="Child's name" required></div>
+          </div>
+          <div class="form-row">
+            <div class="f-group"><label>Email *</label><input type="email" name="email" placeholder="your@email.com" required></div>
+            <div class="f-group"><label>Phone / WhatsApp *</label><input type="tel" name="phone" placeholder="+1 (___) ___-____" required></div>
+          </div>
+          <input type="hidden" name="program" value="waterpolo-temple">
           <div class="f-group"><label>Child's Age *</label><input type="number" name="childAge" placeholder="e.g. 10" min="5" max="18" required></div>
-          <div class="f-group"><label>Phone / WhatsApp *</label><input type="tel" name="phone" placeholder="+1 (___) ___-____" required></div>
-        </div>
-        <div class="f-group">
-          <label>Email *</label>
-          <input type="email" name="email" placeholder="your@email.com" required>
-        </div>
-        <div class="f-group">
-          <label>Pricing preference</label>
-          <select name="pricingPlan">
-            <option value="">Select...</option>
-            <option value="single">Single session ($25)</option>
-            <option value="monthly">Monthly — 8 sessions/month ($200)</option>
-          </select>
-        </div>
-        <div class="f-group">
-          <label>Swim level (optional)</label>
-          <select name="swimLevel">
-            <option value="">Select...</option>
-            <option value="beginner">Beginner — learning to swim</option>
-            <option value="intermediate">Can swim laps confidently</option>
-            <option value="experienced">Competitive swimmer / water polo experience</option>
-          </select>
-        </div>
-        <div class="f-group">
-          <label>Questions or notes</label>
-          <textarea name="message" rows="3" placeholder="Anything we should know?"></textarea>
-        </div>
-        <div class="f-check">
-          <input type="checkbox" id="waiverCheck" name="waiver" required>
-          <label for="waiverCheck">I agree to the <a href="waterpolo-terms.html" target="_blank" id="waiverLink">Terms & Waiver</a> *</label>
-        </div>
-        <div id="formMsg" style="display:none;"></div>
-        <button type="submit" id="submitBtn" class="btn btn-red btn-full btn-lg">
-          Submit — First Practice is FREE →
-        </button>
-      </form>
+          <div class="f-group">
+            <label>Child's Swim Level *</label>
+            <select name="experience" id="experienceSelect" required>
+              <option value="" disabled selected>Select level</option>
+              <option value="none">Cannot swim independently</option>
+              <option value="strokes">Can swim freestyle & breaststroke</option>
+              <option value="competitive">Competitive swimmer</option>
+              <option value="waterpolo">Has played water polo before</option>
+            </select>
+          </div>
+
+          <!-- Water polo swim gate -->
+          <div class="wp-gate" id="wpGate">
+            <p class="wp-gate-head">⚠️ Water polo requires independent swimming</p>
+            <p>To join water polo, your child must be able to swim <strong>freestyle</strong> and <strong>breaststroke</strong> independently across the pool.</p>
+            <p>We recommend starting with our <strong><a href="swimteam.html">Swim Team</a></strong> — your child will build these skills there first, then move to water polo.</p>
+            <div class="wp-gate-btns">
+              <a href="swimteam.html" class="btn btn-blue btn-sm">Register for Swim Team →</a>
+              <button type="button" id="gateDismiss" class="wp-gate-dismiss">Still register for Water Polo — coach will assess</button>
+            </div>
+          </div>
+
+          <div class="f-group">
+            <label>Pricing preference</label>
+            <select name="pricingPlan">
+              <option value="">Select...</option>
+              <option value="single">Single session ($25)</option>
+              <option value="monthly">Monthly — 8 sessions/month ($200)</option>
+            </select>
+          </div>
+          <div class="f-group">
+            <label>Message (optional)</label>
+            <textarea name="message" placeholder="Any questions?"></textarea>
+          </div>
+
+          <div class="waiver-box">
+            <label class="waiver-label">
+              <input type="checkbox" name="waiver" id="waiverCheck" required>
+              <span>I have read and agree to the <a href="waterpolo-terms.html" target="_blank" id="waiverLink">Water Polo Tryout Terms & Conditions</a>. I understand participation involves inherent risks and consent to my child's participation. I also consent to photos/videos being used for Swimnexar's social media and marketing.</span>
+            </label>
+          </div>
+
+          <div class="form-hp" aria-hidden="true">
+            <input type="text" name="_hp" tabindex="-1" autocomplete="off">
+          </div>
+
+          <button type="submit" class="form-submit" id="submitBtn">
+            Submit — First Practice is FREE →
+          </button>
+          <div class="form-msg" id="formMsg"></div>
+        </form>
+      </div>
     </div>
   </div>
 </section>
