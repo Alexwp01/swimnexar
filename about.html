@@ -1,183 +1,566 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  <meta charset="UTF-8">
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
   <link rel="apple-touch-icon" href="/favicon-180.png">
   <link rel="manifest" href="/manifest.json">
   <meta name="theme-color" content="#0d0d0d">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Learn about Swimnexar - our mission, history, and commitment to developing young athletes through swimming and water polo.">
-    <title>About Us | Swimnexar</title>
-    <link rel="stylesheet" href="css/style.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-    <link rel="preconnect" href="https://app.snipcart.com">
-    <link rel="stylesheet" href="https://cdn.snipcart.com/themes/v3.2.0/default/snipcart.css" />
+  <meta name="description" content="The story behind Nexar Aquatic Academy — founded by Asian Champion Alexandr Godovanyuk to bring elite water polo and swim coaching to Tampa Bay youth.">
+  <title>About Us | Nexar Aquatic Academy</title>
+  <link rel="canonical" href="https://swimnexar.com/about.html">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+  <style>
+    /* ── Hero ── */
+    .about-hero {
+      padding: calc(var(--header-h) + 80px) 0 80px;
+      background: var(--dark);
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .about-hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at 50% 0%, rgba(212,43,43,.18) 0%, transparent 65%);
+    }
+    .about-hero .container { position: relative; z-index: 1; }
+    .about-hero h1 {
+      font-size: clamp(38px, 6vw, 64px);
+      font-weight: 900;
+      color: #fff;
+      letter-spacing: -2px;
+      line-height: 1.05;
+      margin-bottom: 20px;
+    }
+    .about-hero h1 span { color: #d42b2b; }
+    .about-hero p {
+      font-size: 18px;
+      color: rgba(255,255,255,.55);
+      max-width: 540px;
+      margin: 0 auto;
+      line-height: 1.7;
+    }
+
+    /* ── Story ── */
+    .story-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 72px;
+      align-items: center;
+    }
+    .story-img {
+      position: relative;
+      border-radius: 28px;
+      overflow: hidden;
+      aspect-ratio: 3/4;
+    }
+    .story-img img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center top;
+      display: block;
+    }
+    .story-img-badge {
+      position: absolute;
+      bottom: 24px;
+      left: 24px;
+      background: rgba(0,0,0,.75);
+      backdrop-filter: blur(12px);
+      border-radius: 14px;
+      padding: 12px 18px;
+      color: #fff;
+    }
+    .story-img-badge strong { display: block; font-size: 13px; font-weight: 800; }
+    .story-img-badge span   { font-size: 12px; color: rgba(255,255,255,.55); }
+
+    .story-text { }
+    .story-text h2 {
+      font-size: clamp(28px, 4vw, 42px);
+      font-weight: 900;
+      letter-spacing: -1px;
+      margin-bottom: 24px;
+      line-height: 1.1;
+    }
+    .story-text p {
+      font-size: 16px;
+      color: #4b5563;
+      line-height: 1.85;
+      margin-bottom: 20px;
+    }
+    .story-badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 28px;
+    }
+    .story-badge {
+      background: #f3f4f6;
+      border-radius: 50px;
+      padding: 8px 16px;
+      font-size: 13px;
+      font-weight: 700;
+      color: #111;
+    }
+
+    /* ── Mission strip ── */
+    .mission-strip {
+      background: #d42b2b;
+      padding: 72px 0;
+      text-align: center;
+    }
+    .mission-strip h2 {
+      font-size: clamp(26px, 4vw, 44px);
+      font-weight: 900;
+      color: #fff;
+      letter-spacing: -1px;
+      margin-bottom: 16px;
+      max-width: 700px;
+      margin-left: auto;
+      margin-right: auto;
+      line-height: 1.15;
+    }
+    .mission-strip p {
+      font-size: 17px;
+      color: rgba(255,255,255,.75);
+      max-width: 560px;
+      margin: 0 auto;
+      line-height: 1.7;
+    }
+
+    /* ── Values ── */
+    .values-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+    .value-card {
+      background: #f7f7f7;
+      border-radius: 24px;
+      padding: 36px 28px;
+    }
+    .value-icon { font-size: 36px; margin-bottom: 16px; }
+    .value-card h3 { font-size: 18px; font-weight: 800; margin-bottom: 10px; }
+    .value-card p  { font-size: 14px; color: #6b7280; line-height: 1.65; }
+
+    /* ── Stats ── */
+    .stats-bar {
+      background: var(--dark);
+      padding: 64px 0;
+    }
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0;
+      text-align: center;
+    }
+    .stat-item {
+      padding: 0 24px;
+      border-right: 1px solid rgba(255,255,255,.1);
+    }
+    .stat-item:last-child { border-right: none; }
+    .stat-num {
+      font-size: clamp(36px, 5vw, 54px);
+      font-weight: 900;
+      color: #d42b2b;
+      letter-spacing: -2px;
+      display: block;
+    }
+    .stat-lbl {
+      font-size: 13px;
+      font-weight: 600;
+      color: rgba(255,255,255,.5);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      display: block;
+      margin-top: 6px;
+    }
+
+    /* ── Team mini-cards ── */
+    .team-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 28px;
+    }
+    .team-card {
+      border-radius: 24px;
+      overflow: hidden;
+      border: 1px solid #e5e7eb;
+      transition: transform .3s ease, box-shadow .3s ease;
+    }
+    .team-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 20px 60px rgba(0,0,0,.1);
+    }
+    .team-card-photo {
+      aspect-ratio: 3/4;
+      overflow: hidden;
+      position: relative;
+    }
+    .team-card-photo img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center top;
+      transition: transform .5s ease;
+    }
+    .team-card:hover .team-card-photo img { transform: scale(1.04); }
+    .team-card-body {
+      padding: 24px 24px 28px;
+    }
+    .team-card-role {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: #d42b2b;
+      margin-bottom: 6px;
+    }
+    .team-card-body h3 {
+      font-size: 20px;
+      font-weight: 900;
+      margin-bottom: 8px;
+      letter-spacing: -.3px;
+    }
+    .team-card-body p {
+      font-size: 13px;
+      color: #6b7280;
+      line-height: 1.6;
+      margin-bottom: 18px;
+    }
+    .team-card-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+    .team-tag {
+      background: #f3f4f6;
+      border-radius: 50px;
+      padding: 4px 12px;
+      font-size: 12px;
+      font-weight: 600;
+      color: #374151;
+    }
+
+    /* ── CTA ── */
+    .about-cta {
+      background: var(--dark);
+      padding: 80px 0;
+      text-align: center;
+    }
+    .about-cta h2 {
+      font-size: clamp(28px, 4vw, 44px);
+      font-weight: 900;
+      color: #fff;
+      letter-spacing: -1px;
+      margin-bottom: 12px;
+    }
+    .about-cta p {
+      font-size: 16px;
+      color: rgba(255,255,255,.5);
+      margin-bottom: 36px;
+    }
+
+    @media (max-width: 900px) {
+      .story-grid   { grid-template-columns: 1fr; gap: 40px; }
+      .story-img    { aspect-ratio: 4/3; max-width: 480px; margin: 0 auto; }
+      .values-grid  { grid-template-columns: 1fr 1fr; }
+      .team-grid    { grid-template-columns: 1fr 1fr; }
+      .stats-row    { grid-template-columns: repeat(2, 1fr); gap: 32px 0; }
+      .stat-item:nth-child(2) { border-right: none; }
+      .stat-item    { border-right: 1px solid rgba(255,255,255,.1); }
+      .stat-item:nth-child(even) { border-right: none; }
+    }
+    @media (max-width: 600px) {
+      .values-grid  { grid-template-columns: 1fr; }
+      .team-grid    { grid-template-columns: 1fr; }
+      .stats-row    { grid-template-columns: repeat(2, 1fr); }
+    }
+  </style>
 </head>
 <body>
-    <!-- Header -->
-    <header class="header">
-        <div class="container">
-            <a href="index.html" class="logo">
-                <span class="logo-icon">🏊</span>
-                <span class="logo-text">Swimnexar</span>
-            </a>
-            <nav class="nav" id="nav">
-                <a href="index.html" class="nav-link">Home</a>
-                <a href="programs.html" class="nav-link">Programs</a>
-                <a href="coaches.html" class="nav-link">Coaches</a>
-                <a href="shop.html" class="nav-link">Shop</a>
-                <a href="about.html" class="nav-link active">About</a>
-                <a href="contact.html" class="nav-link">Contact</a>
-            </nav>
-            <button class="cart-btn snipcart-checkout">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <circle cx="9" cy="21" r="1"></circle>
-                    <circle cx="20" cy="21" r="1"></circle>
-                    <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
-                </svg>
-                <span class="snipcart-items-count">0</span>
-            </button>
-            <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu">
-                <span></span>
-                <span></span>
-                <span></span>
-            </button>
+
+<!-- HEADER -->
+<header class="header" id="header">
+  <div class="container">
+    <a href="index.html" class="logo">
+      <img src="/images/nexar-logo-clean.png" alt="Nexar">
+      <span class="logo-text">NEXAR<em>Aquatic Academy</em></span>
+    </a>
+    <nav class="nav" id="nav">
+      <a href="index.html"            class="nav-link">← Home</a>
+      <a href="waterpolo-choose.html" class="nav-link">Water Polo</a>
+      <a href="swimteam.html"         class="nav-link">Swim Team</a>
+      <a href="coaches.html"          class="nav-link">Coaches</a>
+      <a href="about.html"            class="nav-link active">About</a>
+      <a href="sessions.html"         class="nav-link">Sessions</a>
+    </nav>
+    <div class="header-cta">
+      <a href="waterpolo-choose.html#register" class="btn btn-red btn-sm">Free Trial →</a>
+    </div>
+    <button class="menu-btn" id="menuBtn" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="about-hero">
+  <div class="container">
+    <div class="label" style="background:rgba(212,43,43,.15); color:#f87171; border-color:rgba(212,43,43,.3); margin-bottom:24px;">🤽 Our Story</div>
+    <h1>Built by Athletes,<br><span>for Young Athletes</span></h1>
+    <p>Nexar Aquatic Academy was born from a simple belief — that elite coaching shouldn't be reserved for elite kids. Every child deserves a real coach.</p>
+  </div>
+</section>
+
+<!-- FOUNDER STORY -->
+<section class="section">
+  <div class="container">
+    <div class="story-grid">
+
+      <div class="story-img reveal-l">
+        <img src="images/wp-action-mikasa.jpg" alt="Coach Alex — Founder of Nexar Aquatic Academy">
+        <div class="story-img-badge">
+          <strong>Coach Alex · Founder</strong>
+          <span>Asian Champion · Kazakhstan National Team</span>
         </div>
-    </header>
+      </div>
 
-    <!-- Page Hero -->
-    <section class="page-hero">
-        <div class="container">
-            <h1>About Swimnexar</h1>
-            <p>Building champions in the pool and in life since 2010</p>
+      <div class="story-text reveal-r">
+        <div class="label">The Founder's Story</div>
+        <h2>From Asian Gold<br>to Tampa Bay Pools</h2>
+        <p>
+          Alexandr Godovanyuk grew up competing in water polo at the highest level — representing the Kazakhstan National Team and earning gold at the Asian Championships. He learned what it actually takes to become a complete athlete: not talent, but deliberate, technique-first coaching from a young age.
+        </p>
+        <p>
+          When he moved to Wesley Chapel, FL, he looked around and found a gap. There were pools, but no real water polo programs. No coaches who had played at the international level. No place where a kid with zero experience could walk in and walk out a better athlete.
+        </p>
+        <p>
+          So he built one. Nexar Aquatic Academy started as one practice in Land O' Lakes — now it's two locations, a swim team, and a coaching staff that genuinely cares about every kid in the water.
+        </p>
+
+        <div class="story-badges">
+          <span class="story-badge">🏆 Asian Champion</span>
+          <span class="story-badge">🇰🇿 Kazakhstan National Team</span>
+          <span class="story-badge">📍 Wesley Chapel, FL</span>
+          <span class="story-badge">🤽 Water Polo & Swim</span>
+          <span class="story-badge">🎓 10+ Years Coaching</span>
         </div>
-    </section>
+      </div>
 
-    <!-- About Content -->
-    <section>
-        <div class="container">
-            <div class="about-content">
-                <div class="about-text">
-                    <h2>Our Story</h2>
-                    <p>Swimnexar was founded with a simple mission: to provide world-class aquatic training in a supportive, family-friendly environment. What started as a small swim club has grown into a comprehensive academy serving hundreds of athletes.</p>
-                    <p>Our programs are designed to develop not just athletic skills, but also character, discipline, and teamwork. We believe that the lessons learned in the pool translate to success in all areas of life.</p>
-                    <p>Today, Swimnexar is proud to be one of the premier swimming and water polo academies in the region, with athletes competing at local, regional, and national levels.</p>
-                </div>
-                <div class="about-image">🏊‍♂️</div>
-            </div>
+    </div>
+  </div>
+</section>
+
+<!-- MISSION -->
+<section class="mission-strip">
+  <div class="container">
+    <h2>"Every child who walks through our doors deserves a coach who played the game — and cares about their game."</h2>
+    <p>— Alexandr Godovanyuk, Founder & Head Coach</p>
+  </div>
+</section>
+
+<!-- VALUES -->
+<section class="section section-gray">
+  <div class="container">
+    <div class="section-head center">
+      <div class="label">What We Stand For</div>
+      <h2 class="title">Our Values</h2>
+      <p class="subtitle">The principles behind every practice, every drill, every season.</p>
+    </div>
+    <div class="values-grid">
+      <div class="value-card reveal">
+        <div class="value-icon">🎯</div>
+        <h3>Technique First</h3>
+        <p>We build skills the right way — fundamentals before speed, form before force. Habits learned young last a lifetime.</p>
+      </div>
+      <div class="value-card reveal">
+        <div class="value-icon">🤝</div>
+        <h3>No One Left Behind</h3>
+        <p>Beginners and competitive athletes train side by side. Every level gets real coaching, not just supervision.</p>
+      </div>
+      <div class="value-card reveal">
+        <div class="value-icon">🏆</div>
+        <h3>Championship Mindset</h3>
+        <p>We bring the mentality of elite sport to youth practice — not pressure, but the standard of focused, intentional work.</p>
+      </div>
+      <div class="value-card reveal">
+        <div class="value-icon">👨‍👩‍👧</div>
+        <h3>Family First</h3>
+        <p>Parents are partners, not spectators. We keep families informed, involved, and proud of their athlete's progress.</p>
+      </div>
+      <div class="value-card reveal">
+        <div class="value-icon">💧</div>
+        <h3>Love the Water</h3>
+        <p>Athletes who love practice improve faster. We make every session something kids look forward to — not dread.</p>
+      </div>
+      <div class="value-card reveal">
+        <div class="value-icon">📈</div>
+        <h3>Long-Term Development</h3>
+        <p>We think beyond this season. Our goal is athletes who thrive at 18, not just at 10.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STATS -->
+<section class="stats-bar">
+  <div class="container">
+    <div class="stats-row">
+      <div class="stat-item">
+        <span class="stat-num">2</span>
+        <span class="stat-lbl">Training Locations</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-num">3</span>
+        <span class="stat-lbl">Experienced Coaches</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-num">8–18</span>
+        <span class="stat-lbl">Ages We Train</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-num">Free</span>
+        <span class="stat-lbl">First Practice · Always</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MEET THE TEAM -->
+<section class="section">
+  <div class="container">
+    <div class="section-head center">
+      <div class="label">The Coaching Staff</div>
+      <h2 class="title">Meet the Team</h2>
+      <p class="subtitle">Three coaches. Three different backgrounds. One goal — your athlete's growth.</p>
+    </div>
+
+    <div class="team-grid">
+
+      <!-- Alex -->
+      <div class="team-card reveal">
+        <div class="team-card-photo">
+          <img src="images/wp-action-mikasa.jpg" alt="Coach Alex — Nexar Aquatic Academy">
         </div>
-    </section>
-
-    <!-- Mission & Values -->
-    <section class="features-section">
-        <div class="container">
-            <div class="section-header">
-                <h2 class="section-title">Our Values</h2>
-                <p class="section-subtitle">The principles that guide everything we do</p>
-            </div>
-            <div class="features-grid">
-                <div class="feature">
-                    <div class="feature-icon">🎯</div>
-                    <h3>Excellence</h3>
-                    <p>We strive for excellence in everything we do, pushing our athletes to reach their full potential</p>
-                </div>
-                <div class="feature">
-                    <div class="feature-icon">🤝</div>
-                    <h3>Teamwork</h3>
-                    <p>Success is a team effort. We build strong bonds between athletes, coaches, and families</p>
-                </div>
-                <div class="feature">
-                    <div class="feature-icon">💪</div>
-                    <h3>Perseverance</h3>
-                    <p>We teach our athletes to overcome challenges and never give up on their goals</p>
-                </div>
-                <div class="feature">
-                    <div class="feature-icon">❤️</div>
-                    <h3>Passion</h3>
-                    <p>Our love for aquatic sports drives us to create the best experience for every athlete</p>
-                </div>
-            </div>
+        <div class="team-card-body">
+          <p class="team-card-role">Head Coach & Founder</p>
+          <h3>Alexandr Godovanyuk</h3>
+          <p>Asian Champion. Kazakhstan National Team. Now building the next generation of water polo and swim athletes in Tampa Bay.</p>
+          <div class="team-card-tags">
+            <span class="team-tag">🏆 Asian Champion</span>
+            <span class="team-tag">🤽 Water Polo</span>
+            <span class="team-tag">🏊 Swim</span>
+            <span class="team-tag">📍 Land O' Lakes</span>
+          </div>
         </div>
-    </section>
+      </div>
 
-    <!-- Stats -->
-    <section style="background: var(--gradient); padding: 80px 0;">
-        <div class="container">
-            <div class="hero-stats" style="justify-content: center; color: white;">
-                <div class="stat" style="text-align: center;">
-                    <span class="stat-number">15+</span>
-                    <span class="stat-label">Years of Excellence</span>
-                </div>
-                <div class="stat" style="text-align: center;">
-                    <span class="stat-number">500+</span>
-                    <span class="stat-label">Athletes Trained</span>
-                </div>
-                <div class="stat" style="text-align: center;">
-                    <span class="stat-number">50+</span>
-                    <span class="stat-label">Championships Won</span>
-                </div>
-                <div class="stat" style="text-align: center;">
-                    <span class="stat-number">10+</span>
-                    <span class="stat-label">Expert Coaches</span>
-                </div>
-            </div>
+      <!-- Sergey -->
+      <div class="team-card reveal">
+        <div class="team-card-photo">
+          <img src="images/coach-sergey.jpg" alt="Coach Sergey Bushuev — Temple Terrace">
         </div>
-    </section>
-
-    <!-- CTA -->
-    <section class="cta-section" style="background: var(--secondary);">
-        <div class="container">
-            <div class="cta-content">
-                <h2>Join the Swimnexar Family</h2>
-                <p>Ready to start your aquatic journey? Contact us today to learn more about our programs.</p>
-                <a href="contact.html" class="btn btn-white">Get in Touch</a>
-            </div>
+        <div class="team-card-body">
+          <p class="team-card-role">Head Coach — Temple Terrace</p>
+          <h3>Sergey Bushuev</h3>
+          <p>Decades of water polo experience and a deep commitment to youth development. Leads the Temple Terrace program Tue & Thu.</p>
+          <div class="team-card-tags">
+            <span class="team-tag">🤽 Water Polo</span>
+            <span class="team-tag">🏋️ Player Development</span>
+            <span class="team-tag">📍 Temple Terrace</span>
+          </div>
         </div>
-    </section>
+      </div>
 
-    <!-- Footer -->
-    <footer class="footer">
-        <div class="container">
-            <div class="footer-grid">
-                <div class="footer-brand">
-                    <a href="index.html" class="logo">
-                        <span class="logo-icon">🏊</span>
-                        <span class="logo-text">Swimnexar</span>
-                    </a>
-                    <p>Premier swimming and water polo academy dedicated to developing athletes of all levels.</p>
-                </div>
-                <div class="footer-links">
-                    <h4>Programs</h4>
-                    <a href="programs.html#swim">Swim Team</a>
-                    <a href="programs.html#waterpolo">Water Polo</a>
-                    <a href="programs.html#elite">Elite Training</a>
-                </div>
-                <div class="footer-links">
-                    <h4>Company</h4>
-                    <a href="about.html">About Us</a>
-                    <a href="coaches.html">Coaches</a>
-                    <a href="contact.html">Contact</a>
-                </div>
-                <div class="footer-links">
-                    <h4>Shop</h4>
-                    <a href="shop.html">All Products</a>
-                    <a href="shop.html#gear">Swim Gear</a>
-                    <a href="shop.html#apparel">Apparel</a>
-                </div>
-            </div>
-            <div class="footer-bottom">
-                <p>&copy; 2026 Swimnexar. All rights reserved.</p>
-            </div>
+      <!-- Sayana -->
+      <div class="team-card reveal">
+        <div class="team-card-photo">
+          <img src="images/coach-sayana.jpg" alt="Coach Sayana Yessimseitova — Nexar Aquatic Academy"
+               style="object-position: center top;">
         </div>
-    </footer>
+        <div class="team-card-body">
+          <p class="team-card-role">Assistant Coach</p>
+          <h3>Sayana Yessimseitova</h3>
+          <p>10 years swimming, varsity athlete, national-level competitor. Especially effective with beginners — she remembers exactly what it felt like to start.</p>
+          <div class="team-card-tags">
+            <span class="team-tag">🏊 10 Yrs Swimming</span>
+            <span class="team-tag">🤽 Water Polo</span>
+            <span class="team-tag">📍 Land O' Lakes</span>
+          </div>
+        </div>
+      </div>
 
-    <!-- Snipcart -->
-    <script async src="https://cdn.snipcart.com/themes/v3.2.0/default/snipcart.js"></script>
-    <div hidden id="snipcart" data-api-key="YOUR_SNIPCART_API_KEY"></div>
+    </div>
 
-    <script src="js/main.js"></script>
+    <div style="text-align:center; margin-top:40px;">
+      <a href="coaches.html" class="btn btn-outline-dark" style="border-radius:50px; padding:14px 32px; font-weight:700;">Read Full Bios →</a>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="about-cta">
+  <div class="container">
+    <h2>Come See It For Yourself</h2>
+    <p>First practice is always free — no commitment, no pressure. Just show up.</p>
+    <div style="display:flex; gap:16px; justify-content:center; flex-wrap:wrap;">
+      <a href="waterpolo-choose.html" class="btn btn-red btn-lg">Join Water Polo — Free Trial →</a>
+      <a href="swimteam.html#register" class="btn btn-lg" style="background:rgba(255,255,255,.1); color:#fff; border:1px solid rgba(255,255,255,.2); border-radius:50px; padding:16px 32px;">Join Swim Team →</a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a href="index.html" class="logo">
+          <img src="/images/nexar-logo-clean.png" alt="Nexar Aquatic Academy">
+        </a>
+        <p>Youth Water Polo & Swim Academy. Land O' Lakes, Temple Terrace & Wesley Chapel, FL.</p>
+        <div class="footer-socials">
+          <a href="https://instagram.com/swim_nexar" target="_blank" rel="noopener noreferrer" class="footer-soc">📸</a>
+          <a href="https://wa.me/18383330666" target="_blank" rel="noopener noreferrer" class="footer-soc">💬</a>
+          <a href="mailto:swimnexar@gmail.com" class="footer-soc">✉️</a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h4>Programs</h4>
+        <a href="waterpolo.html">Water Polo — Land O' Lakes</a>
+        <a href="waterpolo-temple.html">Water Polo — Temple Terrace</a>
+        <a href="swimteam.html">Swim Team</a>
+        <a href="sessions.html">Private Sessions</a>
+      </div>
+      <div class="footer-col">
+        <h4>Nexar</h4>
+        <a href="index.html">Home</a>
+        <a href="about.html">About Us</a>
+        <a href="coaches.html">Coaches</a>
+      </div>
+      <div class="footer-col">
+        <h4>Contact</h4>
+        <a href="mailto:swimnexar@gmail.com">swimnexar@gmail.com</a>
+        <a href="tel:+18383330666">+1 (838) 333-0666</a>
+        <a href="https://wa.me/18383330666">WhatsApp</a>
+        <a href="https://instagram.com/swim_nexar" target="_blank">@swim_nexar</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2026 Nexar Aquatic Academy. All rights reserved.</p>
+      <a href="index.html">← Back to Programs</a>
+    </div>
+  </div>
+</footer>
+
+<script src="js/main.js"></script>
 </body>
 </html>
