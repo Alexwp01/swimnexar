@@ -526,43 +526,49 @@ def _try_transfersh(path):
         return r.text.strip()
     raise RuntimeError(f"transfer.sh: {r.status_code} {r.text[:100]}")
 
-def upload_to_public_url(image_path):
-    print("⬆️  Uploading cover image...")
-    for fn in [_try_litterbox, _try_uguu, _try_transfersh]:
-        try:
-            url = fn(image_path)
-            print(f"  URL: {url}")
-            return url
-        except Exception as e:
-            print(f"  {e} — trying next service...")
-    raise RuntimeError("All upload services failed")
+_UPLOAD_HOSTS = [_try_litterbox, _try_uguu, _try_transfersh]
 
 # ── Step 5: Post carousel to Instagram ───────────────────────
-def post_to_instagram(images, caption):
-    print("📱 Posting carousel to Instagram...")
-    base = "https://graph.instagram.com/v21.0"
+def _create_child_container(base, path, slide_no, total):
+    """Upload one slide and create its IG carousel child container.
 
-    # Upload all slides
-    urls = []
-    for i, path in enumerate(images):
-        print(f"  Uploading slide {i+1}/{len(images)}...")
-        urls.append(upload_to_public_url(path))
-
-    # Create a media container for each slide
-    print("📦 Creating child containers...")
-    child_ids = []
-    for i, url in enumerate(urls):
+    Instagram fetches the image from the public URL itself, and some hosts are
+    intermittently un-fetchable by IG (error 9004). So on a media-fetch failure
+    we re-upload to the next host and retry, instead of aborting the whole post.
+    """
+    tried = []
+    for host in _UPLOAD_HOSTS:
+        try:
+            url = host(path)
+        except Exception as e:
+            print(f"  Slide {slide_no}/{total}: upload via {host.__name__} failed: {e}")
+            continue
+        print(f"  Slide {slide_no}/{total} → {url} ({host.__name__})")
         r = requests.post(f"{base}/{IG_USER_ID}/media", data={
             "image_url":        url,
             "is_carousel_item": "true",
             "access_token":     IG_TOKEN,
         })
         data = r.json()
-        print(f"  Slide {i+1}: {data}")
-        if "id" not in data:
-            print(f"❌ Child container failed: {data}")
-            return None
-        child_ids.append(data["id"])
+        if "id" in data:
+            return data["id"]
+        err = data.get("error", {})
+        msg = err.get("error_user_msg") or err.get("message") or data
+        print(f"  ⚠️  Instagram rejected {host.__name__}: {msg} — trying next host")
+        tried.append(host.__name__)
+    raise RuntimeError(
+        f"Slide {slide_no}: all upload hosts failed or were unreachable by Instagram "
+        f"(tried: {', '.join(tried) or 'none uploaded'})")
+
+def post_to_instagram(images, caption):
+    print("📱 Posting carousel to Instagram...")
+    base = "https://graph.instagram.com/v21.0"
+
+    # Upload each slide and create its child container, with per-slide host fallback
+    print("📦 Uploading slides & creating child containers...")
+    total = len(images)
+    child_ids = [_create_child_container(base, path, i + 1, total)
+                 for i, path in enumerate(images)]
 
     # Create carousel container
     print("🎠 Creating carousel container...")
@@ -644,11 +650,12 @@ def main():
         return
 
     post_id = post_to_instagram(images, content["caption"])
-    print(f"✅ Scheduled! ID: {post_id}")
+    if not post_id:
+        log_to_notion(content, None)
+        raise SystemExit("❌ Instagram publish failed — post was NOT created (see logs above)")
 
-    if post_id:
-        _record_used_topic(content["topic"])
-
+    print(f"✅ Posted! ID: {post_id}")
+    _record_used_topic(content["topic"])
     log_to_notion(content, post_id)
     print("🎉 Done!")
 
