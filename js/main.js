@@ -218,18 +218,70 @@ if (programSelect && waiverLink) {
   });
 })();
 
-/* ── Waiver checkbox — locked until terms link is opened ── */
+/* ── Waiver — modal popup ── */
 (function () {
   const check = document.getElementById('waiverCheck');
   const link  = document.getElementById('waiverLink');
   if (!check || !link) return;
+
   check.disabled = true;
   check.title    = 'Please open the Terms & Conditions link first';
-  link.addEventListener('click', () => {
+
+  const modal = document.createElement('div');
+  modal.style.cssText = 'display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.72);overflow-y:auto;-webkit-overflow-scrolling:touch;padding:20px 16px;';
+  modal.innerHTML =
+    '<div style="max-width:700px;margin:0 auto;background:#fff;border-radius:16px;overflow:hidden;">'
+    + '<div style="position:sticky;top:0;background:#fff;border-bottom:1px solid #e5e7eb;padding:14px 20px;display:flex;align-items:center;justify-content:space-between;">'
+    + '<span id="termsModalTitle" style="font-weight:800;font-size:16px;color:#0d0d0d;"></span>'
+    + '<button id="termsModalClose" style="background:none;border:none;font-size:26px;line-height:1;cursor:pointer;color:#6b7280;padding:0 6px;">&times;</button>'
+    + '</div>'
+    + '<div id="termsModalBody" style="padding:24px 28px 32px;font-size:15px;line-height:1.8;color:#4b5563;"></div>'
+    + '<div style="padding:16px 28px 24px;border-top:1px solid #e5e7eb;background:#f9fafb;text-align:right;">'
+    + '<button id="termsModalAccept" style="background:#0d0d0d;color:#fff;border:none;padding:12px 28px;border-radius:50px;font-size:14px;font-weight:700;cursor:pointer;">✓ I\'ve Read — Close</button>'
+    + '</div>'
+    + '</div>';
+  document.body.appendChild(modal);
+
+  function closeModal() {
+    modal.style.display = 'none';
+    document.body.style.overflow = '';
+  }
+  document.getElementById('termsModalClose').addEventListener('click', closeModal);
+  document.getElementById('termsModalAccept').addEventListener('click', closeModal);
+  modal.addEventListener('click', e => { if (e.target === modal) closeModal(); });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape' && modal.style.display !== 'none') closeModal(); });
+
+  link.addEventListener('click', e => {
+    e.preventDefault();
+    const href = link.getAttribute('href');
+    const bodyEl = document.getElementById('termsModalBody');
+    bodyEl.innerHTML = '<p style="text-align:center;padding:48px 0;color:#9ca3af;">Loading…</p>';
+    document.getElementById('termsModalTitle').textContent = '';
+    modal.style.display = 'block';
+    document.body.style.overflow = 'hidden';
+
+    fetch(href)
+      .then(r => r.text())
+      .then(html => {
+        const doc = new DOMParser().parseFromString(html, 'text/html');
+        const content = doc.querySelector('.terms-body');
+        if (content) {
+          content.querySelectorAll('.terms-back, a.btn').forEach(el => el.remove());
+          bodyEl.innerHTML = content.innerHTML;
+          document.getElementById('termsModalTitle').textContent =
+            doc.querySelector('h1')?.textContent || 'Terms & Conditions';
+        } else {
+          bodyEl.innerHTML = '<p>Could not load. <a href="' + href + '" target="_blank" style="color:#d42b2b">Open in new tab →</a></p>';
+        }
+      })
+      .catch(() => {
+        bodyEl.innerHTML = '<p>Could not load. <a href="' + href + '" target="_blank" style="color:#d42b2b">Open in new tab →</a></p>';
+      });
+
     check.disabled = false;
     check.title    = '';
   });
-  // Re-lock when program changes (link href swaps)
+
   const sel = document.getElementById('programSelect');
   if (sel) sel.addEventListener('change', () => {
     check.disabled = true;
