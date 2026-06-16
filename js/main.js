@@ -298,7 +298,7 @@ if (form) {
 
     try {
       await submitToGoogleForms(rawData);
-      showMsg('ok', '✅ Thank you! We\'ll contact you within 24 hours to schedule your free first practice.');
+      showMsg('ok', '✅ Thank you! We received your request. We\'ll reach out within 24 hours — reply to let us know which day works best for your first practice!');
       form.reset();
     } catch (err) {
       console.error('Google Forms error:', err);
