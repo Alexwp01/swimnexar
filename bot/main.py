@@ -303,17 +303,41 @@ def _photo_fits(photo, topic, sport):
         print(f"    vision check failed ({e}) — accepting photo")
         return True
 
+# Used-photos state (committed back by CI) so the same cover never repeats.
+PHOTO_STATE_FILE = os.path.join(os.path.dirname(__file__), "used_photos.json")
+
+def _load_used_photos():
+    try:
+        with open(PHOTO_STATE_FILE, "r", encoding="utf-8") as f:
+            data = json.load(f)
+        return set(data if isinstance(data, list) else data.get("ids", []))
+    except (FileNotFoundError, json.JSONDecodeError):
+        return set()
+
+def _record_used_photo(photo_id):
+    used = _load_used_photos()
+    used.add(photo_id)
+    with open(PHOTO_STATE_FILE, "w", encoding="utf-8") as f:
+        json.dump(sorted(used), f, indent=2)
+    print(f"📸 Recorded photo {photo_id} — {len(used)} photos used so far")
+
+def _download(photo):
+    r = requests.get(photo["src"]["large2x"], timeout=30)
+    return Image.open(BytesIO(r.content)).convert("RGB")
+
 def fetch_cover_photo(query, is_waterpolo, topic):
-    """Search Pexels, then vision-verify each candidate so the cover fits the post."""
+    """Pick a Pexels photo that (a) hasn't been used before and (b) vision-fits the post.
+
+    Returns (Image, photo_id). The id is recorded only after a successful post.
+    """
     sport = "water polo" if is_waterpolo else "swimming"
-    print(f"📷 Searching Pexels: {query}")
+    used = _load_used_photos()
+    print(f"📷 Searching Pexels: {query}  (avoiding {len(used)} already-used photos)")
     candidates = _pexels_search(query)
     for fb in _PEXELS_FALLBACKS[is_waterpolo]:
-        if len(candidates) >= 6:
-            break
         print(f"  Adding fallback query: {fb}")
         candidates += _pexels_search(fb)
-    # De-dup by photo id
+    # De-dup this candidate list by photo id
     seen, uniq = set(), []
     for p in candidates:
         if p["id"] not in seen:
@@ -323,18 +347,23 @@ def fetch_cover_photo(query, is_waterpolo, topic):
         raise RuntimeError(f"Pexels returned no photos for '{query}' or fallbacks")
     random.shuffle(uniq)
 
-    # Vision-gate: take the first candidate Claude confirms fits the post
-    for p in uniq[:8]:
-        if _photo_fits(p, topic, sport):
-            print(f"  ✅ Chosen: photo by {p.get('photographer', '?')} — {p.get('url', '')}")
-            r = requests.get(p["src"]["large2x"], timeout=30)
-            return Image.open(BytesIO(r.content)).convert("RGB")
+    def _first_passing(cands):
+        for p in cands:
+            if _photo_fits(p, topic, sport):
+                return p
+        return None
 
-    # Nothing passed — use the first as a last resort rather than failing the post
-    print("  ⚠️ No candidate passed the vision check — using best available")
-    p = uniq[0]
-    r = requests.get(p["src"]["large2x"], timeout=30)
-    return Image.open(BytesIO(r.content)).convert("RGB")
+    fresh = [p for p in uniq if p["id"] not in used]
+    # Prefer a never-used photo that passes vision; only then fall back to a used one.
+    chosen = _first_passing(fresh[:12])
+    if chosen is None:
+        print("  ⚠️ No fresh photo passed the vision check — falling back to used photos")
+        chosen = _first_passing([p for p in uniq if p["id"] in used][:8]) or (fresh or uniq)[0]
+
+    if chosen["id"] in used:
+        print(f"  ⚠️ Reusing photo {chosen['id']} (no fresh match available)")
+    print(f"  ✅ Chosen: photo {chosen['id']} by {chosen.get('photographer', '?')} — {chosen.get('url', '')}")
+    return _download(chosen), chosen["id"]
 
 # ── Step 3: Create carousel slides ───────────────────────────
 def _make_cover(slide, cover_img, total):
