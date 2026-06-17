@@ -52,6 +52,6 @@ jobs:
         run: |
           git config user.name "Swimnexar Instagram Bot"
           git config user.email "bot@swimnexar.com"
-          git add bot/posted_topics.json
-          git diff --staged --quiet || git commit -m "post: record posted topic"
+          git add bot/posted_topics.json bot/used_photos.json
+          git diff --staged --quiet || git commit -m "post: record posted topic & photo"
           git push

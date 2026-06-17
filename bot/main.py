@@ -669,7 +669,7 @@ def main():
 
     waterpolo = _is_waterpolo(content["topic"])
     query     = content.get("pexels_query") or ("water polo" if waterpolo else "swimming")
-    cover_img = fetch_cover_photo(query, waterpolo, content["topic"])
+    cover_img, photo_id = fetch_cover_photo(query, waterpolo, content["topic"])
     images    = create_carousel_images(content, cover_img)
     print(f"✅ Created {len(images)} slides")
 
@@ -685,6 +685,7 @@ def main():
 
     print(f"✅ Posted! ID: {post_id}")
     _record_used_topic(content["topic"])
+    _record_used_photo(photo_id)
     log_to_notion(content, post_id)
     print("🎉 Done!")
 
