@@ -545,17 +545,25 @@ def _try_uguu(path):
         return r.json()["files"][0]["url"]
     raise RuntimeError(f"uguu: {r.status_code} {r.text[:100]}")
 
-def _try_transfersh(path):
+def _try_0x0(path):
     with open(path, "rb") as f:
-        r = requests.put(
-            "https://transfer.sh/swimnexar_cover.jpg",
-            data=f, headers={"Max-Days": "1"}, timeout=30,
+        r = requests.post(
+            "https://0x0.st",
+            files={"file": ("cover.jpg", f, "image/jpeg")},
+            headers={"User-Agent": "swimnexar-bot/1.0"},
+            timeout=30,
         )
-    if r.status_code == 200:
+    if r.status_code == 200 and r.text.strip().startswith("https://"):
         return r.text.strip()
-    raise RuntimeError(f"transfer.sh: {r.status_code} {r.text[:100]}")
+    raise RuntimeError(f"0x0.st: {r.status_code} {r.text[:100]}")
 
-_UPLOAD_HOSTS = [_try_litterbox, _try_uguu, _try_transfersh]
+_UPLOAD_HOSTS = [_try_litterbox, _try_uguu, _try_0x0]
+
+def _is_auth_error(err):
+    """Detect an expired/invalid Instagram token vs. a per-host media issue."""
+    return (err.get("type") == "OAuthException"
+            or err.get("code") in (190, 102, 10)
+            or "access token" in str(err.get("message", "")).lower())
 
 # ── Step 5: Post carousel to Instagram ───────────────────────
 def _create_child_container(base, path, slide_no, total):
@@ -582,12 +590,37 @@ def _create_child_container(base, path, slide_no, total):
         if "id" in data:
             return data["id"]
         err = data.get("error", {})
+        # An auth/token error is not the host's fault — trying other hosts is
+        # pointless and hides the real cause. Fail fast with a clear message.
+        if _is_auth_error(err):
+            raise SystemExit(
+                "❌ Instagram token is invalid or expired: "
+                f"{err.get('message')}\n"
+                "→ Regenerate it with `python3 bot/get_token.py`, then update the "
+                "GitHub secret INSTAGRAM_ACCESS_TOKEN (and INSTAGRAM_USER_ID if changed).")
         msg = err.get("error_user_msg") or err.get("message") or data
         print(f"  ⚠️  Instagram rejected {host.__name__}: {msg} — trying next host")
         tried.append(host.__name__)
     raise RuntimeError(
         f"Slide {slide_no}: all upload hosts failed or were unreachable by Instagram "
         f"(tried: {', '.join(tried) or 'none uploaded'})")
+
+def verify_token(base="https://graph.instagram.com/v21.0"):
+    """Fail fast (before spending API calls) if the IG token is dead."""
+    try:
+        r = requests.get(f"{base}/{IG_USER_ID}",
+                         params={"fields": "id,username", "access_token": IG_TOKEN}, timeout=15)
+        data = r.json()
+    except Exception as e:
+        print(f"⚠️  Token pre-check skipped (network error: {e})")
+        return
+    if "error" in data:
+        raise SystemExit(
+            "❌ Instagram token check failed: "
+            f"{data['error'].get('message')}\n"
+            "→ Regenerate it with `python3 bot/get_token.py`, then update the "
+            "GitHub secret INSTAGRAM_ACCESS_TOKEN (and INSTAGRAM_USER_ID if changed).")
+    print(f"🔑 Instagram token OK — @{data.get('username', data.get('id'))}")
 
 def post_to_instagram(images, caption):
     print("📱 Posting carousel to Instagram...")
@@ -663,6 +696,9 @@ def log_to_notion(content, post_id):
 # ── Main ──────────────────────────────────────────────────────
 def main():
     print("🚀 Swimnexar Instagram Bot starting...")
+
+    if not os.environ.get("DRY_RUN"):
+        verify_token()
 
     content   = generate_content()
     print(f"✅ Topic: {content['topic']}")
