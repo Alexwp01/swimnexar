@@ -28,11 +28,13 @@ else:
     print("После нажатия Allow скопируй команду с сайта и запусти заново.")
     sys.exit(0)
 
-# strip full URL if pasted
+# strip full URL if pasted (Instagram appends "#_" after the code)
 if "code=" in raw:
     raw = raw.split("code=")[1].split("#")[0].strip()
 
 print(f"\n⏳ Обмениваю код на токен...")
+print(f"   code: {raw[:12]}…{raw[-6:]}  (длина {len(raw)})")
+print(f"   redirect_uri: {REDIRECT_URI}")
 
 r = requests.post("https://api.instagram.com/oauth/access_token", data={
     "client_id":     CLIENT_ID,
