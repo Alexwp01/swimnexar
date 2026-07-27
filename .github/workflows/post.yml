@@ -2,7 +2,7 @@ name: Instagram Bot
 
 on:
   schedule:
-    - cron: '0 14 */2 * *'   # Every 2 days at 14:00 UTC (10 AM ET)
+    - cron: '0 14 * * 1,3,5'   # Mon, Wed, Fri at 14:00 UTC (10 AM ET) — no weekends
   workflow_dispatch:          # Manual trigger from GitHub UI
     inputs:
       dry_run:
