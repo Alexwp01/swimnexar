@@ -260,18 +260,27 @@ Return ONLY valid JSON with this exact structure:
 # ── Step 2: Fetch a real cover photo from Pexels ─────────────
 # Note: avoid the bare word "pool" — Pexels returns billiards photos for it.
 _PEXELS_FALLBACKS = {
-    True:  ["water polo match", "water polo players", "water polo game", "water polo athlete"],
-    False: ["competitive swimmer", "swimmer racing", "freestyle swimming", "swimming competition"],
+    True:  ["water polo match", "water polo players", "water polo game", "water polo athlete",
+            "waterpolo", "water polo ball", "water polo training"],
+    False: ["competitive swimmer", "swimmer racing", "freestyle swimming", "swimming competition",
+            "swimmer underwater", "swimming training"],
 }
 
-def _pexels_search(query):
-    r = requests.get(
-        "https://api.pexels.com/v1/search",
-        headers={"Authorization": PEXELS_KEY},
-        params={"query": query, "per_page": 15, "orientation": "landscape"},
-        timeout=15,
-    )
-    return r.json().get("photos", [])
+def _pexels_search(query, pages=2, per_page=30):
+    """Fetch several pages so the candidate pool is large (avoids repeating covers)."""
+    photos = []
+    for page in range(1, pages + 1):
+        r = requests.get(
+            "https://api.pexels.com/v1/search",
+            headers={"Authorization": PEXELS_KEY},
+            params={"query": query, "per_page": per_page, "orientation": "landscape", "page": page},
+            timeout=15,
+        )
+        batch = r.json().get("photos", [])
+        photos += batch
+        if len(batch) < per_page:
+            break  # reached the last page for this query
+    return photos
 
 def _photo_fits(photo, topic, sport):
     """Ask Claude (vision) whether this photo actually matches the post."""
@@ -307,18 +316,27 @@ def _photo_fits(photo, topic, sport):
 PHOTO_STATE_FILE = os.path.join(os.path.dirname(__file__), "used_photos.json")
 
 def _load_used_photos():
+    """Return used photo IDs in use-order (oldest first, most recent last)."""
     try:
         with open(PHOTO_STATE_FILE, "r", encoding="utf-8") as f:
             data = json.load(f)
-        return set(data if isinstance(data, list) else data.get("ids", []))
+        ids = data if isinstance(data, list) else data.get("ids", [])
     except (FileNotFoundError, json.JSONDecodeError):
-        return set()
+        return []
+    seen, out = set(), []
+    for i in ids:
+        if i not in seen:
+            seen.add(i)
+            out.append(i)
+    return out
 
 def _record_used_photo(photo_id):
     used = _load_used_photos()
-    used.add(photo_id)
+    if photo_id in used:
+        used.remove(photo_id)   # move to the end so it counts as most-recent
+    used.append(photo_id)
     with open(PHOTO_STATE_FILE, "w", encoding="utf-8") as f:
-        json.dump(sorted(used), f, indent=2)
+        json.dump(used, f, indent=2)
     print(f"📸 Recorded photo {photo_id} — {len(used)} photos used so far")
 
 def _download(photo):
@@ -331,8 +349,10 @@ def fetch_cover_photo(query, is_waterpolo, topic):
     Returns (Image, photo_id). The id is recorded only after a successful post.
     """
     sport = "water polo" if is_waterpolo else "swimming"
-    used = _load_used_photos()
-    print(f"📷 Searching Pexels: {query}  (avoiding {len(used)} already-used photos)")
+    used = _load_used_photos()           # oldest → most-recent
+    used_set = set(used)
+    recent = set(used[-8:])              # last 8 posts — never repeat these back-to-back
+    print(f"📷 Searching Pexels: {query}  (avoiding {len(used_set)} already-used photos)")
     candidates = _pexels_search(query)
     for fb in _PEXELS_FALLBACKS[is_waterpolo]:
         print(f"  Adding fallback query: {fb}")
@@ -353,15 +373,20 @@ def fetch_cover_photo(query, is_waterpolo, topic):
                 return p
         return None
 
-    fresh = [p for p in uniq if p["id"] not in used]
-    # Prefer a never-used photo that passes vision; only then fall back to a used one.
-    chosen = _first_passing(fresh[:12])
+    fresh = [p for p in uniq if p["id"] not in used_set]
+    # 1) Prefer a never-used photo that passes vision.
+    chosen = _first_passing(fresh[:15])
     if chosen is None:
-        print("  ⚠️ No fresh photo passed the vision check — falling back to used photos")
-        chosen = _first_passing([p for p in uniq if p["id"] in used][:8]) or (fresh or uniq)[0]
+        # 2) Pool exhausted: reuse, but avoid the last 8 posts so covers don't repeat back-to-back.
+        print("  ⚠️ No fresh photo passed the vision check — reusing an older (non-recent) photo")
+        older = [p for p in uniq if p["id"] in used_set and p["id"] not in recent]
+        random.shuffle(older)
+        chosen = (_first_passing(older)
+                  or _first_passing([p for p in uniq if p["id"] in used_set])
+                  or (fresh or uniq)[0])
 
-    if chosen["id"] in used:
-        print(f"  ⚠️ Reusing photo {chosen['id']} (no fresh match available)")
+    if chosen["id"] in used_set:
+        print(f"  ⚠️ Reusing photo {chosen['id']} (fresh pool exhausted)")
     print(f"  ✅ Chosen: photo {chosen['id']} by {chosen.get('photographer', '?')} — {chosen.get('url', '')}")
     return _download(chosen), chosen["id"]
 
