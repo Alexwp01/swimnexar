@@ -30,7 +30,7 @@
 
 /* ── Reset ── */
 *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
-html { scroll-behavior:smooth; }
+html { scroll-behavior:smooth; overflow-x:hidden; }
 body { font-family:var(--font); color:var(--black); background:var(--white); overflow-x:hidden; line-height:1.6; }
 img { max-width:100%; height:auto; display:block; }
 a { text-decoration:none; color:inherit; transition:color var(--t); }
