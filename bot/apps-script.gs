@@ -38,8 +38,8 @@ function doPost(e) {
     var loc  = data.location || '';
     var programLabel =
       prog === 'swimteam'         ? 'Swim Team — Wesley Chapel' :
-      prog === 'waterpolo-temple' ? 'Water Polo — Temple Terrace (Tue/Thu 7–8 PM)' :
-      loc  === 'temple-terrace'   ? 'Water Polo — Temple Terrace (Tue/Thu 7–8 PM)' :
+      prog === 'waterpolo-temple' ? 'Water Polo — Temple Terrace (Tue/Thu 6:45–8:30 PM)' :
+      loc  === 'temple-terrace'   ? 'Water Polo — Temple Terrace (Tue/Thu 6:45–8:30 PM)' :
                                     'Water Polo — Land O\'Lakes (Mon/Wed/Fri 8–9:45 PM)';
 
     // ── 3. Notification email → Alex ─────────────────────────────────
