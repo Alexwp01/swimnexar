@@ -58,7 +58,11 @@ document.addEventListener('DOMContentLoaded', function() {
 const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzFaQscVvj-a6OWdvoZA9-QtxE_hXBWS8h8vDIT8Ihi9Jd-H5tj4bFFmtqstzrQaDHL/exec';
 
 async function submitToGoogleForms(data) {
-  await fetch(APPS_SCRIPT_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify(data) });
+  try {
+    await fetch(APPS_SCRIPT_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify(data) });
+  } catch (e) {
+    console.warn('Form fetch (no-cors):', e.message);
+  }
 }
 
 /* ── Entry popup ── */
@@ -328,16 +332,28 @@ if (form) {
 
     // Validate required fields
     let valid = true;
+    let hasEmptyFields = false;
+    let hasUnopenedWaiver = false;
     form.querySelectorAll('[required]').forEach(f => {
       f.style.borderColor = '';
+      if (f.type === 'checkbox') f.style.outline = '';
       if (f.type === 'checkbox') {
-        if (!f.checked) { f.style.outline = '2px solid #ef4444'; valid = false; }
-        else { f.style.outline = ''; }
+        if (f.disabled || !f.checked) {
+          if (!f.disabled) f.style.outline = '2px solid #ef4444';
+          valid = false;
+          hasUnopenedWaiver = true;
+        }
       } else {
-        if (!f.value.trim()) { f.style.borderColor = '#ef4444'; valid = false; }
+        if (!f.value.trim()) { f.style.borderColor = '#ef4444'; valid = false; hasEmptyFields = true; }
       }
     });
-    if (!valid) { showMsg('err', 'Please fill in all required fields and accept the Terms & Conditions.'); return; }
+    if (!valid) {
+      const msg = hasEmptyFields
+        ? 'Please fill in all required fields.'
+        : 'Please open the Terms & Conditions link and check the box to continue.';
+      showMsg('err', msg);
+      return;
+    }
 
     const rawData = Object.fromEntries(new FormData(form).entries());
     delete rawData['_hp'];
