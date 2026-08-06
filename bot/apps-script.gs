@@ -22,7 +22,7 @@ function doGet() {
   return ContentService.createTextOutput('ok').setMimeType(ContentService.MimeType.TEXT);
 }
 
-function getSheet() {
+function getSheetForProgram(data) {
   const props = PropertiesService.getScriptProperties();
   let ssId = props.getProperty('SS_ID');
   let ss;
@@ -34,19 +34,36 @@ function getSheet() {
     props.setProperty('SS_ID', ss.getId());
   }
 
-  // New sheet tab each month: "August 2026", "September 2026", etc.
+  // Determine program label and tab color
+  const prog = data.program || '';
+  const loc  = data.location || '';
+  var programLabel, tabColor;
+  if (prog === 'swimteam') {
+    programLabel = 'Swim Team';
+    tabColor = '#3c78d8';
+  } else if (prog === 'waterpolo-temple' || loc === 'temple-terrace') {
+    programLabel = 'WP Temple Terrace';
+    tabColor = '#6aa84f';
+  } else {
+    programLabel = 'WP Land O Lakes';
+    tabColor = '#e69138';
+  }
+
+  // Monthly tab: "Swim Team · Aug 2026"
   const now = new Date();
-  const monthLabel = now.toLocaleString('en-US', { month: 'long', year: 'numeric', timeZone: 'America/New_York' });
+  const monthLabel = now.toLocaleString('en-US', { month: 'short', year: 'numeric', timeZone: 'America/New_York' });
+  const sheetName = programLabel + ' · ' + monthLabel;
 
-  let sheet = ss.getSheetByName(monthLabel);
+  let sheet = ss.getSheetByName(sheetName);
   if (!sheet) {
-    sheet = ss.insertSheet(monthLabel);
+    sheet = ss.insertSheet(sheetName);
+    sheet.setTabColor(tabColor);
 
-    const headers = ['Timestamp', 'Program', 'Parent Name', 'Email', 'Phone', 'Child Name', 'Age', 'Experience', 'Waiver'];
+    const headers = ['Timestamp', 'Parent Name', 'Email', 'Phone', 'Child Name', 'Age', 'Experience', 'Waiver'];
     sheet.appendRow(headers);
 
     // Column header colors
-    const colors = ['#4a86e8', '#6aa84f', '#e69138', '#cc4125', '#674ea7', '#45818e', '#bf9000', '#741b47', '#38761d'];
+    const colors = ['#4a86e8', '#e69138', '#cc4125', '#674ea7', '#45818e', '#bf9000', '#741b47', '#38761d'];
     headers.forEach(function(_, i) {
       const cell = sheet.getRange(1, i + 1);
       cell.setBackground(colors[i]);
@@ -55,7 +72,6 @@ function getSheet() {
       cell.setHorizontalAlignment('center');
     });
 
-    // Freeze header row and resize columns
     sheet.setFrozenRows(1);
     sheet.setRowHeight(1, 32);
     sheet.autoResizeColumns(1, headers.length);
@@ -65,10 +81,9 @@ function getSheet() {
 }
 
 function saveToSheet(data) {
-  const sheet = getSheet();
+  const sheet = getSheetForProgram(data);
   sheet.appendRow([
     new Date().toLocaleString('en-US', { timeZone: 'America/New_York' }),
-    data.program    || '',
     data.parentName || '',
     data.email      || '',
     data.phone      || '',
@@ -209,17 +224,17 @@ function testWaterPolo() {
 function setupSheet() {
   const props = PropertiesService.getScriptProperties();
   props.deleteProperty('SS_ID');
-  getSheet();
+  // Create all three tabs to initialize
+  saveToSheet({ program: 'swimteam',         parentName: 'Test', email: '', phone: '', childName: 'Test', childAge: '', experience: '', waiver: false });
+  saveToSheet({ program: 'waterpolo',         location: 'land-o-lakes', parentName: 'Test', email: '', phone: '', childName: 'Test', childAge: '', experience: '', waiver: false });
+  saveToSheet({ program: 'waterpolo-temple', parentName: 'Test', email: '', phone: '', childName: 'Test', childAge: '', experience: '', waiver: false });
   const ssId = props.getProperty('SS_ID');
   const url = SpreadsheetApp.openById(ssId).getUrl();
   Logger.log('Sheet URL: ' + url);
 }
 
 function testSheet() {
-  const data = {
-    program: 'swimteam', childName: 'Max', childAge: '10',
-    parentName: 'Alex', email: 'alexmpwr@gmail.com',
-    phone: '555-0000', experience: 'strokes', waiver: true,
-  };
-  saveToSheet(data);
+  saveToSheet({ program: 'swimteam', childName: 'Max', childAge: '10', parentName: 'Alex', email: 'alexmpwr@gmail.com', phone: '555-0000', experience: 'strokes', waiver: true });
+  saveToSheet({ program: 'waterpolo', location: 'land-o-lakes', childName: 'Sam', childAge: '12', parentName: 'Maria', email: 'alexmpwr@gmail.com', phone: '555-0001', experience: 'none', waiver: true });
+  saveToSheet({ program: 'waterpolo-temple', childName: 'Leo', childAge: '9', parentName: 'John', email: 'alexmpwr@gmail.com', phone: '555-0002', experience: 'waterpolo', waiver: true });
 }
