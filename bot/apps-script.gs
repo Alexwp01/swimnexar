@@ -24,45 +24,47 @@ function doGet() {
 
 function getSheetForProgram(data) {
   const props = PropertiesService.getScriptProperties();
-  let ssId = props.getProperty('SS_ID');
+  const prog = data.program || '';
+  const loc  = data.location || '';
+
+  // Each program has its own spreadsheet stored separately
+  var ssKey, ssTitle, tabColor;
+  if (prog === 'swimteam') {
+    ssKey    = 'SS_SWIMTEAM';
+    ssTitle  = 'Nexar — Swim Team Registrations';
+    tabColor = '#3c78d8';
+  } else if (prog === 'waterpolo-temple' || loc === 'temple-terrace') {
+    ssKey    = 'SS_WP_TEMPLE';
+    ssTitle  = 'Nexar — Water Polo Temple Terrace Registrations';
+    tabColor = '#6aa84f';
+  } else {
+    ssKey    = 'SS_WP_LOL';
+    ssTitle  = 'Nexar — Water Polo Land O Lakes Registrations';
+    tabColor = '#e69138';
+  }
+
+  let ssId = props.getProperty(ssKey);
   let ss;
   if (ssId) {
     try { ss = SpreadsheetApp.openById(ssId); } catch (_) { ssId = null; }
   }
   if (!ssId) {
-    ss = SpreadsheetApp.create('Swimnexar Registrations');
-    props.setProperty('SS_ID', ss.getId());
+    ss = SpreadsheetApp.create(ssTitle);
+    props.setProperty(ssKey, ss.getId());
   }
 
-  // Determine program label and tab color
-  const prog = data.program || '';
-  const loc  = data.location || '';
-  var programLabel, tabColor;
-  if (prog === 'swimteam') {
-    programLabel = 'Swim Team';
-    tabColor = '#3c78d8';
-  } else if (prog === 'waterpolo-temple' || loc === 'temple-terrace') {
-    programLabel = 'WP Temple Terrace';
-    tabColor = '#6aa84f';
-  } else {
-    programLabel = 'WP Land O Lakes';
-    tabColor = '#e69138';
-  }
-
-  // Monthly tab: "Swim Team · Aug 2026"
+  // Monthly tab: "Aug 2026"
   const now = new Date();
   const monthLabel = now.toLocaleString('en-US', { month: 'short', year: 'numeric', timeZone: 'America/New_York' });
-  const sheetName = programLabel + ' · ' + monthLabel;
 
-  let sheet = ss.getSheetByName(sheetName);
+  let sheet = ss.getSheetByName(monthLabel);
   if (!sheet) {
-    sheet = ss.insertSheet(sheetName);
+    sheet = ss.insertSheet(monthLabel);
     sheet.setTabColor(tabColor);
 
     const headers = ['Timestamp', 'Parent Name', 'Email', 'Phone', 'Child Name', 'Age', 'Experience', 'Waiver'];
     sheet.appendRow(headers);
 
-    // Column header colors
     const colors = ['#4a86e8', '#e69138', '#cc4125', '#674ea7', '#45818e', '#bf9000', '#741b47', '#38761d'];
     headers.forEach(function(_, i) {
       const cell = sheet.getRange(1, i + 1);
@@ -223,14 +225,16 @@ function testWaterPolo() {
 
 function setupSheet() {
   const props = PropertiesService.getScriptProperties();
-  props.deleteProperty('SS_ID');
-  // Create all three tabs to initialize
-  saveToSheet({ program: 'swimteam',         parentName: 'Test', email: '', phone: '', childName: 'Test', childAge: '', experience: '', waiver: false });
-  saveToSheet({ program: 'waterpolo',         location: 'land-o-lakes', parentName: 'Test', email: '', phone: '', childName: 'Test', childAge: '', experience: '', waiver: false });
+  props.deleteProperty('SS_SWIMTEAM');
+  props.deleteProperty('SS_WP_TEMPLE');
+  props.deleteProperty('SS_WP_LOL');
+  // Create all three spreadsheets
+  saveToSheet({ program: 'swimteam',        parentName: 'Test', email: '', phone: '', childName: 'Test', childAge: '', experience: '', waiver: false });
+  saveToSheet({ program: 'waterpolo',       location: 'land-o-lakes', parentName: 'Test', email: '', phone: '', childName: 'Test', childAge: '', experience: '', waiver: false });
   saveToSheet({ program: 'waterpolo-temple', parentName: 'Test', email: '', phone: '', childName: 'Test', childAge: '', experience: '', waiver: false });
-  const ssId = props.getProperty('SS_ID');
-  const url = SpreadsheetApp.openById(ssId).getUrl();
-  Logger.log('Sheet URL: ' + url);
+  Logger.log('Swim Team: '      + SpreadsheetApp.openById(props.getProperty('SS_SWIMTEAM')).getUrl());
+  Logger.log('Land O Lakes: '   + SpreadsheetApp.openById(props.getProperty('SS_WP_LOL')).getUrl());
+  Logger.log('Temple Terrace: ' + SpreadsheetApp.openById(props.getProperty('SS_WP_TEMPLE')).getUrl());
 }
 
 function testSheet() {
