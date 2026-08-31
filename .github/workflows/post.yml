@@ -2,7 +2,7 @@ name: Instagram Bot
 
 on:
   schedule:
-    - cron: '0 14 * * 1,3,5'   # Mon, Wed, Fri at 14:00 UTC (10 AM ET) — no weekends
+    - cron: '40 13 * * 1,3,5'   # Mon/Wed/Fri 13:40 UTC (~9:40 AM ET); off-peak minute to cut GitHub scheduler lag — no weekends
   workflow_dispatch:          # Manual trigger from GitHub UI
     inputs:
       dry_run:

@@ -35,51 +35,94 @@ DARKER = (8, 8, 8)
 STATE_FILE = os.path.join(os.path.dirname(__file__), "posted_topics.json")
 
 def _load_used_topics():
-    """Read previously posted topics from the committed state file."""
+    """Read posted topics in use-order (oldest first, most recent last)."""
     try:
         with open(STATE_FILE, "r", encoding="utf-8") as f:
             data = json.load(f)
-        return data if isinstance(data, list) else data.get("topics", [])
+        items = data if isinstance(data, list) else data.get("topics", [])
     except (FileNotFoundError, json.JSONDecodeError):
         return []
+    seen, out = set(), []
+    for t in items:
+        if t not in seen:
+            seen.add(t)
+            out.append(t)
+    return out
 
 def _record_used_topic(topic):
-    """Append a freshly posted topic to the state file (CI commits it back)."""
+    """Record a freshly posted topic, moving it to the end (most-recent) for recency."""
     used = _load_used_topics()
-    if topic not in used:
-        used.append(topic)
+    if topic in used:
+        used.remove(topic)
+    used.append(topic)
     with open(STATE_FILE, "w", encoding="utf-8") as f:
         json.dump(used, f, indent=2, ensure_ascii=False)
     print(f"📒 Recorded topic — history now {len(used)} entries")
 
 # ── Topic bank ───────────────────────────────────────────────
+# Each topic has a category ("cat") used to avoid posting two similar themes
+# back-to-back. Existing strings are kept verbatim so prior history still matches.
 TOPICS = [
-    # Technique & drills
-    "3 drills to improve freestyle technique for young swimmers",
-    "3 water polo passing drills every beginner needs",
-    "5 water polo tips for beginners aged 8-12",
-    "How to do a perfect flip turn — step by step for kids",
-    "Morning swim workout for youth athletes",
-    "How to improve your child's breaststroke in one week",
-    "Water polo fitness drills you can do at home",
-    "How to prepare for your first water polo tryout",
-    "5 kick drills every young swimmer needs to master",
-    "Top 5 swimming mistakes parents don't notice",
-    "Water polo shooting technique for beginners aged 8-12",
-    "How to teach proper breathing in freestyle to young swimmers",
-    "Best backstroke drills for kids who are just starting out",
-    # Parent & lifestyle
-    "Why starting swimming early gives kids a lifelong advantage",
-    "How to choose the right swim program for your child",
-    "Mental toughness tips for young water polo players",
-    "Nutrition tips for youth aquatic athletes",
-    "How water polo builds leadership skills in kids",
-    # College & recruitment (~1x/week)
-    "How to get a water polo scholarship to a US college",
-    "What NCAA recruiters look for in a water polo athlete",
-    "College recruitment timeline for youth swimmers",
-    "How to build a recruiting profile for water polo by age 14",
+    # swim-technique
+    {"t": "3 drills to improve freestyle technique for young swimmers", "cat": "swim-technique"},
+    {"t": "How to do a perfect flip turn — step by step for kids", "cat": "swim-technique"},
+    {"t": "How to improve your child's breaststroke in one week", "cat": "swim-technique"},
+    {"t": "5 kick drills every young swimmer needs to master", "cat": "swim-technique"},
+    {"t": "How to teach proper breathing in freestyle to young swimmers", "cat": "swim-technique"},
+    {"t": "Best backstroke drills for kids who are just starting out", "cat": "swim-technique"},
+    {"t": "How to fix sinking legs in freestyle for young swimmers", "cat": "swim-technique"},
+    {"t": "Streamline off every wall: free speed for young swimmers", "cat": "swim-technique"},
+    {"t": "Bilateral breathing drills for developing swimmers", "cat": "swim-technique"},
+    {"t": "Butterfly timing basics for young swimmers", "cat": "swim-technique"},
+    {"t": "Common backstroke mistakes and how to correct them", "cat": "swim-technique"},
+    # waterpolo-skill
+    {"t": "3 water polo passing drills every beginner needs", "cat": "waterpolo-skill"},
+    {"t": "5 water polo tips for beginners aged 8-12", "cat": "waterpolo-skill"},
+    {"t": "How to prepare for your first water polo tryout", "cat": "waterpolo-skill"},
+    {"t": "Water polo shooting technique for beginners aged 8-12", "cat": "waterpolo-skill"},
+    {"t": "Eggbeater kick: building a strong water polo base", "cat": "waterpolo-skill"},
+    {"t": "How to improve your water polo passing accuracy", "cat": "waterpolo-skill"},
+    {"t": "Defensive positioning basics for young water polo players", "cat": "waterpolo-skill"},
+    {"t": "How to read the game as a young water polo player", "cat": "waterpolo-skill"},
+    # fitness
+    {"t": "Morning swim workout for youth athletes", "cat": "fitness"},
+    {"t": "Water polo fitness drills you can do at home", "cat": "fitness"},
+    {"t": "Dryland exercises that make young swimmers faster", "cat": "fitness"},
+    {"t": "Core strength routine for youth aquatic athletes", "cat": "fitness"},
+    {"t": "Building endurance for young swimmers without burnout", "cat": "fitness"},
+    # mindset
+    {"t": "Mental toughness tips for young water polo players", "cat": "mindset"},
+    {"t": "How water polo builds leadership skills in kids", "cat": "mindset"},
+    {"t": "How to handle race-day nerves as a young athlete", "cat": "mindset"},
+    {"t": "Building confidence after a tough meet", "cat": "mindset"},
+    {"t": "Goal setting for youth aquatic athletes", "cat": "mindset"},
+    # nutrition
+    {"t": "Nutrition tips for youth aquatic athletes", "cat": "nutrition"},
+    {"t": "Pre-practice snacks that fuel young swimmers", "cat": "nutrition"},
+    {"t": "Hydration tips for youth aquatic athletes", "cat": "nutrition"},
+    # parent
+    {"t": "Top 5 swimming mistakes parents don't notice", "cat": "parent"},
+    {"t": "Why starting swimming early gives kids a lifelong advantage", "cat": "parent"},
+    {"t": "How to choose the right swim program for your child", "cat": "parent"},
+    {"t": "What to expect in your child's first competitive swim season", "cat": "parent"},
+    {"t": "Signs your child is ready to move up a swim group", "cat": "parent"},
+    # safety
+    {"t": "Water safety habits every young swimmer should know", "cat": "safety"},
+    {"t": "Why kids should learn to swim before playing water polo", "cat": "safety"},
+    # recruiting
+    {"t": "How to get a water polo scholarship to a US college", "cat": "recruiting"},
+    {"t": "What NCAA recruiters look for in a water polo athlete", "cat": "recruiting"},
+    {"t": "College recruitment timeline for youth swimmers", "cat": "recruiting"},
+    {"t": "How to build a recruiting profile for water polo by age 14", "cat": "recruiting"},
+    {"t": "How to make a standout water polo recruiting video", "cat": "recruiting"},
+    {"t": "Balancing academics and aquatic sports for college-bound athletes", "cat": "recruiting"},
 ]
+
+def _topic_category(topic):
+    for e in TOPICS:
+        if e["t"] == topic:
+            return e["cat"]
+    return None
 
 # ── Fonts ─────────────────────────────────────────────────────
 _FONT_CACHE: dict = {}
@@ -180,16 +223,32 @@ def _dots(draw, total, active, cx, y, r=6, gap=22):
         draw.ellipse([bx - r, y - r, bx + r, y + r], fill=fill)
 
 # ── Step 1: Generate content with Claude ─────────────────────
+RECENT_TOPIC_BLOCK = 8   # don't reuse a topic seen in the last N posts
+RECENT_CAT_BLOCK   = 2    # don't reuse a category used in the last N posts
+
 def _pick_topic():
     import random
-    used = _load_used_topics()
-    print(f"📋 Used topics so far: {len(used)}/{len(TOPICS)}")
-    available = [t for t in TOPICS if t not in used]
-    if not available:
-        print("🔄 All topics used — resetting cycle")
-        available = TOPICS
-    topic = random.choice(available)
-    return topic
+    used = _load_used_topics()                 # oldest → most recent
+    used_set = set(used)
+    recent_titles = set(used[-RECENT_TOPIC_BLOCK:])
+    recent_cats = {_topic_category(t) for t in used[-RECENT_CAT_BLOCK:]}
+    recent_cats.discard(None)
+    print(f"📋 Topic history: {len(used)} posts · bank {len(TOPICS)} · "
+          f"avoid cats {sorted(recent_cats)}")
+
+    never = [e for e in TOPICS if e["t"] not in used_set]
+    not_recent = [e for e in TOPICS if e["t"] not in recent_titles]
+
+    # Preference tiers (most desirable first):
+    tiers = [
+        [e for e in never if e["cat"] not in recent_cats],       # fresh topic + fresh category
+        never,                                                    # fresh topic (any category)
+        [e for e in not_recent if e["cat"] not in recent_cats],   # old but not recent + fresh category
+        not_recent,                                               # anything not in the last 8 posts
+        TOPICS,                                                    # absolute last resort
+    ]
+    pool = next((t for t in tiers if t), TOPICS)
+    return random.choice(pool)["t"]
 
 def _is_waterpolo(topic):
     return "water polo" in topic.lower()
