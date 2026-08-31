@@ -118,6 +118,21 @@ TOPICS = [
     {"t": "Balancing academics and aquatic sports for college-bound athletes", "cat": "recruiting"},
 ]
 
+# Extend the bank from an optional external file (keeps main.py lean and lets the
+# topic list grow to hundreds without touching code). Inline list above is the
+# always-present base so prior post history keeps matching.
+_TOPICS_FILE = os.path.join(os.path.dirname(__file__), "topics.json")
+try:
+    with open(_TOPICS_FILE, "r", encoding="utf-8") as _f:
+        _extra = json.load(_f)
+    _seen = {e["t"] for e in TOPICS}
+    for _e in _extra:
+        if isinstance(_e, dict) and _e.get("t") and _e["t"] not in _seen:
+            TOPICS.append({"t": _e["t"], "cat": _e.get("cat", "general")})
+            _seen.add(_e["t"])
+except (FileNotFoundError, json.JSONDecodeError):
+    pass
+
 def _topic_category(topic):
     for e in TOPICS:
         if e["t"] == topic:
