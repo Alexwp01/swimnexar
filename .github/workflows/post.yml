@@ -19,6 +19,19 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      # Manually-paused dates (space-separated, UTC YYYY-MM-DD): no post on these days.
+      - name: Skip manually-paused dates
+        id: gate
+        run: |
+          PAUSED=" 2026-09-21 "
+          TODAY="$(date -u +%F)"
+          if echo "$PAUSED" | grep -q " $TODAY "; then
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+            echo "⏭️ $TODAY is manually paused — skipping this post"
+          else
+            echo "skip=false" >> "$GITHUB_OUTPUT"
+          fi
+
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
@@ -30,6 +43,7 @@ jobs:
         run: pip install -r bot/requirements.txt
 
       - name: Run bot
+        if: ${{ steps.gate.outputs.skip != 'true' }}
         env:
           INSTAGRAM_ACCESS_TOKEN: ${{ secrets.INSTAGRAM_ACCESS_TOKEN }}
           INSTAGRAM_USER_ID:      ${{ secrets.INSTAGRAM_USER_ID }}
@@ -48,7 +62,7 @@ jobs:
           path: /tmp/slide_*.jpg
 
       - name: Commit posted-topics history
-        if: ${{ !inputs.dry_run }}
+        if: ${{ !inputs.dry_run && steps.gate.outputs.skip != 'true' }}
         run: |
           git config user.name "Swimnexar Instagram Bot"
           git config user.email "bot@swimnexar.com"
