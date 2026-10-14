@@ -340,16 +340,37 @@ _PEXELS_FALLBACKS = {
             "swimmer underwater", "swimming training"],
 }
 
+def _http_get(url, *, headers=None, params=None, timeout=20, attempts=3):
+    """GET with retries so a single network hiccup (e.g. Pexels timeout) doesn't kill the post."""
+    last = None
+    for i in range(attempts):
+        try:
+            return requests.get(url, headers=headers, params=params, timeout=timeout)
+        except requests.RequestException as e:
+            last = e
+            host = url.split("//")[-1].split("/")[0]
+            print(f"    {host} request failed ({e}) — retry {i + 1}/{attempts}")
+            time.sleep(2 * (i + 1))
+    raise last
+
 def _pexels_search(query, pages=2, per_page=30):
-    """Fetch several pages so the candidate pool is large (avoids repeating covers)."""
+    """Fetch several pages so the candidate pool is large (avoids repeating covers).
+
+    Network-resilient: on repeated failure for a query, return what we have (or
+    empty) instead of raising — other queries still supply candidates.
+    """
     photos = []
     for page in range(1, pages + 1):
-        r = requests.get(
-            "https://api.pexels.com/v1/search",
-            headers={"Authorization": PEXELS_KEY},
-            params={"query": query, "per_page": per_page, "orientation": "landscape", "page": page},
-            timeout=15,
-        )
+        try:
+            r = _http_get(
+                "https://api.pexels.com/v1/search",
+                headers={"Authorization": PEXELS_KEY},
+                params={"query": query, "per_page": per_page, "orientation": "landscape", "page": page},
+                timeout=20,
+            )
+        except requests.RequestException as e:
+            print(f"  ⚠️ Pexels search '{query}' failed after retries ({e}) — skipping this query")
+            break
         batch = r.json().get("photos", [])
         photos += batch
         if len(batch) < per_page:
@@ -414,7 +435,7 @@ def _record_used_photo(photo_id):
     print(f"📸 Recorded photo {photo_id} — {len(used)} photos used so far")
 
 def _download(photo):
-    r = requests.get(photo["src"]["large2x"], timeout=30)
+    r = _http_get(photo["src"]["large2x"], timeout=30)
     return Image.open(BytesIO(r.content)).convert("RGB")
 
 def fetch_cover_photo(query, is_waterpolo, topic):
