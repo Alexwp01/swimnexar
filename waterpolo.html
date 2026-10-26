@@ -61,90 +61,16 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
   <style>
-    /* Split hero: photo full-bleed bg, semi-transparent dark panel left */
-    .hero-split {
-      display: flex;
-      min-height: 100vh;
-      position: relative;
-      overflow: hidden;
-    }
-    /* Right: full photo, no crop */
-    .hs-right {
-      flex: 1;
-      position: relative;
-      z-index: 0;
-      background: #0d0d0d;
-      display: flex;
-      align-items: center;
-    }
-    .hs-right img {
-      width: 100%;
-      height: auto;
-      display: block;
-    }
-    /* Left: semi-transparent dark panel, fades into photo on the right edge */
-    .hs-left {
-      width: 40%;
-      flex-shrink: 0;
+    /* Full-bleed hero: photo background, gradient overlay left for text */
+    .hero-photo img { object-position: center center; }
+    .hero-dim {
       background: linear-gradient(to right,
-        rgba(10,10,10,0.95) 0%,
-        rgba(10,10,10,0.95) 60%,
-        rgba(10,10,10,0.45) 100%);
-      display: flex;
-      align-items: center;
-      padding: calc(var(--header-h) + 48px) 56px 80px 48px;
-      position: relative;
-      z-index: 2;
+        rgba(0,0,0,.90) 0%,
+        rgba(0,0,0,.80) 35%,
+        rgba(0,0,0,.30) 65%,
+        rgba(0,0,0,.10) 100%);
     }
-    .hs-left::after { display: none; }
-    .hs-left .hero-body {
-      padding-top: 0;
-      padding-bottom: 0;
-      max-width: 100%;
-    }
-    .hero-split .hero-wave {
-      position: absolute; bottom: -2px; left: 0; right: 0; z-index: 4; line-height: 0;
-    }
-    .hero-split .hero-wave svg { display: block; width: 100%; }
-
-    @media (max-width: 900px) {
-      /* Mobile: classic full-bg hero with text overlay */
-      .hero-split {
-        display: block;
-        position: relative;
-        min-height: 100vh;
-      }
-      /* Photo fills entire background */
-      .hs-right {
-        position: absolute;
-        inset: 0;
-        display: block;
-        background: #0d0d0d;
-      }
-      .hs-right img {
-        width: 100%; height: 100%;
-        object-fit: cover;
-        object-position: 30% center;
-      }
-      /* Dark overlay over photo */
-      .hs-right::after {
-        content: '';
-        position: absolute;
-        inset: 0;
-        background: linear-gradient(to bottom,
-          rgba(0,0,0,.78) 0%,
-          rgba(0,0,0,.55) 50%,
-          rgba(0,0,0,.88) 100%);
-      }
-      /* Text on top */
-      .hs-left {
-        width: 100%;
-        background: transparent;
-        position: relative;
-        z-index: 2;
-        padding: calc(var(--header-h) + 32px) 24px 100px;
-      }
-    }
+    .hero-body { padding-bottom: 120px; max-width: 580px; }
   </style>
 </head>
 <body>
@@ -178,15 +104,16 @@
 </header>
 
 <!-- HERO -->
-<section class="hero-split" id="hero">
-
-  <!-- Left: dark panel with text -->
-  <div class="hs-left">
+<section class="hero" id="hero">
+  <div class="hero-photo">
+    <img src="images/wp-team-nexar.jpg"
+         alt="Nexar Water Polo team" loading="eager">
+  </div>
+  <div class="hero-dim"></div>
+  <div class="container">
     <div class="hero-body">
       <div class="hero-tag">🤽 Water Polo · Land O' Lakes, FL</div>
-      <h1 style="font-size:clamp(40px,5.5vw,80px); font-weight:900; line-height:1.02; letter-spacing:-3px; color:#fff; margin-bottom:20px;">
-        Train Like a<br><span style="color:#d42b2b;">Champion</span>
-      </h1>
+      <h1>Train Like a<br><span>Champion</span></h1>
       <p class="hero-sub">Youth Water Polo for ages 6–18. Monday, Wednesday &amp; Friday evenings at Land O' Lakes Recreation Complex. All skill levels welcome — no experience needed.</p>
       <div class="hero-free">🎉 First practice is completely FREE — no commitment</div>
       <div class="hero-btns">
@@ -201,19 +128,11 @@
       </div>
     </div>
   </div>
-
-  <!-- Right: full photo, no overlay -->
-  <div class="hs-right">
-    <img src="images/wp-team-nexar.jpg"
-         alt="Nexar Water Polo team" loading="eager">
-  </div>
-
-  <div class="hero-wave" style="position:absolute;bottom:-2px;left:0;right:0;z-index:4;line-height:0;">
+  <div class="hero-wave">
     <svg viewBox="0 0 1440 80" preserveAspectRatio="none">
       <path d="M0,40 C360,80 720,10 1080,50 C1260,70 1380,30 1440,40 L1440,80 L0,80 Z" fill="#ffffff"/>
     </svg>
   </div>
-
 </section>
 
 <!-- SECOND LOCATION BANNER -->
