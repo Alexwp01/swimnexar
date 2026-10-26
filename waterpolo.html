@@ -61,16 +61,22 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
   <style>
-    /* Full-bleed hero: photo background, gradient overlay left for text */
+    /* Full-bleed photo, dark vignette only top-left where text sits */
+    .hero { align-items: flex-start; }
     .hero-photo img { object-position: center center; }
     .hero-dim {
-      background: linear-gradient(to right,
-        rgba(0,0,0,.90) 0%,
-        rgba(0,0,0,.80) 35%,
-        rgba(0,0,0,.30) 65%,
-        rgba(0,0,0,.10) 100%);
+      background:
+        linear-gradient(135deg,
+          rgba(0,0,0,.88) 0%,
+          rgba(0,0,0,.60) 28%,
+          rgba(0,0,0,.15) 55%,
+          transparent 75%);
     }
-    .hero-body { padding-bottom: 120px; max-width: 580px; }
+    .hero-body {
+      padding-top: 48px;
+      padding-bottom: 60px;
+      max-width: 560px;
+    }
   </style>
 </head>
 <body>
