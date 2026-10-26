@@ -1,4 +1,11 @@
 {
+  "redirects": [
+    {
+      "source": "/store",
+      "destination": "https://nexar-team-store.printify.me",
+      "permanent": false
+    }
+  ],
   "headers": [
     {
       "source": "/(.*)",
