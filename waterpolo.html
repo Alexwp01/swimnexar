@@ -61,48 +61,44 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
   <style>
-    /* Split hero: dark text panel left, full photo right */
+    /* Split hero: photo full-bleed bg, semi-transparent dark panel left */
     .hero-split {
       display: flex;
       min-height: 100vh;
       position: relative;
       overflow: hidden;
     }
+    /* Photo spans the entire hero */
+    .hs-right {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+    }
+    .hs-right img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      object-position: 50% center;
+      display: block;
+    }
+    /* Semi-transparent dark panel over photo */
     .hs-left {
-      width: 44%;
+      width: 40%;
       flex-shrink: 0;
-      background: #0d0d0d;
+      background: linear-gradient(to right,
+        rgba(10,10,10,0.93) 0%,
+        rgba(10,10,10,0.93) 60%,
+        rgba(10,10,10,0.50) 100%);
       display: flex;
       align-items: center;
       padding: calc(var(--header-h) + 48px) 56px 100px 48px;
       position: relative;
       z-index: 2;
     }
-    /* subtle right-edge fade to blend into photo */
-    .hs-left::after {
-      content: '';
-      position: absolute;
-      top: 0; right: -40px; bottom: 0;
-      width: 80px;
-      background: linear-gradient(to right, #0d0d0d 0%, transparent 100%);
-      z-index: 3;
-      pointer-events: none;
-    }
+    .hs-left::after { display: none; }
     .hs-left .hero-body {
       padding-top: 0;
       padding-bottom: 0;
       max-width: 100%;
-    }
-    .hs-right {
-      flex: 1;
-      position: relative;
-      overflow: hidden;
-    }
-    .hs-right img {
-      width: 100%; height: 100%;
-      object-fit: cover;
-      object-position: 65% center;
-      display: block;
     }
     .hero-split .hero-wave {
       position: absolute; bottom: -2px; left: 0; right: 0; z-index: 4; line-height: 0;
@@ -115,20 +111,19 @@
         position: relative;
         min-height: 100vh;
       }
-      /* On mobile: photo is full background */
-      .hs-right {
-        position: absolute;
-        inset: 0;
-        height: 100%;
+      /* On mobile: photo bg, show left coach */
+      .hs-right img {
+        object-position: 20% center;
       }
       .hs-right::after {
         content: '';
         position: absolute;
         inset: 0;
         background: linear-gradient(to bottom,
-          rgba(0,0,0,.78) 0%,
-          rgba(0,0,0,.60) 50%,
-          rgba(0,0,0,.85) 100%);
+          rgba(0,0,0,.80) 0%,
+          rgba(0,0,0,.55) 50%,
+          rgba(0,0,0,.88) 100%);
+        z-index: 1;
       }
       .hs-left {
         width: 100%;
@@ -137,7 +132,6 @@
         z-index: 2;
         padding: calc(var(--header-h) + 32px) 24px 100px;
       }
-      .hs-left::after { display: none; }
     }
   </style>
 </head>
