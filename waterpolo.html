@@ -61,15 +61,27 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
   <style>
-    /* Tournament photo: text at top (over arena ceiling), faces visible below */
-    .hero { align-items: flex-start; }
-    .hero-photo img { object-position: center 70%; }
-    .hero-body { padding-top: 56px; padding-bottom: 60px; }
+    /* Tournament photo: text right, faces/kids visible on the left */
+    .hero { align-items: center; }
+    .hero .container { display: flex; justify-content: flex-end; }
+    .hero-photo img { object-position: 30% center; }
+    .hero-body { padding-top: 0; padding-bottom: 120px; max-width: 520px; }
     .hero-dim {
-      background: linear-gradient(to bottom,
-        rgba(0,0,0,.82) 0%,
+      background: linear-gradient(to right,
+        rgba(0,0,0,.25) 0%,
         rgba(0,0,0,.55) 45%,
-        rgba(0,0,0,.75) 100%);
+        rgba(0,0,0,.88) 100%);
+    }
+    @media (max-width: 768px) {
+      .hero .container { justify-content: flex-start; }
+      .hero-body { max-width: 100%; }
+      .hero-photo img { object-position: 35% center; }
+      .hero-dim {
+        background: linear-gradient(to bottom,
+          rgba(0,0,0,.75) 0%,
+          rgba(0,0,0,.55) 50%,
+          rgba(0,0,0,.85) 100%);
+      }
     }
   </style>
 </head>
