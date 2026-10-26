@@ -61,37 +61,83 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
   <style>
-    /* Tournament photo: text center, both coaches visible on sides */
-    .hero { align-items: center; }
-    .hero .container { display: flex; justify-content: center; }
-    .hero-photo img { object-position: 60% 55%; }
-    .hero-body {
-      padding-top: 0; padding-bottom: 120px;
-      max-width: 560px; text-align: center;
+    /* Split hero: dark text panel left, full photo right */
+    .hero-split {
+      display: flex;
+      min-height: 100vh;
+      position: relative;
+      overflow: hidden;
     }
-    .hero-body .hero-btns { justify-content: center; }
-    .hero-body .hero-stats { justify-content: center; }
-    .hero-body .hero-sub { margin-left: auto; margin-right: auto; }
-    .hero-dim {
-      background:
-        linear-gradient(to right,
-          rgba(0,0,0,.1) 0%,
-          rgba(0,0,0,.72) 28%,
-          rgba(0,0,0,.72) 72%,
-          rgba(0,0,0,.1) 100%),
-        linear-gradient(to bottom,
-          rgba(0,0,0,.5) 0%,
-          rgba(0,0,0,.2) 40%,
-          rgba(0,0,0,.7) 100%);
+    .hs-left {
+      width: 44%;
+      flex-shrink: 0;
+      background: #0d0d0d;
+      display: flex;
+      align-items: center;
+      padding: calc(var(--header-h) + 48px) 56px 100px 48px;
+      position: relative;
+      z-index: 2;
     }
-    @media (max-width: 768px) {
-      .hero-body { text-align: left; max-width: 100%; }
-      .hero-body .hero-btns { justify-content: flex-start; }
-      .hero-body .hero-stats { justify-content: flex-start; }
-      .hero-dim {
-        background: linear-gradient(to bottom,
-          rgba(0,0,0,.75) 0%, rgba(0,0,0,.55) 50%, rgba(0,0,0,.85) 100%);
+    /* subtle right-edge fade to blend into photo */
+    .hs-left::after {
+      content: '';
+      position: absolute;
+      top: 0; right: -40px; bottom: 0;
+      width: 80px;
+      background: linear-gradient(to right, #0d0d0d 0%, transparent 100%);
+      z-index: 3;
+      pointer-events: none;
+    }
+    .hs-left .hero-body {
+      padding-top: 0;
+      padding-bottom: 0;
+      max-width: 100%;
+    }
+    .hs-right {
+      flex: 1;
+      position: relative;
+      overflow: hidden;
+    }
+    .hs-right img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      object-position: 65% center;
+      display: block;
+    }
+    .hero-split .hero-wave {
+      position: absolute; bottom: -2px; left: 0; right: 0; z-index: 4; line-height: 0;
+    }
+    .hero-split .hero-wave svg { display: block; width: 100%; }
+
+    @media (max-width: 900px) {
+      .hero-split {
+        display: block;
+        position: relative;
+        min-height: 100vh;
       }
+      /* On mobile: photo is full background */
+      .hs-right {
+        position: absolute;
+        inset: 0;
+        height: 100%;
+      }
+      .hs-right::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(to bottom,
+          rgba(0,0,0,.78) 0%,
+          rgba(0,0,0,.60) 50%,
+          rgba(0,0,0,.85) 100%);
+      }
+      .hs-left {
+        width: 100%;
+        background: transparent;
+        position: relative;
+        z-index: 2;
+        padding: calc(var(--header-h) + 32px) 24px 100px;
+      }
+      .hs-left::after { display: none; }
     }
   </style>
 </head>
@@ -126,16 +172,15 @@
 </header>
 
 <!-- HERO -->
-<section class="hero" id="hero">
-  <div class="hero-photo">
-    <img src="images/wp-team-tournament.jpg"
-         alt="Nexar Water Polo team" loading="eager">
-  </div>
-  <div class="hero-dim"></div>
-  <div class="container">
+<section class="hero-split" id="hero">
+
+  <!-- Left: dark panel with text -->
+  <div class="hs-left">
     <div class="hero-body">
       <div class="hero-tag">🤽 Water Polo · Land O' Lakes, FL</div>
-      <h1>Train Like a<br><span>Champion</span></h1>
+      <h1 style="font-size:clamp(40px,5.5vw,80px); font-weight:900; line-height:1.02; letter-spacing:-3px; color:#fff; margin-bottom:20px;">
+        Train Like a<br><span style="color:#d42b2b;">Champion</span>
+      </h1>
       <p class="hero-sub">Youth Water Polo for ages 6–18. Monday, Wednesday &amp; Friday evenings at Land O' Lakes Recreation Complex. All skill levels welcome — no experience needed.</p>
       <div class="hero-free">🎉 First practice is completely FREE — no commitment</div>
       <div class="hero-btns">
@@ -150,11 +195,19 @@
       </div>
     </div>
   </div>
-  <div class="hero-wave">
+
+  <!-- Right: full photo, no overlay -->
+  <div class="hs-right">
+    <img src="images/wp-team-tournament.jpg"
+         alt="Nexar Water Polo team" loading="eager">
+  </div>
+
+  <div class="hero-wave" style="position:absolute;bottom:-2px;left:0;right:0;z-index:4;line-height:0;">
     <svg viewBox="0 0 1440 80" preserveAspectRatio="none">
       <path d="M0,40 C360,80 720,10 1080,50 C1260,70 1380,30 1440,40 L1440,80 L0,80 Z" fill="#ffffff"/>
     </svg>
   </div>
+
 </section>
 
 <!-- SECOND LOCATION BANNER -->
