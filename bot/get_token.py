@@ -1,9 +1,15 @@
+import os
 import requests
 import sys
 
 CLIENT_ID     = "1945449166095595"
-CLIENT_SECRET = "fcc678c1137e9ed80da161ef4472683d"
+CLIENT_SECRET = os.environ.get("META_CLIENT_SECRET", "")
 REDIRECT_URI  = "https://swimnexar.vercel.app/"
+
+if not CLIENT_SECRET:
+    print("❌ META_CLIENT_SECRET не задан.")
+    print("   Запусти: export META_CLIENT_SECRET=<твой_секрет> && python3 bot/get_token.py")
+    sys.exit(1)
 
 OAUTH_URL = (
     f"https://www.instagram.com/oauth/authorize"
