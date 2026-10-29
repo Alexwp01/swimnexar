@@ -9,6 +9,10 @@ on:
         description: 'Build & preview slides without posting to Instagram'
         type: boolean
         default: false
+      topic:
+        description: 'Force a specific topic for this run (optional; blank = auto-pick)'
+        type: string
+        default: ''
 
 permissions:
   contents: write
@@ -52,6 +56,7 @@ jobs:
           NOTION_TOKEN:           ${{ secrets.NOTION_TOKEN }}
           NOTION_DATABASE_ID:     ${{ secrets.NOTION_DATABASE_ID }}
           DRY_RUN:                ${{ inputs.dry_run && '1' || '' }}
+          TOPIC_OVERRIDE:         ${{ inputs.topic }}
         run: python bot/main.py
 
       - name: Upload preview slides (dry run)

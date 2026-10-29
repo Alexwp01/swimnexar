@@ -243,6 +243,10 @@ RECENT_CAT_BLOCK   = 2    # don't reuse a category used in the last N posts
 
 def _pick_topic():
     import random
+    override = os.environ.get("TOPIC_OVERRIDE", "").strip()
+    if override:
+        print(f"📌 Using manual topic override: {override}")
+        return override
     used = _load_used_topics()                 # oldest → most recent
     used_set = set(used)
     recent_titles = set(used[-RECENT_TOPIC_BLOCK:])
