@@ -27,7 +27,7 @@ jobs:
       - name: Skip manually-paused dates
         id: gate
         run: |
-          PAUSED=" 2026-09-21 "
+          PAUSED=" 2026-09-21 2026-10-30 "
           TODAY="$(date -u +%F)"
           if echo "$PAUSED" | grep -q " $TODAY "; then
             echo "skip=true" >> "$GITHUB_OUTPUT"
