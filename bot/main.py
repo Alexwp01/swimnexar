@@ -386,22 +386,34 @@ def _photo_fits(photo, topic, sport):
     try:
         thumb = requests.get(photo["src"]["medium"], timeout=15).content
         b64 = base64.standard_b64encode(thumb).decode()
+        if sport == "water polo":
+            criteria = (
+                f'This photo will be the cover of a youth water polo social post titled "{topic}". '
+                f'Answer YES ONLY if it clearly shows water polo being PLAYED in a pool: a player '
+                f'wearing a water polo cap and/or a water polo ball in play, ideally several players '
+                f'competing (attackers and defenders battling). '
+                f'Answer NO for: a lone lap swimmer, just a leg/arm or body part, diving or starts, '
+                f'an empty pool, lane ropes, horse polo, billiards, open water, or any scene without '
+                f'clear water polo action. No overlaid text or watermarks. Reply with only YES or NO.'
+            )
+        else:
+            criteria = (
+                f'This photo will be the cover image of a youth {sport} social media post '
+                f'titled "{topic}". Answer YES only if ALL of these hold: '
+                f'(1) it clearly shows at least one real {sport} athlete actively swimming in the '
+                f'water — a visible person in action, not an empty pool, lane ropes, equipment, or '
+                f'water alone; '
+                f'(2) it genuinely depicts swimming (not billiards, not a hot tub/spa, not a beach '
+                f'or open water leisure scene); '
+                f'(3) no babies/bathtubs, no unrelated objects, no overlaid text or watermarks. '
+                f'Otherwise answer NO. Reply with only YES or NO.'
+            )
         resp = anthropic_client.messages.create(
             model="claude-sonnet-4-6",
             max_tokens=10,
             messages=[{"role": "user", "content": [
                 {"type": "image", "source": {"type": "base64", "media_type": "image/jpeg", "data": b64}},
-                {"type": "text", "text": (
-                    f'This photo will be the cover image of a youth {sport} social media post '
-                    f'titled "{topic}". Answer YES only if ALL of these hold: '
-                    f'(1) it clearly shows at least one real {sport} athlete actively swimming or '
-                    f'playing water polo in the water — a visible person in action, not an empty '
-                    f'pool, lane ropes, equipment, or water alone; '
-                    f'(2) it genuinely depicts {sport} (not billiards, not a hot tub/spa, not a '
-                    f'beach or open water leisure scene); '
-                    f'(3) no babies/bathtubs, no unrelated objects, no overlaid text or watermarks. '
-                    f'Otherwise answer NO. Reply with only YES or NO.'
-                )},
+                {"type": "text", "text": criteria},
             ]}],
         )
         ans = resp.content[0].text.strip().upper()
